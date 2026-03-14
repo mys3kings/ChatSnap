@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ChatSnap</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { 
+      font-family: sans-serif; 
+      background: #121212; 
+      color: #e0e0e0; 
+      padding: 20px; 
+    }
+    #messages { 
+      border: 1px solid #333; 
+      height: 300px; 
+      overflow-y: scroll; 
+      padding: 10px; 
+      background: #1e1e1e; 
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    #input { 
+      width: 60%; 
+      padding: 10px; 
+      background: #2c2c2c; 
+      border: 1px solid #444; 
+      color: #e0e0e0; 
+      border-radius: 5px;
+    }
+    #send, #voice { 
+      width: 18%; 
+      padding: 10px; 
+      background: #3a3a3a; 
+      color: #e0e0e0; 
+      border: none; 
+      border-radius: 5px; 
+      margin-left: 2%;
+    }
+    p { margin: 5px 0; }
+    h2 { text-align: center; }
+    audio { width: 100%; margin-top: 5px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h2>ChatSnap</h2>
+  <div id="messages"></div>
+  <input type="text" id="input" placeholder="Type a message"/>
+  <button id="send">Send</button>
+  <button id="voice">🎤</button>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Firebase import
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+    import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
+
+    // Firebase config (yours)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDwM8N-eMlsbndlnuOnB9dQ5lx9D2Dn1hI",
+      authDomain: "chatsnap-16189.firebaseapp.com",
+      projectId: "chatsnap-16189",
+      storageBucket: "chatsnap-16189.firebasestorage.app",
+      messagingSenderId: "687581415852",
+      appId: "1:687581415852:web:3fe355b6fc830ae340d209",
+      measurementId: "G-ZQS6K88PY8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getDatabase(app);
+
+    const messagesDiv = document.getElementById('messages');
+    const input = document.getElementById('input');
+    const send = document.getElementById('send');
+    const voiceBtn = document.getElementById('voice');
+
+    // Load messages in real-time
+    const messagesRef = ref(db, 'messages');
+    onChildAdded(messagesRef, snapshot => {
+      const msg = snapshot.val();
+      if(msg.text){
+        messagesDiv.innerHTML += `<p><strong>${msg.name}:</strong> ${msg.text}</p>`;
+      } else if(msg.audio){
+        messagesDiv.innerHTML += `<p><strong>${msg.name}:</strong><br><audio controls src="${msg.audio}"></audio></p>`;
+      }
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    });
+
+    // Send text message
+    send.onclick = () => {
+      const text = input.value.trim();
+      if(!text) return;
+
+      let name = localStorage.getItem('nickname');
+      if(!name){
+        name = prompt("Enter your nickname") || "Anonymous";
+        localStorage.setItem('nickname', name);
+      }
+
+      push(messagesRef, { name, text });
+      input.value = '';
+    }
+
+    input.addEventListener('keypress', e => {
+      if(e.key === 'Enter') send.onclick();
+    });
+
+    // Voice notes
+    let mediaRecorder;
+    let audioChunks = [];
+
+    voiceBtn.onclick = async () => {
+      if(!mediaRecorder || mediaRecorder.state === 'inactive'){
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+        mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const base64Audio = reader.result;
+            const name = localStorage.getItem('nickname') || "Anonymous";
+            push(messagesRef, { name, audio: base64Audio });
+          };
+          reader.readAsDataURL(audioBlob);
+        };
+
+        mediaRecorder.start();
+        voiceBtn.textContent = "⏹️"; // Stop button
+      } else if(mediaRecorder.state === 'recording'){
+        mediaRecorder.stop();
+        voiceBtn.textContent = "🎤"; // Record button
+      }
+    }
+  </script>
+</body>
+</html>
