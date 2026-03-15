@@ -1,7 +1,7 @@
 {
-  "name": "ChatSnap",
-  "short_name": "ChatSnap",
-  "start_url": "/ChatSnap/",
+  "name": "Imperion",
+  "short_name": "Imperion",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#121212",
   "theme_color": "#121212",
