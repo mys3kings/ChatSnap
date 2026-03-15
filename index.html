@@ -1,56 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>ChatSnap</title>
+  <title>Imperion</title>
   <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#121212">
+  <meta name="theme-color" content="#121212">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { 
-      font-family: sans-serif; 
-      background: #121212; 
-      color: #e0e0e0; 
-      padding: 20px; 
-    }
-    #messages { 
-      border: 1px solid #333; 
-      height: 300px; 
-      overflow-y: scroll; 
-      padding: 10px; 
-      background: #1e1e1e; 
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-    #input { 
-      width: 60%; 
-      padding: 10px; 
-      background: #2c2c2c; 
-      border: 1px solid #444; 
-      color: #e0e0e0; 
-      border-radius: 5px;
-    }
-    #send, #voice { 
-      width: 18%; 
-      padding: 10px; 
-      background: #3a3a3a; 
-      color: #e0e0e0; 
-      border: none; 
-      border-radius: 5px; 
-      margin-left: 2%;
-    }
-    p { margin: 5px 0; }
+    body { font-family: sans-serif; background: #121212; color: #e0e0e0; padding: 20px; }
+    #messages { height: 400px; overflow-y: scroll; padding: 10px; border-radius: 8px; background: #1e1e1e; }
+    .msg { margin: 5px 0; padding: 8px 12px; border-radius: 12px; max-width: 75%; word-wrap: break-word; }
+    .mine { background: #3a3a3a; margin-left: auto; text-align: right; }
+    .other { background: #2c2c2c; margin-right: auto; text-align: left; }
+    .timestamp { font-size: 0.7em; color: #888; margin-top: 2px; }
+    #input { width: 60%; padding: 10px; background: #2c2c2c; border: 1px solid #444; color: #e0e0e0; border-radius: 5px; }
+    #send, #voice { width: 18%; padding: 10px; background: #3a3a3a; color: #e0e0e0; border: none; border-radius: 5px; margin-left: 2%; }
     h2 { text-align: center; }
     audio { width: 100%; margin-top: 5px; border-radius: 5px; }
   </style>
 </head>
 <body>
-  <h2>ChatSnap</h2>
+  <h2>Imperion</h2>
   <div id="messages"></div>
   <input type="text" id="input" placeholder="Type a message"/>
   <button id="send">Send</button>
   <button id="voice">🎤</button>
 
-  <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
@@ -58,7 +32,7 @@
 
     // Firebase config
     const firebaseConfig = {
-      apiKey: "AIzaSyDwM8N-eMlsbndlnuOnB9dQ5lx9D2Dn1hI",
+      apiKey: "AIzaSyDwM8N-eMlsbndlnuOnB9D2Dn1hI",
       authDomain: "chatsnap-16189.firebaseapp.com",
       projectId: "chatsnap-16189",
       storageBucket: "chatsnap-16189.firebasestorage.app",
@@ -71,20 +45,37 @@
     const analytics = getAnalytics(app);
     const db = getDatabase(app);
 
+    // 👑 This is the path for messages
+    const messagesRef = ref(db, 'imperion_messages');
+
     const messagesDiv = document.getElementById('messages');
     const input = document.getElementById('input');
     const send = document.getElementById('send');
     const voiceBtn = document.getElementById('voice');
 
-    // Load messages in real-time
-    const messagesRef = ref(db, 'messages');
+    // Get or set nickname
+    let nickname = localStorage.getItem('nickname');
+    if(!nickname){
+      nickname = prompt("Enter your username") || "Anonymous";
+      localStorage.setItem('nickname', nickname);
+    }
+
+    // Listen for messages
     onChildAdded(messagesRef, snapshot => {
       const msg = snapshot.val();
+      const isMine = msg.name === nickname;
+      let html = '';
       if(msg.text){
-        messagesDiv.innerHTML += `<p><strong>${msg.name}:</strong> ${msg.text}</p>`;
+        html = `<div class="msg ${isMine ? 'mine' : 'other'}">
+                  <strong>${msg.name}</strong>: ${msg.text}<div class="timestamp">${msg.time}</div>
+                </div>`;
       } else if(msg.audio){
-        messagesDiv.innerHTML += `<p><strong>${msg.name}:</strong><br><audio controls src="${msg.audio}"></audio></p>`;
+        html = `<div class="msg ${isMine ? 'mine' : 'other'}">
+                  <strong>${msg.name}</strong>:<br><audio controls src="${msg.audio}"></audio>
+                  <div class="timestamp">${msg.time}</div>
+                </div>`;
       }
+      messagesDiv.innerHTML += html;
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     });
 
@@ -93,19 +84,12 @@
       const text = input.value.trim();
       if(!text) return;
 
-      let name = localStorage.getItem('nickname');
-      if(!name){
-        name = prompt("Enter your nickname") || "Anonymous";
-        localStorage.setItem('nickname', name);
-      }
-
-      push(messagesRef, { name, text });
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      push(messagesRef, { name: nickname, text, time });
       input.value = '';
     }
 
-    input.addEventListener('keypress', e => {
-      if(e.key === 'Enter') send.onclick();
-    });
+    input.addEventListener('keypress', e => { if(e.key === 'Enter') send.onclick(); });
 
     // Voice notes
     let mediaRecorder;
@@ -116,26 +100,24 @@
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorder = new MediaRecorder(stream);
         audioChunks = [];
-
         mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
         mediaRecorder.onstop = () => {
           const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
           const reader = new FileReader();
           reader.onloadend = () => {
             const base64Audio = reader.result;
-            const name = localStorage.getItem('nickname') || "Anonymous";
-            push(messagesRef, { name, audio: base64Audio });
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            push(messagesRef, { name: nickname, audio: base64Audio, time });
           };
           reader.readAsDataURL(audioBlob);
         };
-
         mediaRecorder.start();
-        voiceBtn.textContent = "⏹️"; // Stop button
+        voiceBtn.textContent = "⏹️"; // stop
       } else if(mediaRecorder.state === 'recording'){
         mediaRecorder.stop();
-        voiceBtn.textContent = "🎤"; // Record button
+        voiceBtn.textContent = "🎤"; // record
       }
     }
   </script>
 </body>
-    </html>
+  </html>
