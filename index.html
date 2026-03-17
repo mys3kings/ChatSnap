@@ -2,205 +2,200 @@
 <html>
 <head>
   <title>Imperion</title>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#121212">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#121212">
+
   <style>
     body { font-family: sans-serif; background: #121212; color: #e0e0e0; padding: 20px; }
-    #messages { height: 400px; overflow-y: scroll; padding: 10px; border-radius: 8px; background: #1e1e1e; margin-bottom: 10px; }
-    .msg { display:flex; align-items:flex-start; margin: 5px 0; padding: 8px 12px; border-radius: 12px; max-width: 75%; word-wrap: break-word; }
-    .mine { background: #3a3a3a; margin-left: auto; flex-direction: row-reverse; }
-    .other { background: #2c2c2c; margin-right: auto; }
-    .msg img { border-radius: 50%; width: 32px; height: 32px; margin-right: 8px; }
-    .timestamp { font-size: 0.7em; color: #888; margin-left: auto; margin-top: 2px; }
-    #input { width: 60%; padding: 10px; background: #2c2c2c; border: 1px solid #444; color: #e0e0e0; border-radius: 5px; }
-    #send, #voice { width: 18%; padding: 10px; background: #3a3a3a; color: #e0e0e0; border: none; border-radius: 5px; margin-left: 2%; }
-    #auth { margin-bottom: 15px; }
-    h2 { text-align: center; margin-bottom:10px; }
-    audio { width: 100%; margin-top: 5px; border-radius: 5px; }
+
+    h2 { text-align: center; }
+
+    #auth {
+      background:#1e1e1e;
+      padding:20px;
+      border-radius:10px;
+      max-width:350px;
+      margin:auto;
+      text-align:center;
+    }
+
+    input, button {
+      width:100%;
+      padding:10px;
+      margin:5px 0;
+      border:none;
+      border-radius:5px;
+    }
+
+    input { background:#2c2c2c; color:white; }
+    button { background:#3a3a3a; color:white; }
+
+    #messages {
+      height: 400px;
+      overflow-y: scroll;
+      padding: 10px;
+      border-radius: 8px;
+      background: #1e1e1e;
+      margin-top:10px;
+    }
+
+    .msg {
+      display:flex;
+      align-items:flex-start;
+      margin: 5px 0;
+      padding: 8px;
+      border-radius: 10px;
+      max-width: 75%;
+    }
+
+    .mine { background:#3a3a3a; margin-left:auto; flex-direction:row-reverse; }
+    .other { background:#2c2c2c; }
+
+    .msg img {
+      width:30px;
+      height:30px;
+      border-radius:50%;
+      margin:5px;
+    }
+
+    .timestamp {
+      font-size:10px;
+      color:#888;
+    }
   </style>
 </head>
+
 <body>
+
+<div id="auth">
+  <h2>SIGN INTO IMPERION</h2>
+
+  <button id="googleLogin">Continue with Google</button>
+
+  <input type="email" id="emailInput" placeholder="Email">
+  <input type="password" id="passwordInput" placeholder="Password">
+  <button id="emailLogin">Login / Signup</button>
+
+  <input type="text" id="nicknameInput" placeholder="Choose username">
+  <input type="file" id="profilePicInput" accept="image/*">
+  <button id="setProfile">Save Profile</button>
+</div>
+
+<div id="chatUI" style="display:none;">
   <h2>Imperion</h2>
-
-  <div id="auth">
-    <button id="googleLogin">Sign in with Google</button><br><br>
-    <input type="email" id="emailInput" placeholder="Email">
-    <input type="password" id="passwordInput" placeholder="Password">
-    <button id="emailLogin">Login / Signup</button><br><br>
-    <input type="text" id="nicknameInput" placeholder="Choose your nickname">
-    <input type="file" id="profilePicInput" accept="image/*">
-    <button id="setProfile">Set Profile</button>
-  </div>
-
   <div id="messages"></div>
-  <input type="text" id="input" placeholder="Type a message"/>
+
+  <input type="text" id="input" placeholder="Type message">
   <button id="send">Send</button>
-  <button id="voice">🎤</button>
+</div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
-    import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getDatabase, ref, push, onChildAdded, set, get, child } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
-    // Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyDwM8N-eMlsbndlnuOnB9dQ5lx9D2Dn1hI",
-      authDomain: "chatsnap-16189.firebaseapp.com",
-      projectId: "chatsnap-16189",
-      databaseURL: "https://chatsnap-16189-default-rtdb.europe-west1.firebasedatabase.app",
-      storageBucket: "chatsnap-16189.firebasestorage.app",
-      messagingSenderId: "687581415852",
-      appId: "1:687581415852:web:3fe355b6fc830ae340d209",
-      measurementId: "G-ZQS6K88PY8"
+const firebaseConfig = {
+  apiKey: "YOUR API KEY",
+  authDomain: "chatsnap-16189.firebaseapp.com",
+  projectId: "chatsnap-16189",
+  databaseURL: "https://chatsnap-16189-default-rtdb.europe-west1.firebasedatabase.app"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const auth = getAuth(app);
+const messagesRef = ref(db, 'imperion_messages');
+
+setPersistence(auth, browserLocalPersistence);
+
+let nickname = "";
+let profilePic = "";
+
+// 🔥 AUTO LOGIN
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const snap = await get(child(ref(db), 'users/' + user.uid));
+    if (snap.exists()) {
+      const data = snap.val();
+      nickname = data.name;
+      profilePic = data.profilePic;
+    }
+
+    document.getElementById("auth").style.display = "none";
+    document.getElementById("chatUI").style.display = "block";
+  }
+});
+
+// GOOGLE LOGIN
+const provider = new GoogleAuthProvider();
+googleLogin.onclick = () => signInWithPopup(auth, provider);
+
+// EMAIL LOGIN
+emailLogin.onclick = () => {
+  const email = emailInput.value;
+  const pass = passwordInput.value;
+
+  signInWithEmailAndPassword(auth, email, pass)
+  .catch(() => createUserWithEmailAndPassword(auth, email, pass));
+};
+
+// SAVE PROFILE (FIREBASE)
+setProfile.onclick = () => {
+  const user = auth.currentUser;
+  if (!user) return alert("Login first");
+
+  const name = nicknameInput.value;
+  const file = profilePicInput.files[0];
+
+  if(file){
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      profilePic = reader.result;
+
+      set(ref(db, 'users/' + user.uid), {
+        name,
+        profilePic
+      });
+
+      nickname = name;
+      alert("Profile saved!");
     };
+    reader.readAsDataURL(file);
+  }
+};
 
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const db = getDatabase(app);
-    const auth = getAuth(app);
-    const messagesRef = ref(db, 'imperion_messages');
+// RECEIVE MESSAGES
+onChildAdded(messagesRef, snap => {
+  const msg = snap.val();
+  const mine = msg.name === nickname;
 
-    const messagesDiv = document.getElementById('messages');
-    const input = document.getElementById('input');
-    const send = document.getElementById('send');
-    const voiceBtn = document.getElementById('voice');
+  messages.innerHTML += `
+    <div class="msg ${mine ? 'mine' : 'other'}">
+      <img src="${msg.profilePic || ''}">
+      <div>
+        <strong>${msg.name}</strong><br>
+        ${msg.text || ''}
+        <div class="timestamp">${msg.time}</div>
+      </div>
+    </div>
+  `;
+});
 
-    const nicknameInput = document.getElementById("nicknameInput");
-    const profilePicInput = document.getElementById("profilePicInput");
-    const setProfileBtn = document.getElementById("setProfile");
+// SEND MESSAGE
+send.onclick = () => {
+  const text = input.value.trim();
+  if(!text) return;
 
-    // Load saved nickname + profile pic
-    let nickname = localStorage.getItem('nickname') || "";
-    let profilePic = localStorage.getItem('profilePic') || "";
+  push(messagesRef, {
+    name: nickname,
+    text,
+    time: new Date().toLocaleTimeString(),
+    profilePic
+  });
 
-    if(nickname) nicknameInput.value = nickname;
+  input.value = "";
+};
+</script>
 
-    // Set nickname & profile pic
-    setProfileBtn.onclick = () => {
-      const chosen = nicknameInput.value.trim();
-      if(!chosen) return alert("Nickname cannot be empty!");
-      nickname = chosen;
-      localStorage.setItem('nickname', nickname);
-
-      const file = profilePicInput.files[0];
-      if(file){
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          profilePic = reader.result;
-          localStorage.setItem('profilePic', profilePic);
-          alert("Profile saved!");
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert("Nickname saved!");
-      }
-    };
-
-    // Google login
-    const provider = new GoogleAuthProvider();
-    document.getElementById("googleLogin").onclick = () => {
-      signInWithPopup(auth, provider)
-        .then(result => {
-          if(!nickname){
-            nickname = prompt("Enter your preferred nickname") || "Anonymous";
-            localStorage.setItem('nickname', nickname);
-          }
-          document.getElementById("auth").style.display = "none";
-          console.log("Logged in as:", nickname);
-        })
-        .catch(console.error);
-    };
-
-    // Email login/signup
-    document.getElementById("emailLogin").onclick = () => {
-      const email = document.getElementById("emailInput").value;
-      const pass = document.getElementById("passwordInput").value;
-      if(!email || !pass) return alert("Enter email & password");
-
-      signInWithEmailAndPassword(auth, email, pass)
-        .then(userCred => {
-          if(!nickname){
-            nickname = prompt("Enter your preferred nickname") || "Anonymous";
-            localStorage.setItem('nickname', nickname);
-          }
-          document.getElementById("auth").style.display = "none";
-        })
-        .catch(() => {
-          // Signup if login fails
-          createUserWithEmailAndPassword(auth, email, pass)
-            .then(() => {
-              if(!nickname){
-                nickname = prompt("Enter your preferred nickname") || "Anonymous";
-                localStorage.setItem('nickname', nickname);
-              }
-              document.getElementById("auth").style.display = "none";
-            })
-            .catch(console.error);
-        });
-    };
-
-    // Listen for messages
-    onChildAdded(messagesRef, snapshot => {
-      const msg = snapshot.val();
-      const isMine = msg.name === nickname;
-      let avatar = msg.profilePic || "default-avatar.png";
-      let html = "";
-
-      if(msg.text){
-        html = `<div class="msg ${isMine ? 'mine' : 'other'}">
-                  <img src="${avatar}"><strong>${msg.name}</strong>: ${msg.text}
-                  <div class="timestamp">${msg.time}</div>
-                </div>`;
-      } else if(msg.audio){
-        html = `<div class="msg ${isMine ? 'mine' : 'other'}">
-                  <img src="${avatar}"><strong>${msg.name}</strong>:<br>
-                  <audio controls src="${msg.audio}"></audio>
-                  <div class="timestamp">${msg.time}</div>
-                </div>`;
-      }
-
-      messagesDiv.innerHTML += html;
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    });
-
-    // Send message
-    send.onclick = () => {
-      const text = input.value.trim();
-      if(!text) return;
-      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      push(messagesRef, { name: nickname, text, time, profilePic });
-      input.value = '';
-    };
-
-    input.addEventListener('keypress', e => { if(e.key === 'Enter') send.onclick(); });
-
-    // Voice notes
-    let mediaRecorder, audioChunks = [];
-    voiceBtn.onclick = async () => {
-      if(!mediaRecorder || mediaRecorder.state === 'inactive'){
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream);
-        audioChunks = [];
-        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-        mediaRecorder.onstop = () => {
-          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            const base64Audio = reader.result;
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            push(messagesRef, { name: nickname, audio: base64Audio, time, profilePic });
-          };
-          reader.readAsDataURL(audioBlob);
-        };
-        mediaRecorder.start();
-        voiceBtn.textContent = "⏹️";
-      } else if(mediaRecorder.state === 'recording'){
-        mediaRecorder.stop();
-        voiceBtn.textContent = "🎤";
-      }
-    };
-  </script>
 </body>
   </html>
