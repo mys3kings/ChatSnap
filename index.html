@@ -1,25 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
   <title>Imperion</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#121212">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Imperion">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     * { box-sizing: border-box; margin:0; padding:0; }
-    body, html { width:100%; height:100%; font-family:sans-serif; background:#121212; color:#e0e0e0; }
+    body, html { width:100%; height:100%; font-family:sans-serif; background:#121212; color:#e0e0e0; display:flex; flex-direction:column; }
+
     #header { display:flex; justify-content:space-between; align-items:center; padding:10px; background:#1f1f1f; }
     #header h2 { color:#4db8ff; }
-    #header button { background:none; border:none; color:#e0e0e0; font-size:1.5em; cursor:pointer; }
-    #auth { display:flex; flex-direction:column; padding:20px; gap:10px; align-items:center; justify-content:center; height:calc(100% - 60px); }
+    #settingsBtn { background:none; border:none; font-size:1.5em; color:#e0e0e0; cursor:pointer; display:none; }
+
+    #auth { display:flex; flex-direction:column; gap:10px; padding:20px; align-items:center; justify-content:center; flex:1; }
     #auth input, #auth button { width:80%; padding:10px; border-radius:5px; border:none; }
-    #auth button { background:#3a3a3a; color:#e0e0e0; cursor:pointer; }
+    #auth button { background:#3a3a3a; color:#e0e0e0; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; }
+
     #messages { flex:1; overflow-y:auto; padding:10px; display:none; }
     .msg { display:flex; align-items:flex-start; margin:5px 0; max-width:75%; word-wrap:break-word; }
     .mine { background:#3a3a3a; margin-left:auto; flex-direction:row-reverse; border-radius:12px 12px 0 12px; }
@@ -29,42 +26,56 @@
     .msg-content .name { font-size:0.8em; color:#4db8ff; margin-bottom:2px; }
     .msg-content .text { font-size:1em; }
     .timestamp { font-size:0.7em; color:#888; align-self:flex-end; margin-top:2px; }
-    #inputContainer { display:none; padding:10px; background:#1f1f1f; gap:5px; }
+
+    #inputContainer { display:none; padding:10px; background:#1f1f1f; gap:5px; display:flex; }
     #inputContainer input { flex:1; padding:10px; border-radius:5px; border:none; background:#2c2c2c; color:#e0e0e0; }
     #inputContainer button { padding:10px; border-radius:5px; border:none; background:#3a3a3a; color:#e0e0e0; cursor:pointer; }
+
+    /* Settings panel */
+    #settingsPanel { position:fixed; top:0; right:-100%; width:80%; max-width:300px; height:100%; background:#1e1e1e; transition:0.3s; padding:20px; display:flex; flex-direction:column; align-items:center; }
+    #settingsPanel.active { right:0; }
+    #profilePreview { width:80px; height:80px; border-radius:50%; margin-bottom:10px; border:2px solid #4db8ff; }
   </style>
 </head>
 <body>
 
 <div id="header">
   <h2>Imperion</h2>
-  <button id="settingsBtn" style="display:none;">⚙️</button>
+  <button id="settingsBtn">⚙️</button>
 </div>
 
 <div id="auth">
-  <button id="googleLogin">Sign in with Google</button>
+  <button id="googleLogin">
+    <span style="font-weight:bold; font-size:1.2em;">G</span> Sign in with Google
+  </button>
   <input type="email" id="emailInput" placeholder="Email">
   <input type="password" id="passwordInput" placeholder="Password">
-  <button id="emailLogin">Login / Signup</button>
-  <input type="text" id="nicknameInput" placeholder="Choose your nickname">
-  <input type="file" id="profilePicInput" accept="image/*">
-  <button id="setProfile">Set Profile</button>
+  <button id="emailLogin">Sign in with Email</button>
 </div>
 
 <div id="messages"></div>
 
 <div id="inputContainer">
-  <input type="text" id="input" placeholder="Type a message">
+  <input id="input" placeholder="Type a message">
   <button id="send">Send</button>
   <button id="voice">🎤</button>
+</div>
+
+<div id="settingsPanel">
+  <h3>Profile</h3>
+  <img id="profilePreview">
+  <input id="editNickname" placeholder="Nickname">
+  <input type="file" id="editProfilePic">
+  <button id="saveSettings">Save</button>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
 import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, browserLocalPersistence, setPersistence } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
+// ✅ Your Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDwM8N-eMlsbndlnuOnB9dQ5lx9D2Dn1hI",
   authDomain: "chatsnap-16189.firebaseapp.com",
@@ -81,51 +92,30 @@ const db = getDatabase(app);
 const auth = getAuth(app);
 const messagesRef = ref(db, 'imperion_messages');
 
-const emailInput = document.getElementById("emailInput");
-const passwordInput = document.getElementById("passwordInput");
-const messagesDiv = document.getElementById('messages');
-const input = document.getElementById('input');
-const send = document.getElementById('send');
-const voiceBtn = document.getElementById('voice');
 const authDiv = document.getElementById("auth");
+const messagesDiv = document.getElementById("messages");
 const inputContainer = document.getElementById("inputContainer");
 const settingsBtn = document.getElementById("settingsBtn");
+
 const nicknameInput = document.getElementById("nicknameInput");
 const profilePicInput = document.getElementById("profilePicInput");
 const setProfileBtn = document.getElementById("setProfile");
 
-let nickname = localStorage.getItem('nickname') || "";
-let profilePic = localStorage.getItem('profilePic') || "";
+const emailInput = document.getElementById("emailInput");
+const passwordInput = document.getElementById("passwordInput");
 
-if(nickname) nicknameInput.value = nickname;
+let nickname = localStorage.getItem("nickname") || "";
+let profilePic = localStorage.getItem("profilePic") || "";
 
-setProfileBtn.onclick = () => {
-  const chosen = nicknameInput.value.trim();
-  if(!chosen) return alert("Nickname cannot be empty!");
-  nickname = chosen;
-  localStorage.setItem('nickname', nickname);
-
-  const file = profilePicInput.files[0];
-  if(file){
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      profilePic = reader.result;
-      localStorage.setItem('profilePic', profilePic);
-      alert("Profile saved!");
-    };
-    reader.readAsDataURL(file);
-  } else {
-    alert("Nickname saved!");
-  }
-};
-
+// Login persistence
 setPersistence(auth, browserLocalPersistence);
 
+// Show chat UI
 function showChatUI(userNickname, userProfilePic){
   nickname = userNickname || nickname || "Anonymous";
   profilePic = userProfilePic || profilePic || "";
-  localStorage.setItem('nickname', nickname);
-  localStorage.setItem('profilePic', profilePic);
+  localStorage.setItem("nickname", nickname);
+  localStorage.setItem("profilePic", profilePic);
 
   authDiv.style.display = "none";
   messagesDiv.style.display = "block";
@@ -133,33 +123,31 @@ function showChatUI(userNickname, userProfilePic){
   settingsBtn.style.display = "block";
 }
 
+// Google login
 const provider = new GoogleAuthProvider();
-
 document.getElementById("googleLogin").onclick = () => {
   signInWithPopup(auth, provider)
-    .then(result => showChatUI(result.user.displayName, result.user.photoURL))
+    .then(res => showChatUI(res.user.displayName, res.user.photoURL))
     .catch(console.error);
 };
 
+// Email login/signup
 document.getElementById("emailLogin").onclick = () => {
-  const email = emailInput.value;
-  const pass = passwordInput.value;
-
+  const email = emailInput.value.trim();
+  const pass = passwordInput.value.trim();
   if(!email || !pass) return alert("Enter email & password");
 
-  signInWithEmailAndPassword(auth, email, pass)
+  signInWithEmailAndPassword(auth,email,pass)
     .then(userCred => showChatUI(userCred.user.displayName, userCred.user.photoURL))
-    .catch(() => {
-      createUserWithEmailAndPassword(auth, email, pass)
-        .then(userCred => showChatUI(userCred.user.displayName, userCred.user.photoURL))
-        .catch(console.error);
-    });
+    .catch(()=> createUserWithEmailAndPassword(auth,email,pass)
+      .then(userCred => showChatUI(userCred.user.displayName, userCred.user.photoURL))
+      .catch(console.error));
 };
 
+// Auth state
 onAuthStateChanged(auth, user => {
-  if(user){
-    showChatUI(user.displayName, user.photoURL);
-  } else {
+  if(user) showChatUI(user.displayName, user.photoURL);
+  else {
     authDiv.style.display = "flex";
     messagesDiv.style.display = "none";
     inputContainer.style.display = "none";
@@ -167,37 +155,107 @@ onAuthStateChanged(auth, user => {
   }
 });
 
-// Listen for messages
+// SETTINGS BUTTON
+const panel = document.getElementById("settingsPanel");
+const profilePreview = document.getElementById("profilePreview");
+const editNickname = document.getElementById("editNickname");
+const editProfilePic = document.getElementById("editProfilePic");
+const saveSettings = document.getElementById("saveSettings");
+
+settingsBtn.onclick = () => {
+  panel.classList.add("active");
+  profilePreview.src = profilePic || "";
+  editNickname.value = nickname || "";
+};
+
+panel.onclick = e => {
+  if(e.target === panel) panel.classList.remove("active");
+};
+
+saveSettings.onclick = () => {
+  nickname = editNickname.value || nickname;
+  localStorage.setItem("nickname", nickname);
+
+  const file = editProfilePic.files[0];
+  if(file){
+    const reader = new FileReader();
+    reader.onload = () => {
+      profilePic = reader.result;
+      localStorage.setItem("profilePic", profilePic);
+    };
+    reader.readAsDataURL(file);
+  }
+  panel.classList.remove("active");
+};
+
+// CHAT MESSAGE LISTENER (optimized)
 onChildAdded(messagesRef, snapshot => {
   const msg = snapshot.val();
   const isMine = msg.name === nickname;
-  const avatar = msg.profilePic || "default-avatar.png";
+  const avatar = msg.profilePic || "";
 
-  messagesDiv.innerHTML += `
-    <div class="msg ${isMine ? 'mine' : 'other'}">
-      <img src="${avatar}">
-      <div class="msg-content">
-        <div class="name">${msg.name}</div>
-        ${msg.text ? `<div class="text">${msg.text}</div>` : `<audio controls src="${msg.audio}"></audio>`}
-        <div class="timestamp">${msg.time}</div>
-      </div>
-    </div>`;
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  const msgDiv = document.createElement("div");
+  msgDiv.className = `msg ${isMine ? 'mine' : 'other'}`;
+
+  const img = document.createElement("img");
+  img.src = avatar;
+  msgDiv.appendChild(img);
+
+  const contentDiv = document.createElement("div");
+  contentDiv.className = "msg-content";
+
+  const nameDiv = document.createElement("div");
+  nameDiv.className = "name";
+  nameDiv.textContent = msg.name;
+  contentDiv.appendChild(nameDiv);
+
+  if(msg.text){
+    const textDiv = document.createElement("div");
+    textDiv.className = "text";
+    textDiv.textContent = msg.text;
+    contentDiv.appendChild(textDiv);
+  } else if(msg.audio){
+    const audio = document.createElement("audio");
+    audio.controls = true;
+    audio.src = msg.audio;
+    contentDiv.appendChild(audio);
+  }
+
+  const timeDiv = document.createElement("div");
+  timeDiv.className = "timestamp";
+  timeDiv.textContent = msg.time;
+  contentDiv.appendChild(timeDiv);
+
+  msgDiv.appendChild(contentDiv);
+  messagesDiv.appendChild(msgDiv);
+
+  const nearBottom = messagesDiv.scrollHeight - messagesDiv.scrollTop - messagesDiv.clientHeight < 100;
+  if(nearBottom) messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+  // Keep messages capped to 200 for performance
+  if(messagesDiv.childNodes.length > 200){
+    messagesDiv.removeChild(messagesDiv.firstChild);
+  }
 });
 
-// Send message
+// SEND MESSAGE
+const input = document.getElementById("input");
+const send = document.getElementById("send");
 send.onclick = () => {
   const text = input.value.trim();
   if(!text) return;
-
-  push(messagesRef, { name: nickname, text, time: new Date().toLocaleTimeString(), profilePic });
+  push(messagesRef,{
+    name: nickname,
+    text,
+    profilePic,
+    time: new Date().toLocaleTimeString()
+  });
   input.value = "";
 };
-
-// Enter key
 input.addEventListener('keypress', e => { if(e.key==='Enter') send.onclick(); });
 
-// Voice notes
+// VOICE MESSAGE
+const voiceBtn = document.getElementById("voice");
 let mediaRecorder, audioChunks = [];
 
 voiceBtn.onclick = async () => {
@@ -205,12 +263,20 @@ voiceBtn.onclick = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
     mediaRecorder = new MediaRecorder(stream);
     audioChunks = [];
+
     mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
     mediaRecorder.onstop = () => {
-      const audioBlob = new Blob(audioChunks);
+      const blob = new Blob(audioChunks);
       const reader = new FileReader();
-      reader.onloadend = () => push(messagesRef, { name:nickname, audio:reader.result, time:new Date().toLocaleTimeString(), profilePic });
-      reader.readAsDataURL(audioBlob);
+      reader.onloadend = () => {
+        push(messagesRef,{
+          name: nickname,
+          audio: reader.result,
+          profilePic,
+          time: new Date().toLocaleTimeString()
+        });
+      };
+      reader.readAsDataURL(blob);
     };
     mediaRecorder.start();
     voiceBtn.textContent="⏹️";
@@ -220,6 +286,5 @@ voiceBtn.onclick = async () => {
   }
 };
 </script>
-
 </body>
   </html>
