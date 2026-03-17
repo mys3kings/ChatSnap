@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Imperion</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#121212">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Imperion">
+
   <style>
     * { box-sizing: border-box; margin:0; padding:0; }
     body, html { width:100%; height:100%; font-family:sans-serif; background:#121212; color:#e0e0e0; }
@@ -75,10 +81,8 @@ const db = getDatabase(app);
 const auth = getAuth(app);
 const messagesRef = ref(db, 'imperion_messages');
 
-// ✅ FIXED INPUT REFERENCES
 const emailInput = document.getElementById("emailInput");
 const passwordInput = document.getElementById("passwordInput");
-
 const messagesDiv = document.getElementById('messages');
 const input = document.getElementById('input');
 const send = document.getElementById('send');
@@ -86,7 +90,6 @@ const voiceBtn = document.getElementById('voice');
 const authDiv = document.getElementById("auth");
 const inputContainer = document.getElementById("inputContainer");
 const settingsBtn = document.getElementById("settingsBtn");
-
 const nicknameInput = document.getElementById("nicknameInput");
 const profilePicInput = document.getElementById("profilePicInput");
 const setProfileBtn = document.getElementById("setProfile");
@@ -116,7 +119,6 @@ setProfileBtn.onclick = () => {
   }
 };
 
-// login persistence
 setPersistence(auth, browserLocalPersistence);
 
 function showChatUI(userNickname, userProfilePic){
@@ -165,11 +167,11 @@ onAuthStateChanged(auth, user => {
   }
 });
 
-// messages
+// Listen for messages
 onChildAdded(messagesRef, snapshot => {
   const msg = snapshot.val();
   const isMine = msg.name === nickname;
-  let avatar = msg.profilePic || "";
+  const avatar = msg.profilePic || "default-avatar.png";
 
   messagesDiv.innerHTML += `
     <div class="msg ${isMine ? 'mine' : 'other'}">
@@ -180,63 +182,44 @@ onChildAdded(messagesRef, snapshot => {
         <div class="timestamp">${msg.time}</div>
       </div>
     </div>`;
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
 });
 
-// send
+// Send message
 send.onclick = () => {
   const text = input.value.trim();
   if(!text) return;
 
-  push(messagesRef, {
-    name: nickname,
-    text,
-    time: new Date().toLocaleTimeString(),
-    profilePic
-  });
-
+  push(messagesRef, { name: nickname, text, time: new Date().toLocaleTimeString(), profilePic });
   input.value = "";
 };
 
-// enter key
-input.addEventListener('keypress', e => {
-  if(e.key === 'Enter') send.onclick();
-});
+// Enter key
+input.addEventListener('keypress', e => { if(e.key==='Enter') send.onclick(); });
 
-// voice
+// Voice notes
 let mediaRecorder, audioChunks = [];
 
 voiceBtn.onclick = async () => {
-  if(!mediaRecorder || mediaRecorder.state === 'inactive'){
+  if(!mediaRecorder || mediaRecorder.state==='inactive'){
     const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
     mediaRecorder = new MediaRecorder(stream);
     audioChunks = [];
-
     mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-
     mediaRecorder.onstop = () => {
       const audioBlob = new Blob(audioChunks);
       const reader = new FileReader();
-
-      reader.onloadend = () => {
-        push(messagesRef, {
-          name: nickname,
-          audio: reader.result,
-          time: new Date().toLocaleTimeString(),
-          profilePic
-        });
-      };
-
+      reader.onloadend = () => push(messagesRef, { name:nickname, audio:reader.result, time:new Date().toLocaleTimeString(), profilePic });
       reader.readAsDataURL(audioBlob);
     };
-
     mediaRecorder.start();
-    voiceBtn.textContent = "⏹️";
+    voiceBtn.textContent="⏹️";
   } else {
     mediaRecorder.stop();
-    voiceBtn.textContent = "🎤";
+    voiceBtn.textContent="🎤";
   }
 };
 </script>
 
 </body>
-</html>
+  </html>
