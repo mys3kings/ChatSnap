@@ -6,64 +6,60 @@
   <meta name="theme-color" content="#121212">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body, html { margin: 0; padding: 0; font-family: sans-serif; height: 100%; background: #121212; color: #e0e0e0; display: flex; flex-direction: column; }
-    #header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: #1e1e1e; }
-    #header h2 { margin: 0; font-size: 1.2em; color: #00ff9d; }
-    #settings { font-size: 1.5em; cursor: pointer; }
-    #messages { flex: 1; overflow-y: auto; padding: 10px; }
-    .msg { display:flex; align-items:flex-start; margin: 5px 0; max-width: 75%; word-wrap: break-word; border-radius: 12px; padding: 8px 12px; }
-    .mine { background: #3a3a3a; margin-left: auto; flex-direction: row-reverse; }
-    .other { background: #2c2c2c; margin-right: auto; }
-    .msg img { border-radius: 50%; width: 32px; height: 32px; margin-right: 8px; }
-    .msg .name { font-weight: bold; color: #00ff9d; display: block; }
-    .timestamp { font-size: 0.7em; color: #888; margin-left: auto; margin-top: 2px; }
-    #inputContainer { display: flex; padding: 10px; background: #1e1e1e; }
-    #input { flex: 1; padding: 10px; background: #2c2c2c; border: 1px solid #444; color: #e0e0e0; border-radius: 5px; }
-    #send, #voice { width: 60px; margin-left: 5px; background: #3a3a3a; border: none; color: #e0e0e0; border-radius: 5px; cursor: pointer; }
-    #auth { display: flex; flex-direction: column; justify-content: center; align-items: center; flex: 1; }
-    #auth input, #auth button { margin: 5px 0; padding: 8px 10px; border-radius: 5px; border: none; }
-    #auth button { background: #3a3a3a; color: #e0e0e0; cursor: pointer; }
-    #profileModal { display: none; flex-direction: column; position: absolute; top: 50px; right: 10px; background: #2c2c2c; padding: 10px; border-radius: 10px; }
-    #profileModal input { margin: 5px 0; }
-    #profileModal button { margin-top: 5px; }
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body, html { width:100%; height:100%; font-family:sans-serif; background:#121212; color:#e0e0e0; }
+    #header { display:flex; justify-content:space-between; align-items:center; padding:10px; background:#1f1f1f; }
+    #header h2 { color:#4db8ff; }
+    #header button { background:none; border:none; color:#e0e0e0; font-size:1.5em; cursor:pointer; }
+    #auth { display:flex; flex-direction:column; padding:20px; gap:10px; align-items:center; justify-content:center; height:calc(100% - 60px); }
+    #auth input, #auth button { width:80%; padding:10px; border-radius:5px; border:none; }
+    #auth button { background:#3a3a3a; color:#e0e0e0; cursor:pointer; }
+    #messages { flex:1; overflow-y:auto; padding:10px; display:none; }
+    .msg { display:flex; align-items:flex-start; margin:5px 0; max-width:75%; word-wrap:break-word; }
+    .mine { background:#3a3a3a; margin-left:auto; flex-direction:row-reverse; border-radius:12px 12px 0 12px; }
+    .other { background:#2c2c2c; margin-right:auto; border-radius:12px 12px 12px 0; }
+    .msg img { border-radius:50%; width:36px; height:36px; margin:4px; }
+    .msg-content { display:flex; flex-direction:column; }
+    .msg-content .name { font-size:0.8em; color:#4db8ff; margin-bottom:2px; }
+    .msg-content .text { font-size:1em; }
+    .timestamp { font-size:0.7em; color:#888; align-self:flex-end; margin-top:2px; }
+    #inputContainer { display:none; padding:10px; background:#1f1f1f; gap:5px; }
+    #inputContainer input { flex:1; padding:10px; border-radius:5px; border:none; background:#2c2c2c; color:#e0e0e0; }
+    #inputContainer button { padding:10px; border-radius:5px; border:none; background:#3a3a3a; color:#e0e0e0; cursor:pointer; }
   </style>
 </head>
 <body>
   <div id="header">
     <h2>Imperion</h2>
-    <span id="settings">⚙️</span>
+    <button id="settingsBtn" style="display:none;">⚙️</button>
   </div>
 
   <div id="auth">
-    <h2>SIGN INTO IMPERION</h2>
     <button id="googleLogin">Sign in with Google</button>
     <input type="email" id="emailInput" placeholder="Email">
     <input type="password" id="passwordInput" placeholder="Password">
     <button id="emailLogin">Login / Signup</button>
-  </div>
-
-  <div id="profileModal">
     <input type="text" id="nicknameInput" placeholder="Choose your nickname">
     <input type="file" id="profilePicInput" accept="image/*">
-    <button id="setProfile">Save Profile</button>
+    <button id="setProfile">Set Profile</button>
   </div>
 
   <div id="messages"></div>
 
   <div id="inputContainer">
-    <input type="text" id="input" placeholder="Type a message"/>
-    <button id="voice">🎤</button>
+    <input type="text" id="input" placeholder="Type a message">
     <button id="send">Send</button>
+    <button id="voice">🎤</button>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
     import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
-    import { getAuth, setPersistence, browserLocalPersistence, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, browserLocalPersistence, setPersistence } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
     const firebaseConfig = {
-      apiKey: "AIzaSyDwM8N-eMlsbndlnuOnB9D2Dn1hI",
+      apiKey: "AIzaSyDwM8N-eMlsbndlnuOnB9dQ5lx9D2Dn1hI",
       authDomain: "chatsnap-16189.firebaseapp.com",
       projectId: "chatsnap-16189",
       databaseURL: "https://chatsnap-16189-default-rtdb.europe-west1.firebasedatabase.app",
@@ -83,10 +79,11 @@
     const input = document.getElementById('input');
     const send = document.getElementById('send');
     const voiceBtn = document.getElementById('voice');
-    const authDiv = document.getElementById('auth');
+    const authDiv = document.getElementById("auth");
+    const headerDiv = document.getElementById("header");
+    const inputContainer = document.getElementById("inputContainer");
+    const settingsBtn = document.getElementById("settingsBtn");
 
-    const profileModal = document.getElementById("profileModal");
-    const settingsBtn = document.getElementById("settings");
     const nicknameInput = document.getElementById("nicknameInput");
     const profilePicInput = document.getElementById("profilePicInput");
     const setProfileBtn = document.getElementById("setProfile");
@@ -94,16 +91,7 @@
     let nickname = localStorage.getItem('nickname') || "";
     let profilePic = localStorage.getItem('profilePic') || "";
 
-    // Hide settings and chat until login
-    document.getElementById("header").style.display = "none";
-    document.getElementById("inputContainer").style.display = "none";
-    messagesDiv.style.display = "none";
-
-    // Set profile modal toggle
-    settingsBtn.onclick = () => {
-      profileModal.style.display = profileModal.style.display === "flex" ? "none" : "flex";
-      nicknameInput.value = nickname;
-    };
+    if(nickname) nicknameInput.value = nickname;
 
     setProfileBtn.onclick = () => {
       const chosen = nicknameInput.value.trim();
@@ -125,16 +113,26 @@
       }
     };
 
-    // Persist login
+    // Login persistence
     setPersistence(auth, browserLocalPersistence).catch(console.error);
+
+    function showChatUI(userNickname, userProfilePic){
+      nickname = userNickname || nickname || "Anonymous";
+      profilePic = userProfilePic || profilePic || "";
+      localStorage.setItem('nickname', nickname);
+      localStorage.setItem('profilePic', profilePic);
+
+      authDiv.style.display = "none";
+      messagesDiv.style.display = "block";
+      inputContainer.style.display = "flex";
+      settingsBtn.style.display = "block";
+    }
 
     const provider = new GoogleAuthProvider();
     document.getElementById("googleLogin").onclick = () => {
-      signInWithPopup(auth, provider).then(result => {
-        nickname = nickname || result.user.displayName || "Anonymous";
-        localStorage.setItem('nickname', nickname);
-        showChatUI();
-      }).catch(console.error);
+      signInWithPopup(auth, provider)
+        .then(result => showChatUI(result.user.displayName, result.user.photoURL))
+        .catch(console.error);
     };
 
     document.getElementById("emailLogin").onclick = () => {
@@ -143,40 +141,44 @@
       if(!email || !pass) return alert("Enter email & password");
 
       signInWithEmailAndPassword(auth, email, pass)
-        .then(() => showChatUI())
+        .then(userCred => showChatUI(userCred.user.displayName, userCred.user.photoURL))
         .catch(() => {
           createUserWithEmailAndPassword(auth, email, pass)
-            .then(() => showChatUI())
+            .then(userCred => showChatUI(userCred.user.displayName, userCred.user.photoURL))
             .catch(console.error);
         });
     };
 
-    function showChatUI(){
-      authDiv.style.display = "none";
-      document.getElementById("header").style.display = "flex";
-      document.getElementById("inputContainer").style.display = "flex";
-      messagesDiv.style.display = "block";
-    }
+    onAuthStateChanged(auth, user => {
+      if(user){
+        showChatUI(user.displayName, user.photoURL);
+      } else {
+        authDiv.style.display = "flex";
+        messagesDiv.style.display = "none";
+        inputContainer.style.display = "none";
+        settingsBtn.style.display = "none";
+      }
+    });
 
-    // Load messages
+    settingsBtn.onclick = () => {
+      alert("Settings clicked! You can add more functionality here.");
+    };
+
+    // Listen for messages
     onChildAdded(messagesRef, snapshot => {
       const msg = snapshot.val();
       const isMine = msg.name === nickname;
-      let html = "";
-      if(msg.text){
-        html = `<div class="msg ${isMine ? 'mine' : 'other'}">
-                  <img src="${msg.profilePic || 'default-avatar.png'}">
-                  <span class="name">${msg.name}</span>${msg.text}
-                  <div class="timestamp">${msg.time}</div>
-                </div>`;
-      } else if(msg.audio){
-        html = `<div class="msg ${isMine ? 'mine' : 'other'}">
-                  <img src="${msg.profilePic || 'default-avatar.png'}">
-                  <span class="name">${msg.name}</span><br>
-                  <audio controls src="${msg.audio}"></audio>
-                  <div class="timestamp">${msg.time}</div>
-                </div>`;
-      }
+      let avatar = msg.profilePic || "default-avatar.png";
+
+      let html = `<div class="msg ${isMine ? 'mine' : 'other'}">
+                    <img src="${avatar}">
+                    <div class="msg-content">
+                      <div class="name">${msg.name}</div>
+                      ${msg.text ? `<div class="text">${msg.text}</div>` : `<audio controls src="${msg.audio}"></audio>`}
+                      <div class="timestamp">${msg.time}</div>
+                    </div>
+                  </div>`;
+
       messagesDiv.innerHTML += html;
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     });
@@ -185,36 +187,36 @@
     send.onclick = () => {
       const text = input.value.trim();
       if(!text) return;
-      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      push(messagesRef, { name: nickname, text, time, profilePic });
+      const time = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+      push(messagesRef, { name:nickname, text, time, profilePic });
       input.value = '';
     };
 
-    input.addEventListener('keypress', e => { if(e.key === 'Enter') send.onclick(); });
+    input.addEventListener('keypress', e => { if(e.key==='Enter') send.onclick(); });
 
     // Voice notes
     let mediaRecorder, audioChunks = [];
     voiceBtn.onclick = async () => {
-      if(!mediaRecorder || mediaRecorder.state === 'inactive'){
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      if(!mediaRecorder || mediaRecorder.state==='inactive'){
+        const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
         mediaRecorder = new MediaRecorder(stream);
         audioChunks = [];
         mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
         mediaRecorder.onstop = () => {
-          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+          const audioBlob = new Blob(audioChunks, { type:'audio/webm' });
           const reader = new FileReader();
           reader.onloadend = () => {
             const base64Audio = reader.result;
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            push(messagesRef, { name: nickname, audio: base64Audio, time, profilePic });
+            const time = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+            push(messagesRef, { name:nickname, audio:base64Audio, time, profilePic });
           };
           reader.readAsDataURL(audioBlob);
         };
         mediaRecorder.start();
-        voiceBtn.textContent = "⏹️";
-      } else if(mediaRecorder.state === 'recording'){
+        voiceBtn.textContent="⏹️";
+      } else if(mediaRecorder.state==='recording'){
         mediaRecorder.stop();
-        voiceBtn.textContent = "🎤";
+        voiceBtn.textContent="🎤";
       }
     };
   </script>
