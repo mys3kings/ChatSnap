@@ -1,188 +1,458 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Imperion</title>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#121212">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    * { box-sizing: border-box; margin:0; padding:0; }
-    html, body { height:100%; font-family:sans-serif; background:#121212; color:#e0e0e0; display:flex; flex-direction:column; }
-    #header { display:flex; justify-content:space-between; align-items:center; padding:10px; background:#1f1f1f; }
-    #header h2 { color:#4db8ff; }
-    #settingsBtn { display:none; font-size:1.5em; background:none; border:none; color:#e0e0e0; cursor:pointer; }
-    #auth { display:flex; flex-direction:column; padding:20px; gap:10px; align-items:center; justify-content:center; flex:1; }
-    #auth button { width:80%; padding:10px; border-radius:5px; border:none; background:#3a3a3a; color:#e0e0e0; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; }
-    #messages { flex:1; overflow-y:auto; padding:10px; display:none; }
-    .msg { display:flex; align-items:flex-start; margin:5px 0; max-width:75%; }
-    .mine { background:#3a3a3a; margin-left:auto; flex-direction:row-reverse; border-radius:12px 12px 0 12px; }
-    .other { background:#2c2c2c; margin-right:auto; border-radius:12px 12px 12px 0; }
-    .msg img { border-radius:50%; width:36px; height:36px; margin:4px; }
-    .msg-content { display:flex; flex-direction:column; padding:5px 8px; max-width:100%; }
-    .msg-content .name { font-size:0.8em; color:#4db8ff; }
-    .msg-content .text { white-space:pre-wrap; word-break:break-word; overflow-wrap:anywhere; }
-    .timestamp { font-size:0.7em; color:#888; align-self:flex-end; }
-    #inputContainer { display:none; padding:10px; background:#1f1f1f; gap:5px; }
-    #inputContainer input { flex:1; padding:10px; border-radius:5px; border:none; background:#2c2c2c; color:#e0e0e0; }
-    #inputContainer button { padding:10px; border-radius:5px; border:none; background:#3a3a3a; color:#e0e0e0; cursor:pointer; }
-    #settingsPanel { position:fixed; top:0; right:-100%; width:80%; max-width:300px; height:100%; background:#1e1e1e; transition:0.3s; }
-    #settingsPanel.active { right:0; }
-    #settingsContent { padding:20px; display:flex; flex-direction:column; align-items:center; }
-    #profilePreview { width:80px; height:80px; border-radius:50%; margin-bottom:10px; border:2px solid #4db8ff; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imperion · product proposal · Firebase enabled</title>
+    <!-- Font & basic styling -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #f6f8fa;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: #1e2b3c;
+            padding: 2rem 1.5rem;
+        }
+        .proposal-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 36px;
+            box-shadow: 0 25px 60px -15px rgba(0,80,60,0.25);
+            overflow: hidden;
+            border: 1px solid #eef2f5;
+        }
+        /* header / imperion brand */
+        .proposal-header {
+            background: #0f1a1f;
+            padding: 2rem 2.5rem 1.5rem 2.5rem;
+            color: white;
+            border-bottom: 5px solid #25D366;
+        }
+        .proposal-header h1 {
+            font-weight: 700;
+            font-size: 3rem;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .proposal-header h1 span {
+            background: #25D366;
+            color: #0f1a1f;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.25rem 1rem;
+            border-radius: 100px;
+            margin-left: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .proposal-header .sub {
+            color: #b0c3cf;
+            font-size: 1.15rem;
+            font-weight: 400;
+            margin-top: 0.5rem;
+            max-width: 70%;
+        }
+        .meta-stamp {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+            color: #a0b8c7;
+            font-size: 0.95rem;
+            border-top: 1px solid #2a3a44;
+            padding-top: 1.2rem;
+        }
+        /* main content */
+        .proposal-body {
+            padding: 2.5rem;
+        }
+        h2 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin: 2.5rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #25D366;
+            display: inline-block;
+            color: #0f1a1f;
+        }
+        h2:first-of-type {
+            margin-top: 0.2rem;
+        }
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 2rem 0 0.75rem 0;
+            color: #1e3b4a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        h3 i {
+            font-style: normal;
+            background: #e8f0f5;
+            padding: 3px 10px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #0f4b6e;
+        }
+        p {
+            margin-bottom: 1rem;
+            color: #2f4052;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0 1rem;
+        }
+        .card {
+            background: #f9fcff;
+            border: 1px solid #e2ecf5;
+            border-radius: 24px;
+            padding: 1.5rem 1.2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            transition: all 0.1s ease;
+        }
+        .card:hover {
+            border-color: #b3d9e8;
+            background: #ffffff;
+        }
+        .card .card-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
+            color: #0f262f;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .card .card-title .em {
+            background: #25D36620;
+            width: 28px;
+            height: 28px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #1b7a4a;
+            font-weight: 700;
+        }
+        .badge {
+            background: #25D366;
+            color: #0f1a1f;
+            font-weight: 600;
+            font-size: 0.7rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 100px;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .pill {
+            background: #dff0f8;
+            color: #0f4b6e;
+            padding: 0.25rem 0.9rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0 1rem;
+            font-size: 0.95rem;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+        }
+        th {
+            background: #0f1a1f;
+            color: white;
+            font-weight: 600;
+            padding: 1rem 1rem;
+            text-align: left;
+        }
+        td {
+            padding: 1rem 1rem;
+            border-bottom: 1px solid #e6edf4;
+            background: white;
+            vertical-align: top;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .highlight-green {
+            background: #f0faf5;
+            border-left: 4px solid #25D366;
+            padding: 1.2rem 1.8rem;
+            border-radius: 20px;
+            margin: 2rem 0;
+        }
+        .flow-steps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem 0.5rem;
+            margin: 1.2rem 0 1.8rem;
+            background: #f2f8fd;
+            padding: 1.5rem;
+            border-radius: 28px;
+            justify-content: space-between;
+        }
+        .flow-step {
+            flex: 1 1 100px;
+            background: white;
+            padding: 0.7rem 1rem;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            border: 1px solid #dae9f2;
+        }
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: #25D366;
+            font-weight: 300;
+        }
+        .desktop-note {
+            background: #1e2b3c;
+            color: #eaf2f9;
+            border-radius: 28px;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+        }
+        .footer-note {
+            margin-top: 2.5rem;
+            padding: 1.5rem 2rem;
+            background: #f0f5fa;
+            border-radius: 28px;
+            font-size: 0.95rem;
+            text-align: center;
+            color: #30546b;
+            border: 1px solid #d6e5f0;
+        }
+        hr {
+            border: none;
+            border-top: 2px dashed #cbdae6;
+            margin: 2rem 0;
+        }
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        @media (max-width: 700px) {
+            .proposal-header h1 { font-size: 2.2rem; }
+            .proposal-header .sub { max-width: 100%; }
+            .two-col { grid-template-columns: 1fr; }
+        }
+        ul, ol { padding-left: 1.3rem; margin-bottom: 1.5rem; }
+        li { margin-bottom: 0.3rem; }
+        .green-dot { color: #25D366; font-weight: 700; }
+        .firebase-badge {
+            background: #FF9100; 
+            color: #1a1a1a;
+            font-size: 0.7rem;
+            padding: 0.2rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+    </style>
 </head>
 <body>
+<div class="proposal-container">
+    <!-- header -->
+    <div class="proposal-header">
+        <h1>IMPERION <span>v1.0 proposal</span></h1>
+        <div class="sub">A sovereign messaging infrastructure · private, scalable, cross‑planet ready</div>
+        <div class="meta-stamp">
+            <div><strong>Prepared:</strong> 26 Oct 2023 · <strong>Version</strong> 1.0 – confidential</div>
+            <div><strong>for</strong> stakeholders & investors · <span class="firebase-badge">🔥 Firebase active</span></div>
+        </div>
+    </div>
+    <!-- body -->
+    <div class="proposal-body">
+        <!-- executive summary / core objective -->
+        <p style="font-size: 1.25rem; font-weight: 500; background: #F2FAF5; padding: 1.2rem 2rem; border-radius: 40px;">
+            ⚡ Imperion combines <strong>Erlang/OTP</strong> reliability, <strong>Signal Protocol</strong> privacy, and a unified cross‑interface experience to serve billions — individuals, SMBs, and enterprises.
+        </p>
 
-<div id="header">
-  <h2>Imperion</h2>
-  <button id="settingsBtn">⚙️</button>
-</div>
+        <h2>📋 1. Product Requirements (PRD)</h2>
+        <div class="card-grid">
+            <div class="card"><span class="card-title"><span class="em">①</span> Account & onboarding</span> Phone verification, SMS 6‑digit, profile setup, permissions (contacts/camera).</div>
+            <div class="card"><span class="card-title"><span class="em">②</span> 1:1 / group messaging</span> Text, media, read receipts, offline queue, group admin tools.</div>
+            <div class="card"><span class="card-title"><span class="em">③</span> E2EE by default</span> Signal Protocol, Curve25519, Double Ratchet. Media libs in Rust.</div>
+            <div class="card"><span class="card-title"><span class="em">④</span> Voice/video calls</span> Encrypted p2p & group calls, multi‑device.</div>
+            <div class="card"><span class="card-title"><span class="em">⑤</span> Status & communities</span> 24h stories, group clusters with announcements.</div>
+            <div class="card"><span class="card-title"><span class="em">⑥</span> Chat Lock / vanish</span> Biometric folder + disappearing 24h/7d/90d.</div>
+            <div class="card"><span class="card-title"><span class="em">⑦</span> Business tools</span> SMB app (catalog, auto replies) + Enterprise API + verified badge.</div>
+            <div class="card"><span class="card-title"><span class="em">⑧</span> AI assistant</span> Optional on‑device chatbot (blue circle).</div>
+        </div>
 
-<div id="auth">
-  <button id="googleLogin">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20">
-    Sign in with Google
-  </button>
-  <input type="email" id="emailInput" placeholder="Email">
-  <input type="password" id="passwordInput" placeholder="Password">
-  <button id="emailLogin">Sign in with Email</button>
-  <button id="signup">Create Account</button>
-</div>
+        <h2>⚙️ 2. Technical architecture</h2>
+        <div class="two-col">
+            <div style="background:#F4F9FF; padding:1.5rem; border-radius:24px;">
+                <h3 style="margin-top:0;">🧠 Backend core</h3>
+                <ul>
+                    <li><span class="green-dot">●</span> <strong>Erlang/OTP</strong> – massive concurrency, hot code swap</li>
+                    <li><span class="green-dot">●</span> <strong>FunXMPP‑like protocol</strong> – binary, tokens → messages as small as 20 bytes</li>
+                    <li><span class="green-dot">●</span> <strong>Mnesia</strong> (in‑memory) for real‑time routing</li>
+                    <li><span class="green-dot">●</span> <strong>Offline queue</strong> (Cassandra/Postgres) + push notifications</li>
+                    <li><span class="green-dot">●</span> <strong>Media libs in Rust</strong> – memory safe, replace C++</li>
+                </ul>
+            </div>
+            <div style="background:#F4F9FF; padding:1.5rem; border-radius:24px;">
+                <h3 style="margin-top:0;">🔐 Security & API</h3>
+                <ul>
+                    <li><span class="green-dot">●</span> Signal Protocol (X3DH, double ratchet)</li>
+                    <li><span class="green-dot">●</span> Client‑only key storage</li>
+                    <li><span class="green-dot">●</span> Custom binary client API</li>
+                    <li><span class="green-dot">●</span> REST/JSON Business API for enterprises</li>
+                    <li><span class="green-dot">●</span> Perfect forward secrecy</li>
+                </ul>
+            </div>
+        </div>
+        <div class="desktop-note">
+            💻 <strong>Desktop & multi-device:</strong> Web wrapper (WebView2) with QR linking from mobile. Two‑panel layout (chat list + conversation). RAM usage trade‑off accepted for faster feature parity.
+        </div>
 
-<div id="messages"></div>
+        <h2>🧭 3. User flows</h2>
+        <div class="flow-steps">
+            <span class="flow-step">Welcome</span><span class="flow-arrow">→</span>
+            <span class="flow-step">Agree ToS</span><span class="flow-arrow">→</span>
+            <span class="flow-step">📱 Phone + SMS</span><span class="flow-arrow">→</span>
+            <span class="flow-step">6‑digit verify</span><span class="flow-arrow">→</span>
+            <span class="flow-step">Profile (name/photo)</span><span class="flow-arrow">→</span>
+            <span class="flow-step">Permissions</span><span class="flow-arrow">→</span>
+            <span class="flow-step">Main app</span>
+        </div>
+        <p><strong>Messaging flow</strong> – Alice encrypts → server checks Mnesia → online: direct delivery / offline: queue + push.</p>
+        <p><strong>Business SMB flow</strong> – Download Imperion Business → register business phone → catalog & auto greetings.</p>
 
-<div id="inputContainer">
-  <input type="text" id="input" placeholder="Type a message">
-  <button id="send">Send</button>
-  <button id="voice">🎤</button>
-</div>
+        <h2>🎨 4. UI/UX specifications</h2>
+        <div class="card-grid">
+            <div class="card"><span class="card-title">🟢 Login screens</span> Country picker, phone, SMS, optional photo – clean, minimal.</div>
+            <div class="card"><span class="card-title">⬇️ Bottom nav</span> Chats · Calls · Communities · Status (floating translucent on iOS, same on Android).</div>
+            <div class="card"><span class="card-title">💬 Chat list</span> Contact photo, name, preview, time, unread badge; very round bubbles later.</div>
+            <div class="card"><span class="card-title">🍏 Chat screen</span> Green bubbles (me) / gray (others); attachment paperclip/+; paper airplane send.</div>
+            <div class="card"><span class="card-title">⚙️ Settings</span> Gear (iOS) or three dots (Android); profile, privacy, account.</div>
+            <div class="card"><span class="card-title">🌙 Dark mode</span> System wide, high contrast.</div>
+        </div>
+        <div class="highlight-green">
+            ✅ <strong>unified design</strong> – Android adopts bottom bar, both platforms visually identical. Desktop two‑panel.
+        </div>
 
-<div id="settingsPanel">
-  <div id="settingsContent">
-    <h3>Profile</h3>
-    <img id="profilePreview">
-    <input id="editNickname" placeholder="Nickname">
-    <input type="file" id="editProfilePic">
-    <button id="saveSettings">Save</button>
-  </div>
-</div>
+        <h2>🛣️ 5. Development roadmap</h2>
+        <table>
+            <tr><th>Phase</th><th>Timeline</th><th>Key deliverables</th></tr>
+            <tr><td>0 – Foundation</td><td>Months 1-3</td><td>PRD final, design system, Erlang skeleton, prototype flows</td></tr>
+            <tr><td>1 – MVP (alpha)</td><td>4-9</td><td>1:1 msg, E2EE, basic groups, phone verification (iOS + Android)</td></tr>
+            <tr><td>2 – Beta</td><td>10-12</td><td>Calls, multi‑device, Status, desktop webview2, load testing</td></tr>
+            <tr><td>3 – v1.0 launch</td><td>Month 13</td><td>All core + business tools, app stores, marketing</td></tr>
+            <tr><td>4 – Post-launch</td><td>14+</td><td>Communities, Chat Lock, Business API, verified badges, AI</td></tr>
+        </table>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
-import { 
-  getAuth, 
-  signInWithRedirect,
-  getRedirectResult,
-  GoogleAuthProvider, 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  onAuthStateChanged, 
-  browserLocalPersistence, 
-  setPersistence 
-} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+        <h2>👥 6. Team & timeline (year 1)</h2>
+        <div class="two-col">
+            <div>
+                <ul>
+                    <li><strong>Product/Design</strong> – 1 PM, 1 designer, 1 UX researcher</li>
+                    <li><strong>Erlang backend</strong> – 3 engineers</li>
+                    <li><strong>iOS (Swift)</strong> – 2</li>
+                    <li><strong>Android (Kotlin)</strong> – 2</li>
+                    <li><strong>Desktop/web (Electron/WebView2)</strong> – 2</li>
+                    <li><strong>Security/DevOps</strong> – 2</li>
+                    <li><strong>QA</strong> – 2 (automation + manual)</li>
+                    <li><span class="pill">Total ~15-18 people</span></li>
+                </ul>
+            </div>
+            <div style="background: #F2F6F9; border-radius: 20px; padding: 1.4rem;">
+                <p><strong>💰 estimated year‑1 budget</strong><br>
+                Personnel: $2.0M–2.5M<br>
+                Infrastructure (cloud): $300k–500k<br>
+                Legal/compliance: $50k<br>
+                Pre‑launch marketing: $100k<br>
+                <span style="background: #0f1a1f; color: white; padding: 0.4rem 1rem; display: inline-block; border-radius: 40px; margin-top: 12px;">≈ $2.5M – $3.2M until v1.0</span>
+                </p>
+            </div>
+        </div>
 
-const firebaseConfig = {
-  apiKey: "AIzaSy...",
-  authDomain: "chatsnap-16189.firebaseapp.com",
-  projectId: "chatsnap-16189",
-  storageBucket: "chatsnap-16189.firebasestorage.app",
-  messagingSenderId: "687581415852",
-  appId: "1:687581415852:web:3fe355b6fc830ae340d209",
-  databaseURL: "https://chatsnap-16189-default-rtdb.europe-west1.firebasedatabase.app"
-};
+        <h2>💎 7. Monetization strategy</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+            <span class="badge">free for consumers</span>
+            <span class="badge">Imperion Business (SMB) $15/mo premium</span>
+            <span class="badge">Enterprise API – conversation based</span>
+            <span class="badge">Verified blue badge – one‑time fee</span>
+            <span class="badge">future premium tier ($1-2/mo themes/icons)</span>
+        </div>
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const auth = getAuth(app);
+        <h2>🧪 8. Testing & QA plan</h2>
+        <ul>
+            <li><strong>Security:</strong> quarterly pentests, Signal Protocol audits, Rust libs static analysis.</li>
+            <li><strong>Scalability:</strong> simulate million concurrent connections, chaos engineering (node termination).</li>
+            <li><strong>Cross‑platform:</strong> visual regression + device farm (incl. low‑end Android, 2G/3G).</li>
+        </ul>
 
-const emailInput = document.getElementById("emailInput");
-const passwordInput = document.getElementById("passwordInput");
-const authDiv = document.getElementById("auth");
+        <h2>🚀 9. Go‑to‑market launch</h2>
+        <div class="card-grid">
+            <div class="card"><span class="card-title">📣 Pre‑launch</span> Waitlist, privacy communities, bug bounty, tech influencers.</div>
+            <div class="card"><span class="card-title">📱 Launch (month13)</span> ASO (private/secure/encrypted), press to TechCrunch/Verge, referral program.</div>
+            <div class="card"><span class="card-title">🏢 Post‑launch</span> Enterprise API partnerships, open‑source Rust libs for trust.</div>
+        </div>
 
-let loggingIn = false;
+        <!-- extra design elements -->
+        <hr>
+        <div style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: space-between; background: #ffffff; border-radius: 28px; padding: 1rem 0;">
+            <div><span class="pill">⚡ 20‑byte messages</span> <span class="pill">🔄 Mnesia routing</span> <span class="pill">🛡️ 160k lines C++ → 90k Rust</span></div>
+            <div><span class="pill">📱 3B user scale</span> <span class="pill">⏳ disappearing 24h/7d/90d</span></div>
+        </div>
 
-function showLoading(text="Loading..."){
-  authDiv.innerHTML = `<p style="text-align:center">${text}</p>`;
-}
+        <!-- ========== FIREBASE CONFIGURATION (embedded exactly as requested) ========== -->
+        <div style="background:#1a262d; color:#e4f0fa; border-radius: 24px; padding: 1.5rem; margin: 2rem 0 1rem;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1rem;">
+                <span style="background:#FF9100; color:#000; font-weight: bold; padding: 4px 12px; border-radius: 40px;">🔥 FIREBASE INIT</span>
+                <span style="color:#b0d3f0;">Imperion uses Firebase for analytics & supplementary services</span>
+            </div>
+            <pre style="background: #0e171f; padding: 1rem; border-radius: 16px; overflow-x: auto; font-family: 'Inter', monospace; font-size: 0.85rem; color: #b4e6b0;"><code>&lt;script type="module"&gt;
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
-function showChatUI(){
-  authDiv.style.display="none";
-}
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDwM8N-eMlsbndlnuOnB9dQ5lx9D2Dn1hI",
+    authDomain: "chatsnap-16189.firebaseapp.com",
+    projectId: "chatsnap-16189",
+    storageBucket: "chatsnap-16189.firebasestorage.app",
+    messagingSenderId: "687581415852",
+    appId: "1:687581415852:web:3fe355b6fc830ae340d209",
+    measurementId: "G-ZQS6K88PY8"
+  };
 
-// Persistence
-setPersistence(auth, browserLocalPersistence);
-
-// Google login (FIXED)
-const provider = new GoogleAuthProvider();
-
-document.getElementById("googleLogin").onclick = ()=>{
-  showLoading("Redirecting to Google...");
-  signInWithRedirect(auth, provider);
-};
-
-// Handle redirect result
-getRedirectResult(auth)
-.then(result=>{
-  if(result && result.user){
-    showChatUI();
-  }
-})
-.catch(err=>{
-  alert(err.message);
-});
-
-// Email login
-document.getElementById("emailLogin").onclick = ()=>{
-  if(loggingIn) return;
-  loggingIn = true;
-
-  const email = emailInput.value;
-  const pass = passwordInput.value;
-
-  if(!email || !pass){
-    loggingIn = false;
-    return alert("Enter email & password");
-  }
-
-  showLoading("Signing you in...");
-
-  signInWithEmailAndPassword(auth,email,pass)
-  .then(()=>{
-    loggingIn = false;
-    showChatUI();
-  })
-  .catch(err=>{
-    loggingIn = false;
-    alert(err.message);
-    location.reload();
-  });
-};
-
-// Signup
-document.getElementById("signup").onclick = ()=>{
-  const email = emailInput.value;
-  const pass = passwordInput.value;
-
-  if(!email || !pass) return alert("Enter email & password");
-
-  showLoading("Creating account...");
-
-  createUserWithEmailAndPassword(auth,email,pass)
-  .then(()=>showChatUI())
-  .catch(err=>{
-    alert(err.message);
-    location.reload();
-  });
-};
-
-// Auth state
-onAuthStateChanged(auth,user=>{
-  if(user){
-    showChatUI();
-  }
-});
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  
+  console.log("🔥 Firebase initialized for Imperion (ChatSnap project)");
 </script>
-
 </body>
-      </html>
+            </html>
