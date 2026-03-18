@@ -14,15 +14,15 @@
     #auth { display:flex; flex-direction:column; padding:20px; gap:10px; align-items:center; justify-content:center; flex:1; }
     #auth button { width:80%; padding:10px; border-radius:5px; border:none; background:#3a3a3a; color:#e0e0e0; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; }
     #messages { flex:1; overflow-y:auto; padding:10px; display:none; }
-    .msg { display:flex; align-items:flex-start; margin:5px 0; max-width:75%; word-wrap:break-word; }
+    .msg { display:flex; align-items:flex-start; margin:5px 0; max-width:75%; }
     .mine { background:#3a3a3a; margin-left:auto; flex-direction:row-reverse; border-radius:12px 12px 0 12px; }
     .other { background:#2c2c2c; margin-right:auto; border-radius:12px 12px 12px 0; }
     .msg img { border-radius:50%; width:36px; height:36px; margin:4px; }
-    .msg-content { display:flex; flex-direction:column; padding:5px 8px; max-width:100%; word-break: break-word; }
-    .msg-content .name { font-size:0.8em; color:#4db8ff; margin-bottom:2px; }
-    .msg-content .text { font-size:1em; white-space:pre-wrap; word-wrap:break-word; }
-    .timestamp { font-size:0.7em; color:#888; align-self:flex-end; margin-top:2px; }
-    #inputContainer { display:none; padding:10px; background:#1f1f1f; gap:5px; display:flex; }
+    .msg-content { display:flex; flex-direction:column; padding:5px 8px; max-width:100%; }
+    .msg-content .name { font-size:0.8em; color:#4db8ff; }
+    .msg-content .text { white-space:pre-wrap; word-break:break-word; overflow-wrap:anywhere; }
+    .timestamp { font-size:0.7em; color:#888; align-self:flex-end; }
+    #inputContainer { display:none; padding:10px; background:#1f1f1f; gap:5px; }
     #inputContainer input { flex:1; padding:10px; border-radius:5px; border:none; background:#2c2c2c; color:#e0e0e0; }
     #inputContainer button { padding:10px; border-radius:5px; border:none; background:#3a3a3a; color:#e0e0e0; cursor:pointer; }
     #settingsPanel { position:fixed; top:0; right:-100%; width:80%; max-width:300px; height:100%; background:#1e1e1e; transition:0.3s; }
@@ -39,10 +39,14 @@
 </div>
 
 <div id="auth">
-  <button id="googleLogin"><img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20"> Sign in with Google</button>
+  <button id="googleLogin">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20">
+    Sign in with Google
+  </button>
   <input type="email" id="emailInput" placeholder="Email">
   <input type="password" id="passwordInput" placeholder="Password">
   <button id="emailLogin">Sign in with Email</button>
+  <button id="signup">Create Account</button>
 </div>
 
 <div id="messages"></div>
@@ -69,7 +73,7 @@ import { getDatabase, ref, push, onChildAdded, get, set, query, limitToLast } fr
 import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, browserLocalPersistence, setPersistence } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDwM8N-eMlsbndlnuOnB9dQ5lx9D2Dn1hI",
+  apiKey: "AIzaSy...",
   authDomain: "chatsnap-16189.firebaseapp.com",
   projectId: "chatsnap-16189",
   storageBucket: "chatsnap-16189.firebasestorage.app",
@@ -88,168 +92,89 @@ const passwordInput = document.getElementById("passwordInput");
 const messagesDiv = document.getElementById('messages');
 const input = document.getElementById('input');
 const send = document.getElementById('send');
-const voiceBtn = document.getElementById('voice');
 const authDiv = document.getElementById("auth");
 const inputContainer = document.getElementById("inputContainer");
 const settingsBtn = document.getElementById("settingsBtn");
 
 let nickname = localStorage.getItem('nickname') || "";
 let profilePic = localStorage.getItem('profilePic') || "";
+let loggingIn = false;
 
-// Render messages from cache first
-function renderCachedMessages(){
-  const cached = JSON.parse(localStorage.getItem('cachedMessages')||'[]');
-  messagesDiv.innerHTML = '';
-  cached.forEach(msg=>{
-    const isMine = msg.name===nickname;
-    messagesDiv.innerHTML += `
-      <div class="msg ${isMine?'mine':'other'}">
-        <img src="${msg.profilePic||''}">
-        <div class="msg-content">
-          <div class="name">${msg.name}</div>
-          <div class="text">${msg.text||''}</div>
-          ${msg.audio?`<audio controls src="${msg.audio}"></audio>`:''}
-          <div class="timestamp">${msg.time}</div>
-        </div>
-      </div>`;
-  });
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+function showLoading(text="Loading..."){
+  authDiv.innerHTML = `<p style="text-align:center">${text}</p>`;
 }
 
-// Show chat UI
 function showChatUI(user){
-  const uid = user.uid;
-  get(ref(db,'users/'+uid)).then(snapshot=>{
-    if(snapshot.exists()){
-      nickname = snapshot.val().nickname || nickname;
-      profilePic = snapshot.val().profilePic || profilePic;
-      localStorage.setItem('nickname', nickname);
-      localStorage.setItem('profilePic', profilePic);
-    }
-    authDiv.style.display="none";
-    messagesDiv.style.display="block";
-    inputContainer.style.display="flex";
-    settingsBtn.style.display="block";
-    renderCachedMessages();
-  });
+  authDiv.style.display="none";
+  messagesDiv.style.display="block";
+  inputContainer.style.display="flex";
+  settingsBtn.style.display="block";
 }
 
 setPersistence(auth, browserLocalPersistence);
 
-// LOGIN
 const provider = new GoogleAuthProvider();
+
 document.getElementById("googleLogin").onclick = ()=>{
-  signInWithPopup(auth, provider).then(userCred=>showChatUI(userCred.user)).catch(console.error);
+  showLoading("Opening Google...");
+  signInWithPopup(auth, provider)
+  .then(res=>showChatUI(res.user))
+  .catch(()=>location.reload());
 };
+
 document.getElementById("emailLogin").onclick = ()=>{
+  if(loggingIn) return;
+  loggingIn = true;
+
   const email = emailInput.value;
   const pass = passwordInput.value;
-  if(!email||!pass) return alert("Enter email & password");
+
+  if(!email || !pass){
+    loggingIn = false;
+    return alert("Enter email & password");
+  }
+
+  showLoading("Signing you in...");
+
   signInWithEmailAndPassword(auth,email,pass)
-  .then(userCred=>showChatUI(userCred.user))
-  .catch(()=>createUserWithEmailAndPassword(auth,email,pass).then(userCred=>showChatUI(userCred.user)).catch(console.error));
+  .then(res=>{
+    loggingIn = false;
+    showChatUI(res.user);
+  })
+  .catch(err=>{
+    loggingIn = false;
+    alert(err.message);
+    location.reload();
+  });
 };
+
+document.getElementById("signup").onclick = ()=>{
+  const email = emailInput.value;
+  const pass = passwordInput.value;
+
+  if(!email || !pass) return alert("Enter email & password");
+
+  showLoading("Creating account...");
+
+  createUserWithEmailAndPassword(auth,email,pass)
+  .then(res=>showChatUI(res.user))
+  .catch(err=>{
+    alert(err.message);
+    location.reload();
+  });
+};
+
 onAuthStateChanged(auth,user=>{
-  if(user) showChatUI(user);
-  else { authDiv.style.display="flex"; messagesDiv.style.display="none"; inputContainer.style.display="none"; settingsBtn.style.display="none"; }
+  if(user){
+    showChatUI(user);
+  } else {
+    authDiv.style.display="flex";
+    messagesDiv.style.display="none";
+    inputContainer.style.display="none";
+    settingsBtn.style.display="none";
+  }
 });
-
-// Load last 50 messages live
-const messagesQuery = query(messagesRef, limitToLast(50));
-onChildAdded(messagesQuery,snapshot=>{
-  const msg = snapshot.val();
-  // Update local cache
-  let cached = JSON.parse(localStorage.getItem('cachedMessages')||'[]');
-  cached.push(msg);
-  if(cached.length>50) cached = cached.slice(cached.length-50); // keep last 50
-  localStorage.setItem('cachedMessages', JSON.stringify(cached));
-
-  // Render message
-  const isMine = msg.name===nickname;
-  messagesDiv.innerHTML += `
-    <div class="msg ${isMine?'mine':'other'}">
-      <img src="${msg.profilePic||''}">
-      <div class="msg-content">
-        <div class="name">${msg.name}</div>
-        <div class="text">${msg.text||''}</div>
-        ${msg.audio?`<audio controls src="${msg.audio}"></audio>`:''}
-        <div class="timestamp">${msg.time}</div>
-      </div>
-    </div>`;
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
-});
-
-// Send message
-send.onclick = ()=>{
-  const text = input.value.trim();
-  if(!text) return;
-  const msgObj = {name:nickname,text,time:new Date().toLocaleTimeString(),profilePic};
-  push(messagesRef,msgObj);
-  // also add to cache
-  let cached = JSON.parse(localStorage.getItem('cachedMessages')||'[]');
-  cached.push(msgObj);
-  if(cached.length>50) cached = cached.slice(cached.length-50);
-  localStorage.setItem('cachedMessages', JSON.stringify(cached));
-  input.value="";
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
-};
-input.addEventListener('keypress', e=>{ if(e.key==='Enter') send.onclick(); });
-
-// Voice
-let mediaRecorder,audioChunks=[];
-voiceBtn.onclick=async ()=>{
-  if(!mediaRecorder||mediaRecorder.state==='inactive'){
-    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
-    mediaRecorder=new MediaRecorder(stream);
-    audioChunks=[];
-    mediaRecorder.ondataavailable=e=>audioChunks.push(e.data);
-    mediaRecorder.onstop=()=>{
-      const audioBlob=new Blob(audioChunks);
-      const reader=new FileReader();
-      reader.onloadend=()=>{
-        const msgObj={name:nickname,audio:reader.result,time:new Date().toLocaleTimeString(),profilePic};
-        push(messagesRef,msgObj);
-        // update cache
-        let cached = JSON.parse(localStorage.getItem('cachedMessages')||'[]');
-        cached.push(msgObj);
-        if(cached.length>50) cached=cached.slice(cached.length-50);
-        localStorage.setItem('cachedMessages',JSON.stringify(cached));
-      };
-      reader.readAsDataURL(audioBlob);
-    };
-    mediaRecorder.start();
-    voiceBtn.textContent="⏹️";
-  }else{ mediaRecorder.stop(); voiceBtn.textContent="🎤"; }
-};
-
-// SETTINGS
-const panel = document.getElementById("settingsPanel");
-const preview = document.getElementById("profilePreview");
-const editNickname = document.getElementById("editNickname");
-const editProfilePic = document.getElementById("editProfilePic");
-const saveSettings = document.getElementById("saveSettings");
-
-settingsBtn.onclick = ()=>{
-  panel.classList.add("active");
-  preview.src = profilePic;
-  editNickname.value = nickname;
-};
-panel.onclick=e=>{ if(e.target.id==="settingsPanel") panel.classList.remove("active"); };
-saveSettings.onclick = ()=>{
-  nickname = editNickname.value || nickname;
-  const file = editProfilePic.files[0];
-  if(file){
-    const reader = new FileReader();
-    reader.onload = ()=>{
-      profilePic = reader.result;
-      localStorage.setItem("profilePic", profilePic);
-      set(ref(db,'users/'+auth.currentUser.uid),{nickname,profilePic});
-    };
-    reader.readAsDataURL(file);
-  } else set(ref(db,'users/'+auth.currentUser.uid),{nickname,profilePic});
-  localStorage.setItem("nickname", nickname);
-  panel.classList.remove("active");
-};
 </script>
+
 </body>
-  </html>
+</html>
