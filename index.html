@@ -69,8 +69,18 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded, get, set, query, limitToLast } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, browserLocalPersistence, setPersistence } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+import { 
+  getAuth, 
+  signInWithRedirect,
+  getRedirectResult,
+  GoogleAuthProvider, 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  onAuthStateChanged, 
+  browserLocalPersistence, 
+  setPersistence 
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSy...",
@@ -85,43 +95,44 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
-const messagesRef = ref(db, 'imperion_messages');
 
 const emailInput = document.getElementById("emailInput");
 const passwordInput = document.getElementById("passwordInput");
-const messagesDiv = document.getElementById('messages');
-const input = document.getElementById('input');
-const send = document.getElementById('send');
 const authDiv = document.getElementById("auth");
-const inputContainer = document.getElementById("inputContainer");
-const settingsBtn = document.getElementById("settingsBtn");
 
-let nickname = localStorage.getItem('nickname') || "";
-let profilePic = localStorage.getItem('profilePic') || "";
 let loggingIn = false;
 
 function showLoading(text="Loading..."){
   authDiv.innerHTML = `<p style="text-align:center">${text}</p>`;
 }
 
-function showChatUI(user){
+function showChatUI(){
   authDiv.style.display="none";
-  messagesDiv.style.display="block";
-  inputContainer.style.display="flex";
-  settingsBtn.style.display="block";
 }
 
+// Persistence
 setPersistence(auth, browserLocalPersistence);
 
+// Google login (FIXED)
 const provider = new GoogleAuthProvider();
 
 document.getElementById("googleLogin").onclick = ()=>{
-  showLoading("Opening Google...");
-  signInWithPopup(auth, provider)
-  .then(res=>showChatUI(res.user))
-  .catch(()=>location.reload());
+  showLoading("Redirecting to Google...");
+  signInWithRedirect(auth, provider);
 };
 
+// Handle redirect result
+getRedirectResult(auth)
+.then(result=>{
+  if(result && result.user){
+    showChatUI();
+  }
+})
+.catch(err=>{
+  alert(err.message);
+});
+
+// Email login
 document.getElementById("emailLogin").onclick = ()=>{
   if(loggingIn) return;
   loggingIn = true;
@@ -137,9 +148,9 @@ document.getElementById("emailLogin").onclick = ()=>{
   showLoading("Signing you in...");
 
   signInWithEmailAndPassword(auth,email,pass)
-  .then(res=>{
+  .then(()=>{
     loggingIn = false;
-    showChatUI(res.user);
+    showChatUI();
   })
   .catch(err=>{
     loggingIn = false;
@@ -148,6 +159,7 @@ document.getElementById("emailLogin").onclick = ()=>{
   });
 };
 
+// Signup
 document.getElementById("signup").onclick = ()=>{
   const email = emailInput.value;
   const pass = passwordInput.value;
@@ -157,24 +169,20 @@ document.getElementById("signup").onclick = ()=>{
   showLoading("Creating account...");
 
   createUserWithEmailAndPassword(auth,email,pass)
-  .then(res=>showChatUI(res.user))
+  .then(()=>showChatUI())
   .catch(err=>{
     alert(err.message);
     location.reload();
   });
 };
 
+// Auth state
 onAuthStateChanged(auth,user=>{
   if(user){
-    showChatUI(user);
-  } else {
-    authDiv.style.display="flex";
-    messagesDiv.style.display="none";
-    inputContainer.style.display="none";
-    settingsBtn.style.display="none";
+    showChatUI();
   }
 });
 </script>
 
 </body>
-</html>
+      </html>
