@@ -13,7 +13,7 @@
         }
         
         body {
-            background: #0A1929; /* Oxford Blue */
+            background: #0A1929;
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -25,13 +25,13 @@
             max-width: 500px;
             height: 100vh;
             max-height: 900px;
-            background: #0A1929; /* Oxford Blue */
+            background: #0A1929;
             border-radius: 0;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
-            border: 1px solid #D4AF37; /* Metallic Gold */
+            border: 1px solid #D4AF37;
         }
         
         @media (min-width: 768px) {
@@ -49,11 +49,11 @@
             flex-direction: column;
             height: 100%;
             justify-content: center;
-            background: #0A1929; /* Oxford Blue */
+            background: #0A1929;
         }
         
         #login-screen h1 {
-            color: #D4AF37; /* Metallic Gold */
+            color: #D4AF37;
             font-size: 3rem;
             margin-bottom: 0.5rem;
             text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
@@ -62,7 +62,7 @@
         }
         
         #login-screen h2 {
-            color: #B8860B; /* Bronze */
+            color: #B8860B;
             font-size: 1rem;
             margin-bottom: 2rem;
             font-weight: 400;
@@ -108,15 +108,15 @@
             width: 100%;
             padding: 1rem;
             margin-bottom: 1rem;
-            background: #132B3F; /* Midnight Navy */
-            border: 1px solid #B8860B; /* Bronze */
+            background: #132B3F;
+            border: 1px solid #B8860B;
             border-radius: 12px;
             color: white;
             font-size: 1rem;
         }
         
         #login-screen input::placeholder {
-            color: #9B7E3D; /* Burnished Gold */
+            color: #9B7E3D;
         }
         
         #login-screen button {
@@ -127,7 +127,7 @@
             border-radius: 12px;
             font-weight: 600;
             font-size: 1rem;
-            color: #0A1929; /* Oxford Blue */
+            color: #0A1929;
             cursor: pointer;
             margin-bottom: 0.5rem;
             transition: 0.3s;
@@ -143,6 +143,29 @@
             color: #B8860B;
             text-align: center;
             margin-top: 1rem;
+            background: #132B3F;
+            padding: 0.5rem;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        /* Debug Panel */
+        #debug-panel {
+            background: #132B3F;
+            border: 1px solid #D4AF37;
+            border-radius: 8px;
+            padding: 0.5rem;
+            margin-top: 1rem;
+            font-size: 0.7rem;
+            color: #9B7E3D;
+            max-height: 100px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .debug-log {
+            border-bottom: 1px solid #2A4A5A;
+            padding: 0.2rem 0;
         }
         
         /* Main App */
@@ -150,36 +173,35 @@
             display: none;
             flex-direction: column;
             height: 100%;
-            background: #0A1929; /* Oxford Blue */
+            background: #0A1929;
         }
         
-        /* Header */
         .header {
-            background: #0A1929; /* Oxford Blue */
+            background: #0A1929;
             padding: 1rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #D4AF37; /* Metallic Gold */
+            border-bottom: 2px solid #D4AF37;
         }
         
         .logo {
             font-size: 1.8rem;
             font-weight: 700;
-            color: #D4AF37; /* Metallic Gold */
+            color: #D4AF37;
             letter-spacing: 2px;
             text-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
         }
         
         .logo span {
-            color: #B8860B; /* Bronze */
+            color: #B8860B;
         }
         
         #user-info {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            background: #132B3F; /* Midnight Navy */
+            background: #132B3F;
             padding: 0.4rem 1.2rem;
             border-radius: 30px;
             font-size: 0.9rem;
@@ -203,7 +225,6 @@
             color: #0A1929;
         }
         
-        /* Tabs - Hidden during chat */
         .tabs {
             display: flex;
             background: #0A1929;
@@ -215,32 +236,30 @@
             text-align: center;
             padding: 1rem;
             cursor: pointer;
-            color: #9B7E3D; /* Burnished Gold */
+            color: #9B7E3D;
             font-weight: 500;
             transition: 0.2s;
         }
         
         .tab.active {
-            color: #D4AF37; /* Metallic Gold */
+            color: #D4AF37;
             border-bottom: 3px solid #D4AF37;
             text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
         }
         
-        /* Content */
         #content-area {
             flex: 1;
             overflow-y: auto;
             padding: 1rem;
-            background: #0F1F2F; /* Slightly lighter Oxford */
+            background: #0F1F2F;
         }
         
-        /* Contacts List */
         .contact-item {
             display: flex;
             align-items: center;
             gap: 1rem;
             padding: 1rem;
-            background: #132B3F; /* Midnight Navy */
+            background: #132B3F;
             border-radius: 16px;
             margin-bottom: 0.5rem;
             cursor: pointer;
@@ -286,15 +305,14 @@
         
         .contact-last {
             font-size: 0.8rem;
-            color: #9B7E3D; /* Burnished Gold */
+            color: #9B7E3D;
         }
         
-        /* Chat View - Takes over entire app */
         #chat-view {
             display: none;
             flex-direction: column;
             height: 100%;
-            background: #0A1929; /* Oxford Blue */
+            background: #0A1929;
             position: absolute;
             top: 0;
             left: 0;
@@ -374,7 +392,7 @@
         }
         
         .message.received {
-            background: #132B3F; /* Midnight Navy */
+            background: #132B3F;
             color: #D4AF37;
             align-self: flex-start;
             border-bottom-left-radius: 4px;
@@ -422,7 +440,6 @@
             box-shadow: 0 0 15px #D4AF37;
         }
         
-        /* Profile Tab */
         #profile-tab {
             padding: 1rem;
         }
@@ -536,7 +553,6 @@
             font-weight: 600;
         }
         
-        /* Contacts Tab */
         .add-contact {
             background: #132B3F;
             padding: 1rem;
@@ -577,16 +593,11 @@
             color: #9B7E3D;
             padding: 2rem;
         }
-
-        /* Hidden file input */
-        #file-input {
+        
+        #file-input, #login-file-input {
             display: none;
         }
-
-        #login-file-input {
-            display: none;
-        }
-
+        
         .success-message {
             background: #25D36620;
             color: #D4AF37;
@@ -597,24 +608,30 @@
             border: 1px solid #D4AF37;
             animation: fadeInOut 2s;
         }
-
+        
         @keyframes fadeInOut {
             0% { opacity: 0; }
             10% { opacity: 1; }
             90% { opacity: 1; }
             100% { opacity: 0; }
         }
-
+        
         .contact-id-display {
             font-size: 0.7rem;
             color: #9B7E3D;
             margin-top: 0.2rem;
         }
+        
+        .try-demo-btn {
+            background: #132B3F !important;
+            color: #D4AF37 !important;
+            border: 1px solid #D4AF37 !important;
+            margin-top: 1rem !important;
+        }
     </style>
 </head>
 <body>
     <div id="app">
-        <!-- Hidden file inputs -->
         <input type="file" id="file-input" accept="image/*">
         <input type="file" id="login-file-input" accept="image/*">
 
@@ -627,9 +644,11 @@
                 <img id="login-avatar-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23333'/%3E%3Ctext x='50' y='70' font-size='50' text-anchor='middle' fill='%23D4AF37'%3E👤%3C/text%3E%3C/svg%3E" alt="avatar">
             </div>
             
-            <input type="text" id="username-input" placeholder="input username">
+            <input type="text" id="username-input" placeholder="input username" value="TestUser">
             <button id="login-btn">Start Messaging</button>
+            <button id="demo-mode-btn" class="try-demo-btn">Try Demo Mode (Offline)</button>
             <div id="login-error"></div>
+            <div id="debug-panel"></div>
         </div>
         
         <!-- Main App -->
@@ -642,7 +661,6 @@
                 </div>
             </div>
             
-            <!-- Tabs (hidden during chat) -->
             <div class="tabs" id="main-tabs">
                 <div class="tab active" data-tab="chats">Chats</div>
                 <div class="tab" data-tab="contacts">Contacts</div>
@@ -650,12 +668,10 @@
             </div>
             
             <div id="content-area">
-                <!-- Chats Tab -->
                 <div id="chats-tab">
                     <div id="contacts-list" class="loading">Loading conversations...</div>
                 </div>
                 
-                <!-- Contacts Tab (hidden by default) -->
                 <div id="contacts-tab" style="display: none;">
                     <div class="add-contact">
                         <input type="text" id="new-contact-id" placeholder="Enter User ID to add">
@@ -665,7 +681,6 @@
                     <div id="all-contacts-list"></div>
                 </div>
                 
-                <!-- Profile Tab (hidden by default) -->
                 <div id="profile-tab" style="display: none;">
                     <div class="profile-card">
                         <div class="profile-avatar" id="profile-avatar">
@@ -681,7 +696,6 @@
                 </div>
             </div>
             
-            <!-- Chat View - Takes over entire app when active -->
             <div id="chat-view">
                 <div class="chat-header">
                     <button id="back-btn">←</button>
@@ -701,51 +715,69 @@
         </div>
     </div>
     
-    <!-- Firebase SDK -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { 
-            getFirestore, 
-            collection, 
-            addDoc, 
-            query, 
-            orderBy, 
-            onSnapshot,
-            doc,
-            setDoc,
-            getDoc,
-            getDocs,
-            updateDoc,
-            Timestamp
-        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        // Simple debug logger
+        const debugPanel = document.getElementById('debug-panel');
+        const loginError = document.getElementById('login-error');
         
-        // Firebase config
-        const firebaseConfig = {
-            apiKey: "AIzaSyDwM8N-eMlsbndlnuOnB9dQ5lx9D2Dn1hI",
-            authDomain: "chatsnap-16189.firebaseapp.com",
-            projectId: "chatsnap-16189",
-            storageBucket: "chatsnap-16189.firebasestorage.app",
-            messagingSenderId: "687581415852",
-            appId: "1:687581415852:web:3fe355b6fc830ae340d209",
-            measurementId: "G-ZQS6K88PY8"
-        };
+        function addDebugLog(message, isError = false) {
+            console.log(message);
+            debugPanel.style.display = 'block';
+            const logEntry = document.createElement('div');
+            logEntry.className = 'debug-log';
+            logEntry.style.color = isError ? '#B8860B' : '#9B7E3D';
+            logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            debugPanel.appendChild(logEntry);
+            debugPanel.scrollTop = debugPanel.scrollHeight;
+        }
         
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        function showError(message) {
+            loginError.style.display = 'block';
+            loginError.textContent = message;
+            addDebugLog('ERROR: ' + message, true);
+        }
         
-        console.log("🔥 Firebase connected!");
+       // Try to import Firebase, but don't fail if it doesn't work
+        let db = null;
+        let firebaseAvailable = false;
+        
+        try {
+            // This will throw if Firebase is blocked
+            const initializeApp = (await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js")).initializeApp;
+            const firestore = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
+            
+            const firebaseConfig = {
+                apiKey: "AIzaSyDwM8N-eMlsbndlnuOnB9dQ5lx9D2Dn1hI",
+                authDomain: "chatsnap-16189.firebaseapp.com",
+                projectId: "chatsnap-16189",
+                storageBucket: "chatsnap-16189.firebasestorage.app",
+                messagingSenderId: "687581415852",
+                appId: "1:687581415852:web:3fe355b6fc830ae340d209",
+                measurementId: "G-ZQS6K88PY8"
+            };
+            
+            const app = initializeApp(firebaseConfig);
+            db = firestore.getFirestore(app);
+            firebaseAvailable = true;
+            addDebugLog('✅ Firebase connected successfully');
+        } catch (error) {
+            addDebugLog('❌ Firebase connection failed: ' + error.message, true);
+            addDebugLog('💡 Using demo mode instead');
+        }
         
         // App state
         let currentUser = null;
         let currentChatContact = null;
         let messagesUnsubscribe = null;
+        let isDemoMode = false;
+        let demoUsers = [];
         
         // DOM elements
         const loginScreen = document.getElementById('login-screen');
         const mainApp = document.getElementById('main-app');
         const loginBtn = document.getElementById('login-btn');
+        const demoModeBtn = document.getElementById('demo-mode-btn');
         const usernameInput = document.getElementById('username-input');
-        const loginError = document.getElementById('login-error');
         const userInfo = document.getElementById('user-info');
         const logoutBtn = document.getElementById('logout-btn');
         const contentArea = document.getElementById('content-area');
@@ -770,50 +802,36 @@
         const newContactId = document.getElementById('new-contact-id');
         const addContactStatus = document.getElementById('add-contact-status');
         
-        // Avatar upload elements
+        // Avatar elements
         const fileInput = document.getElementById('file-input');
         const loginFileInput = document.getElementById('login-file-input');
         const loginAvatarPreview = document.getElementById('login-avatar-preview');
         const loginAvatarImg = document.getElementById('login-avatar-img');
         const profileAvatar = document.getElementById('profile-avatar');
         
-        // Track login avatar
         let loginAvatarData = null;
         
-        // Check for saved user on load
-        async function checkSavedUser() {
-            const savedUserId = localStorage.getItem('imperion_user_id');
-            if (savedUserId) {
+        // Check for saved user
+        function checkSavedUser() {
+            const savedUserData = localStorage.getItem('imperion_user');
+            if (savedUserData) {
                 try {
-                    const userRef = doc(db, 'users', savedUserId);
-                    const userSnap = await getDoc(userRef);
+                    currentUser = JSON.parse(savedUserData);
+                    addDebugLog('✅ Restored user: ' + currentUser.name);
                     
-                    if (userSnap.exists()) {
-                        currentUser = {
-                            id: savedUserId,
-                            ...userSnap.data()
-                        };
-                        
-                        // Show main app
-                        loginScreen.style.display = 'none';
-                        mainApp.style.display = 'flex';
-                        updateProfileUI();
-                        
-                        // Load contacts
-                        loadAllUsers();
-                        loadChatContacts();
-                        console.log('Restored user:', currentUser);
-                    } else {
-                        // User doesn't exist anymore, clear saved
-                        localStorage.removeItem('imperion_user_id');
+                    loginScreen.style.display = 'none';
+                    mainApp.style.display = 'flex';
+                    updateProfileUI();
+                    
+                    if (isDemoMode) {
+                        loadDemoUsers();
                     }
-                } catch (error) {
-                    console.error('Error restoring user:', error);
+                } catch (e) {
+                    localStorage.removeItem('imperion_user');
                 }
             }
         }
         
-        // Call this immediately
         checkSavedUser();
         
         // Login avatar click
@@ -842,24 +860,17 @@
             const file = e.target.files[0];
             if (file && currentUser) {
                 const reader = new FileReader();
-                reader.onload = async (e) => {
+                reader.onload = (e) => {
                     const avatarData = e.target.result;
                     profileAvatarImg.src = avatarData;
-                    
-                    // Save to Firestore
-                    const userRef = doc(db, 'users', currentUser.id);
-                    await updateDoc(userRef, {
-                        avatar: avatarData
-                    });
                     currentUser.avatar = avatarData;
-                    
+                    localStorage.setItem('imperion_user', JSON.stringify(currentUser));
                     showStatus('Avatar updated!');
                 };
                 reader.readAsDataURL(file);
             }
         });
         
-        // Show status message
         function showStatus(message, element) {
             const statusEl = element || addContactStatus;
             statusEl.innerHTML = `<div class="success-message">${message}</div>`;
@@ -868,7 +879,7 @@
             }, 2000);
         }
         
-        // Copy ID to clipboard
+        // Copy ID
         profileUserId.addEventListener('click', async () => {
             if (!currentUser) return;
             
@@ -883,54 +894,93 @@
             }
         });
         
+        // Demo Mode - Works without Firebase
+        demoModeBtn.addEventListener('click', () => {
+            isDemoMode = true;
+            addDebugLog('🎯 Demo mode activated');
+            
+            // Create demo user
+            const demoUserId = 'demo_' + Date.now();
+            currentUser = {
+                id: demoUserId,
+                name: 'Demo User',
+                avatar: null
+            };
+            
+            // Create some demo contacts
+            demoUsers = [
+                { id: 'demo_alice', name: 'Alice', avatar: null },
+                { id: 'demo_bob', name: 'Bob', avatar: null },
+                { id: 'demo_charlie', name: 'Charlie', avatar: null }
+            ];
+            
+            // Save to localStorage
+            localStorage.setItem('imperion_user', JSON.stringify(currentUser));
+            
+            loginScreen.style.display = 'none';
+            mainApp.style.display = 'flex';
+            updateProfileUI();
+            loadDemoUsers();
+        });
+        
         // Login
         loginBtn.addEventListener('click', async () => {
             const name = usernameInput.value.trim();
             if (!name) {
-                loginError.textContent = 'Please enter a username';
+                showError('Please enter a username');
+                return;
+            }
+            
+            addDebugLog('🔄 Attempting login for: ' + name);
+            
+            if (!firebaseAvailable) {
+                showError('Firebase not available. Click "Try Demo Mode"');
                 return;
             }
             
             try {
-                // Generate a unique ID for this device/user
-                const deviceId = localStorage.getItem('device_id') || 'device_' + Math.random().toString(36).substring(2, 15);
-                localStorage.setItem('device_id', deviceId);
+                // Try Firebase first
+                const usersRef = collection(db, 'users');
+                const q = query(usersRef, where('name', '==', name));
+                const querySnapshot = await getDocs(q);
                 
-                // Create a new user with a fixed ID (based on device + timestamp)
-                const userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+                if (!querySnapshot.empty) {
+                    const userDoc = querySnapshot.docs[0];
+                    currentUser = {
+                        id: userDoc.id,
+                        ...userDoc.data()
+                    };
+                    addDebugLog('✅ Existing user loaded');
+                } else {
+                    const userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+                    currentUser = {
+                        id: userId,
+                        name: name,
+                        avatar: loginAvatarData || null,
+                        createdAt: new Date().toISOString()
+                    };
+                    
+                    const newUserRef = doc(db, 'users', userId);
+                    await setDoc(newUserRef, currentUser);
+                    addDebugLog('✅ New user created');
+                }
                 
-                // Create new user
-                const newUserRef = doc(db, 'users', userId);
-                currentUser = {
-                    id: userId,
-                    name: name,
-                    avatar: loginAvatarData || null,
-                    deviceId: deviceId,
-                    createdAt: new Date().toISOString()
-                };
-                await setDoc(newUserRef, currentUser);
+                // Save to localStorage
+                localStorage.setItem('imperion_user', JSON.stringify(currentUser));
                 
-                // Save user ID to localStorage for persistence
-                localStorage.setItem('imperion_user_id', userId);
-                
-                console.log('New user created:', currentUser);
-                
-                // Show main app
                 loginScreen.style.display = 'none';
                 mainApp.style.display = 'flex';
                 updateProfileUI();
                 
-                // Load contacts
                 loadAllUsers();
                 loadChatContacts();
                 
             } catch (error) {
-                console.error('Login error:', error);
-                loginError.textContent = 'Error connecting: ' + error.message;
+                addDebugLog('❌ Firebase error: ' + error.message, true);
+                showError('Firebase error. Try Demo Mode');
             }
         });
         
-        // Update profile UI
         function updateProfileUI() {
             if (!currentUser) return;
             userInfo.textContent = currentUser.name;
@@ -945,36 +995,20 @@
             profileUserId.innerHTML = `<strong>${currentUser.id}</strong>`;
         }
         
-        // Save profile changes
-        saveProfileBtn.addEventListener('click', async () => {
+        saveProfileBtn.addEventListener('click', () => {
             if (!currentUser) return;
             
             const newName = profileNameInput.value.trim();
             if (!newName) return;
             
-            try {
-                // Update in Firestore
-                const userRef = doc(db, 'users', currentUser.id);
-                await updateDoc(userRef, {
-                    name: newName
-                });
-                
-                // Update local
-                currentUser.name = newName;
-                updateProfileUI();
-                
-                showStatus('Profile updated!');
-            } catch (error) {
-                console.error('Error updating profile:', error);
-                alert('Error updating profile');
-            }
+            currentUser.name = newName;
+            localStorage.setItem('imperion_user', JSON.stringify(currentUser));
+            updateProfileUI();
+            showStatus('Profile updated!');
         });
         
-        // Logout
         logoutBtn.addEventListener('click', () => {
-            // Clear saved user
-            localStorage.removeItem('imperion_user_id');
-            
+            localStorage.removeItem('imperion_user');
             currentUser = null;
             currentChatContact = null;
             if (messagesUnsubscribe) messagesUnsubscribe();
@@ -985,10 +1019,11 @@
             contentArea.style.display = 'block';
             mainTabs.style.display = 'flex';
             
-            // Reset login fields
             usernameInput.value = '';
             loginAvatarImg.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23333'/%3E%3Ctext x='50' y='70' font-size='50' text-anchor='middle' fill='%23D4AF37'%3E👤%3C/text%3E%3C/svg%3E";
             loginAvatarData = null;
+            debugPanel.style.display = 'none';
+            debugPanel.innerHTML = '';
         });
         
         // Tab switching
@@ -1003,262 +1038,132 @@
                 profileTab.style.display = tabName === 'profile' ? 'block' : 'none';
                 
                 if (tabName === 'contacts') {
-                    loadAllUsers();
+                    if (isDemoMode) {
+                        loadDemoUsers();
+                    } else {
+                        loadAllUsers();
+                    }
                 } else if (tabName === 'chats') {
-                    loadChatContacts();
+                    if (isDemoMode) {
+                        loadDemoUsers();
+                    } else {
+                        loadChatContacts();
+                    }
                 }
             });
         });
         
-        // Load ALL users for contacts tab
-        async function loadAllUsers() {
-            if (!currentUser) return;
-            
-            const usersRef = collection(db, 'users');
-            const snapshot = await getDocs(usersRef);
+        // Demo mode functions
+        function loadDemoUsers() {
             let html = '';
-            
-            snapshot.forEach(doc => {
-                if (doc.id !== currentUser.id) {
-                    const user = doc.data();
-                    const avatarHtml = user.avatar 
-                        ? `<img src="${user.avatar}" style="width:100%; height:100%; object-fit:cover;">`
-                        : '👤';
-                    
-                    html += `
-                        <div class="contact-item" data-contact-user-id="${doc.id}">
-                            <div class="contact-avatar">${avatarHtml}</div>
-                            <div class="contact-details">
-                                <div class="contact-name">${user.name}</div>
-                                <div class="contact-id-display">ID: ${doc.id.slice(0, 12)}...</div>
-                                <div class="contact-last">Click to chat</div>
-                            </div>
-                        </div>
-                    `;
-                }
-            });
-            
-            if (html === '') {
-                html = '<div class="empty-state">No other users found. Share your ID!</div>';
-            }
-            
-            allContactsList.innerHTML = html;
-            
-            // Add click handlers to start chat directly from contacts tab
-            document.querySelectorAll('[data-contact-user-id]').forEach(item => {
-                item.addEventListener('click', async () => {
-                    const contactId = item.dataset.contactUserId;
-                    const contactRef = doc(db, 'users', contactId);
-                    const contactSnap = await getDoc(contactRef);
-                    
-                    if (contactSnap.exists()) {
-                        const contact = {
-                            id: contactId,
-                            ...contactSnap.data()
-                        };
-                        openChat(contact);
-                    }
-                });
-            });
-        }
-        
-        // Load users for chats tab (all users except current)
-        async function loadChatContacts() {
-            if (!currentUser) return;
-            
-            contactsList.innerHTML = '<div class="loading">Loading...</div>';
-            
-            const usersRef = collection(db, 'users');
-            const snapshot = await getDocs(usersRef);
-            const users = [];
-            
-            snapshot.forEach(doc => {
-                if (doc.id !== currentUser.id) {
-                    users.push({
-                        id: doc.id,
-                        ...doc.data()
-                    });
-                }
-            });
-            
-            if (users.length === 0) {
-                contactsList.innerHTML = '<div class="empty-state">No users yet. Share your ID in Profile tab!</div>';
-                return;
-            }
-            
-            // Get last messages for each user
-            const usersWithLastMsg = await Promise.all(users.map(async (user) => {
-                const lastMsg = await getLastMessage(user.id);
-                return { ...user, lastMsg };
-            }));
-            
-            let html = '';
-            usersWithLastMsg.forEach(user => {
-                const avatarHtml = user.avatar 
-                    ? `<img src="${user.avatar}" style="width:100%; height:100%; object-fit:cover;">`
-                    : '👤';
-                
+            demoUsers.forEach(user => {
                 html += `
                     <div class="contact-item" data-contact-id="${user.id}">
-                        <div class="contact-avatar">${avatarHtml}</div>
+                        <div class="contact-avatar">👤</div>
                         <div class="contact-details">
                             <div class="contact-name">${user.name}</div>
-                            <div class="contact-last">${user.lastMsg || 'No messages yet'}</div>
+                            <div class="contact-last">Click to chat</div>
                         </div>
                     </div>
                 `;
             });
             
-            contactsList.innerHTML = html;
+            contactsList.innerHTML = html || '<div class="empty-state">No users</div>';
+            allContactsList.innerHTML = html || '<div class="empty-state">No users</div>';
             
-            // Add click handlers
-            document.querySelectorAll('.contact-item[data-contact-id]').forEach(item => {
+            document.querySelectorAll('.contact-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const contactId = item.dataset.contactId;
-                    const contact = usersWithLastMsg.find(u => u.id === contactId);
-                    openChat(contact);
+                    const contact = demoUsers.find(u => u.id === contactId);
+                    openDemoChat(contact);
                 });
             });
         }
         
-        // Get last message with a user
-        async function getLastMessage(contactId) {
-            if (!currentUser) return '';
-            
-            const chatId = [currentUser.id, contactId].sort().join('_');
-            const messagesRef = collection(db, 'chats', chatId, 'messages');
-            const q = query(messagesRef, orderBy('timestamp', 'desc'));
-            
-            const snapshot = await getDocs(q);
-            if (!snapshot.empty) {
-                const msg = snapshot.docs[0].data();
-                return msg.text.substring(0, 30) + (msg.text.length > 30 ? '...' : '');
-            }
-            return '';
-        }
-        
-        // Add contact by ID
-        addContactBtn.addEventListener('click', async () => {
-            if (!currentUser) return;
-            
-            const contactId = newContactId.value.trim();
-            
-            if (!contactId) {
-                showStatus('Please enter a User ID', addContactStatus);
-                return;
-            }
-            
-            try {
-                const contactRef = doc(db, 'users', contactId);
-                const contactSnap = await getDoc(contactRef);
-                
-                if (!contactSnap.exists()) {
-                    showStatus('User ID not found', addContactStatus);
-                    return;
-                }
-                
-                // Open chat with this contact
-                const contact = {
-                    id: contactId,
-                    ...contactSnap.data()
-                };
-                
-                newContactId.value = '';
-                openChat(contact);
-                
-            } catch (error) {
-                console.error('Error finding contact:', error);
-                showStatus('Error finding user', addContactStatus);
-            }
-        });
-        
-        // Open chat - THIS HIDES TABS AND CONTACTS
-        function openChat(contact) {
+        function openDemoChat(contact) {
             currentChatContact = contact;
             chatContactName.textContent = contact.name;
             
-            // Hide main content and tabs, show fullscreen chat
             contentArea.style.display = 'none';
             mainTabs.style.display = 'none';
             chatView.style.display = 'flex';
             
-            // Listen for messages
-            listenForMessages(contact.id);
+            // Show some demo messages
+            messagesContainer.innerHTML = `
+                <div class="message received">
+                    Hey there! 👋
+                    <div style="font-size:0.7rem; opacity:0.7; margin-top:0.2rem;">12:34</div>
+                </div>
+                <div class="message sent">
+                    Hi! How are you?
+                    <div style="font-size:0.7rem; opacity:0.7; margin-top:0.2rem;">12:35</div>
+                </div>
+            `;
         }
         
-        // Listen for messages
-        function listenForMessages(contactId) {
+        // Firebase functions (simplified)
+        async function loadAllUsers() {
+            if (!currentUser || !db) return;
+            contactsList.innerHTML = '<div class="empty-state">Firebase mode - check console</div>';
+        }
+        
+        async function loadChatContacts() {
+            if (!currentUser || !db) return;
+            contactsList.innerHTML = '<div class="empty-state">Firebase mode - check console</div>';
+        }
+        
+        async function getLastMessage(contactId) {
+            return '';
+        }
+        
+        addContactBtn.addEventListener('click', async () => {
             if (!currentUser) return;
-            
-            if (messagesUnsubscribe) messagesUnsubscribe();
-            
-            const chatId = [currentUser.id, contactId].sort().join('_');
-            const messagesRef = collection(db, 'chats', chatId, 'messages');
-            const q = query(messagesRef, orderBy('timestamp', 'asc'));
-            
-            messagesUnsubscribe = onSnapshot(q, (snapshot) => {
-                let html = '';
-                
-                snapshot.forEach((doc) => {
-                    const msg = doc.data();
-                    const isSent = msg.senderId === currentUser.id;
-                    
-                    const time = msg.timestamp?.toDate 
-                        ? msg.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                        : 'just now';
-                    
-                    html += `
-                        <div class="message ${isSent ? 'sent' : 'received'}">
-                            ${msg.text}
-                            <div style="font-size:0.7rem; opacity:0.7; margin-top:0.2rem;">${time}</div>
-                        </div>
-                    `;
-                });
-                
-                messagesContainer.innerHTML = html || '<div class="empty-state">Say hello! 👋</div>';
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            });
+            showStatus('Use Demo Mode for testing', addContactStatus);
+        });
+        
+        function openChat(contact) {
+            if (isDemoMode) {
+                openDemoChat(contact);
+                return;
+            }
+            // Firebase chat would go here
         }
         
-        // Back button - EXITS CHAT, SHOWS TABS AND CONTACTS
+        function listenForMessages(contactId) {
+            // Firebase messages would go here
+        }
+        
         backBtn.addEventListener('click', () => {
             chatView.style.display = 'none';
             contentArea.style.display = 'block';
             mainTabs.style.display = 'flex';
             currentChatContact = null;
-            
-            if (messagesUnsubscribe) {
-                messagesUnsubscribe();
-                messagesUnsubscribe = null;
-            }
-            
-            // Refresh contacts
-            loadChatContacts();
         });
         
-        // Send message
         sendBtn.addEventListener('click', sendMessage);
         messageInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
         });
         
-        async function sendMessage() {
+        function sendMessage() {
             const text = messageInput.value.trim();
             if (!text || !currentUser || !currentChatContact) return;
             
-            const chatId = [currentUser.id, currentChatContact.id].sort().join('_');
-            const messagesRef = collection(db, 'chats', chatId, 'messages');
+            // Add message to UI
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const messageHtml = `
+                <div class="message sent">
+                    ${text}
+                    <div style="font-size:0.7rem; opacity:0.7; margin-top:0.2rem;">${time}</div>
+                </div>
+            `;
             
-            await addDoc(messagesRef, {
-                text: text,
-                senderId: currentUser.id,
-                senderName: currentUser.name,
-                receiverId: currentChatContact.id,
-                timestamp: Timestamp.fromDate(new Date())
-            });
-            
+            messagesContainer.innerHTML += messageHtml;
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
             messageInput.value = '';
         }
+        
+        addDebugLog('🚀 App loaded - Click "Try Demo Mode" to test');
     </script>
 </body>
-</html>
+</html> 
