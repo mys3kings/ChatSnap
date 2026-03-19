@@ -1,10 +1,9 @@
-html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Imperion · messaging app</title>
+    <title>Imperion · gold & navy</title>
     <style>
         * {
             margin: 0;
@@ -14,7 +13,7 @@ html
         }
         
         body {
-            background: #0a1419;
+            background: #0A1929; /* Oxford Blue */
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -26,12 +25,13 @@ html
             max-width: 500px;
             height: 100vh;
             max-height: 900px;
-            background: #0e1a21;
+            background: #0A1929; /* Oxford Blue */
             border-radius: 0;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
+            border: 1px solid #D4AF37; /* Metallic Gold */
         }
         
         @media (min-width: 768px) {
@@ -49,48 +49,98 @@ html
             flex-direction: column;
             height: 100%;
             justify-content: center;
-            background: #0e1a21;
+            background: #0A1929; /* Oxford Blue */
         }
         
         #login-screen h1 {
-            color: #25D366;
-            font-size: 2.5rem;
+            color: #D4AF37; /* Metallic Gold */
+            font-size: 3rem;
             margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+            letter-spacing: 2px;
+            text-align: center;
         }
         
         #login-screen h2 {
-            color: #8ba0b2;
+            color: #B8860B; /* Bronze */
             font-size: 1rem;
             margin-bottom: 2rem;
             font-weight: 400;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        
+        .login-avatar-preview {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.5rem;
+            background: #132B3F;
+            border-radius: 50%;
+            border: 3px solid #D4AF37;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .login-avatar-preview:hover::after {
+            content: "📷";
+            position: absolute;
+            background: rgba(0,0,0,0.6);
+            color: #D4AF37;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        #login-avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         
         #login-screen input {
             width: 100%;
             padding: 1rem;
             margin-bottom: 1rem;
-            background: #1f2f39;
-            border: 1px solid #314954;
+            background: #132B3F; /* Midnight Navy */
+            border: 1px solid #B8860B; /* Bronze */
             border-radius: 12px;
             color: white;
             font-size: 1rem;
         }
         
+        #login-screen input::placeholder {
+            color: #9B7E3D; /* Burnished Gold */
+        }
+        
         #login-screen button {
             width: 100%;
             padding: 1rem;
-            background: #25D366;
+            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
             border: none;
             border-radius: 12px;
             font-weight: 600;
             font-size: 1rem;
-            color: #0a1419;
+            color: #0A1929; /* Oxford Blue */
             cursor: pointer;
             margin-bottom: 0.5rem;
+            transition: 0.3s;
+            border: 1px solid #D4AF37;
+        }
+        
+        #login-screen button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px #D4AF37;
         }
         
         #login-error {
-            color: #ff6b6b;
+            color: #B8860B;
             text-align: center;
             margin-top: 1rem;
         }
@@ -100,54 +150,64 @@ html
             display: none;
             flex-direction: column;
             height: 100%;
-            background: #0e1a21;
+            background: #0A1929; /* Oxford Blue */
         }
         
         /* Header */
         .header {
-            background: #0f1a1f;
-            padding: 1rem;
+            background: #0A1929; /* Oxford Blue */
+            padding: 1rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #25D366;
+            border-bottom: 2px solid #D4AF37; /* Metallic Gold */
         }
         
         .logo {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
-            color: white;
+            color: #D4AF37; /* Metallic Gold */
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
         }
         
         .logo span {
-            color: #25D366;
+            color: #B8860B; /* Bronze */
         }
         
         #user-info {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            background: #1f2f39;
-            padding: 0.4rem 1rem;
+            background: #132B3F; /* Midnight Navy */
+            padding: 0.4rem 1.2rem;
             border-radius: 30px;
-            font-size: 0.85rem;
-            color: #b4d5e5;
+            font-size: 0.9rem;
+            color: #D4AF37;
+            border: 1px solid #B8860B;
         }
         
         #logout-btn {
-            background: #2a3f4b;
-            border: none;
-            color: white;
+            background: #132B3F;
+            border: 1px solid #B8860B;
+            color: #D4AF37;
             padding: 0.4rem 1rem;
             border-radius: 30px;
             cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
         }
         
-        /* Tabs */
+        #logout-btn:hover {
+            background: #B8860B;
+            color: #0A1929;
+        }
+        
+        /* Tabs - Hidden during chat */
         .tabs {
             display: flex;
-            background: #101d25;
-            border-bottom: 1px solid #1f323e;
+            background: #0A1929;
+            border-bottom: 1px solid #132B3F;
         }
         
         .tab {
@@ -155,13 +215,15 @@ html
             text-align: center;
             padding: 1rem;
             cursor: pointer;
-            color: #8ba0b2;
+            color: #9B7E3D; /* Burnished Gold */
             font-weight: 500;
+            transition: 0.2s;
         }
         
         .tab.active {
-            color: #25D366;
-            border-bottom: 3px solid #25D366;
+            color: #D4AF37; /* Metallic Gold */
+            border-bottom: 3px solid #D4AF37;
+            text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
         }
         
         /* Content */
@@ -169,7 +231,7 @@ html
             flex: 1;
             overflow-y: auto;
             padding: 1rem;
-            background: #0a1419;
+            background: #0F1F2F; /* Slightly lighter Oxford */
         }
         
         /* Contacts List */
@@ -178,21 +240,38 @@ html
             align-items: center;
             gap: 1rem;
             padding: 1rem;
-            background: #13222b;
+            background: #132B3F; /* Midnight Navy */
             border-radius: 16px;
             margin-bottom: 0.5rem;
             cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid #132B3F;
         }
-            .contact-avatar {
+        
+        .contact-item:hover {
+            border: 1px solid #D4AF37;
+            transform: translateX(5px);
+        }
+        
+        .contact-avatar {
             width: 50px;
             height: 50px;
-            background: #25D366;
+            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            color: #0f1a1f;
+            color: #0A1929;
+            font-size: 1.2rem;
+            border: 2px solid #D4AF37;
+            overflow: hidden;
+        }
+        
+        .contact-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         
         .contact-details {
@@ -201,20 +280,27 @@ html
         
         .contact-name {
             font-weight: 600;
-            color: white;
+            color: #D4AF37;
             margin-bottom: 0.2rem;
         }
         
         .contact-last {
             font-size: 0.8rem;
-            color: #9ab3c4;
+            color: #9B7E3D; /* Burnished Gold */
         }
         
-        /* Chat View */
+        /* Chat View - Takes over entire app */
         #chat-view {
             display: none;
             flex-direction: column;
             height: 100%;
+            background: #0A1929; /* Oxford Blue */
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 100;
         }
         
         .chat-header {
@@ -222,15 +308,39 @@ html
             align-items: center;
             gap: 1rem;
             padding: 1rem;
-            background: #101d25;
+            background: #0A1929;
+            border-bottom: 2px solid #D4AF37;
         }
         
         #back-btn {
             background: none;
-            border: none;
-            color: #25D366;
+            border: 1px solid #D4AF37;
+            color: #D4AF37;
             font-size: 1.5rem;
             cursor: pointer;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        
+        #back-btn:hover {
+            background: #D4AF37;
+            color: #0A1929;
+        }
+        
+        #chat-contact-name {
+            color: #D4AF37;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .chat-header small {
+            color: #9B7E3D;
+            font-size: 0.8rem;
         }
         
         .messages {
@@ -240,66 +350,190 @@ html
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+            background: #0F1F2F;
         }
         
         .message {
             max-width: 80%;
-            padding: 0.8rem 1rem;
+            padding: 0.8rem 1.2rem;
             border-radius: 20px;
             word-wrap: break-word;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .message.sent {
-            background: #25D366;
-            color: #0a1419;
+            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+            color: #0A1929;
             align-self: flex-end;
+            border-bottom-right-radius: 4px;
         }
         
         .message.received {
-            background: #1f2f39;
-            color: white;
+            background: #132B3F; /* Midnight Navy */
+            color: #D4AF37;
             align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            border: 1px solid #B8860B;
         }
         
         .message-input-area {
             display: flex;
             gap: 0.5rem;
             padding: 1rem;
-            background: #101d25;
+            background: #0A1929;
+            border-top: 1px solid #132B3F;
         }
         
         #message-input {
             flex: 1;
-            padding: 0.8rem;
-            background: #1f2f39;
-            border: none;
+            padding: 0.8rem 1.2rem;
+            background: #132B3F;
+            border: 1px solid #B8860B;
             border-radius: 25px;
             color: white;
+            font-size: 1rem;
+        }
+        
+        #message-input:focus {
+            outline: none;
+            border-color: #D4AF37;
+            box-shadow: 0 0 8px #D4AF37;
         }
         
         #send-btn {
             width: 45px;
             height: 45px;
             border-radius: 50%;
-            background: #25D366;
+            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
             border: none;
             cursor: pointer;
             font-size: 1.2rem;
+            color: #0A1929;
+            transition: 0.2s;
         }
         
-        /* Add Contact */
-        .add-contact {
+        #send-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px #D4AF37;
+        }
+        
+        /* Profile Tab */
+        #profile-tab {
             padding: 1rem;
-            background: #13222b;
+        }
+        
+        .profile-card {
+            background: #132B3F;
+            border-radius: 24px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid #B8860B;
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0A1929;
+            border: 3px solid #D4AF37;
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .profile-avatar:hover::after {
+            content: "📷 Change";
+            position: absolute;
+            background: rgba(0,0,0,0.7);
+            color: #D4AF37;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        #profile-avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #D4AF37;
+            margin-bottom: 0.5rem;
+        }
+        
+        .profile-input {
+            width: 100%;
+            padding: 0.8rem;
+            background: #0A1929;
+            border: 1px solid #B8860B;
+            border-radius: 12px;
+            color: white;
+            margin: 1rem 0;
+            font-size: 1rem;
+        }
+        
+        .profile-input:focus {
+            outline: none;
+            border-color: #D4AF37;
+        }
+        
+        #save-profile-btn {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            font-weight: 600;
+            color: #0A1929;
+            cursor: pointer;
+            margin-top: 1rem;
+            border: 1px solid #D4AF37;
+            width: 100%;
+        }
+        
+        .profile-id {
+            background: #0A1929;
+            padding: 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #9B7E3D;
+            margin-top: 1rem;
+            word-break: break-all;
+        }
+        
+        /* Contacts Tab */
+        .add-contact {
+            background: #132B3F;
+            padding: 1rem;
             border-radius: 16px;
             margin-bottom: 1rem;
+            border: 1px solid #B8860B;
         }
         
         .add-contact input {
             width: 100%;
             padding: 0.8rem;
-            background: #1f2f39;
-            border: 1px solid #314954;
+            background: #0A1929;
+            border: 1px solid #B8860B;
             border-radius: 12px;
             color: white;
             margin-bottom: 0.5rem;
@@ -308,32 +542,54 @@ html
         .add-contact button {
             width: 100%;
             padding: 0.8rem;
-            background: #25D366;
+            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
             border: none;
             border-radius: 12px;
             font-weight: 600;
             cursor: pointer;
+            color: #0A1929;
         }
         
         .empty-state {
             text-align: center;
-            color: #4a6577;
+            color: #9B7E3D;
             padding: 2rem;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #9B7E3D;
+            padding: 2rem;
+        }
+
+        /* Hidden file input */
+        #file-input {
+            display: none;
+        }
+
+        #login-file-input {
+            display: none;
         }
     </style>
 </head>
 <body>
     <div id="app">
+        <!-- Hidden file inputs -->
+        <input type="file" id="file-input" accept="image/*">
+        <input type="file" id="login-file-input" accept="image/*">
+
         <!-- Login Screen -->
         <div id="login-screen">
             <h1>IMPERION</h1>
-            <h2>secure messaging</h2>
-            <input type="text" id="username-input" placeholder="Your name (e.g., Alice)" value="Alice">
-            <button id="login-btn">Start chatting</button>
+            <h2>gold & navy edition</h2>
+            
+            <div class="login-avatar-preview" id="login-avatar-preview">
+                <img id="login-avatar-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23333'/%3E%3Ctext x='50' y='70' font-size='50' text-anchor='middle' fill='%23D4AF37'%3E👤%3C/text%3E%3C/svg%3E" alt="avatar">
+            </div>
+            
+            <input type="text" id="username-input" placeholder="input username">
+            <button id="login-btn">Start Messaging</button>
             <div id="login-error"></div>
-            <p style="color:#4a6577; text-align:center; margin-top:2rem; font-size:0.8rem;">
-                Demo: Enter any name to begin
-            </p>
         </div>
         
         <!-- Main App -->
@@ -344,7 +600,10 @@ html
                     <span id="user-info"></span>
                     <button id="logout-btn">Exit</button>
                 </div>
-            </div> <div class="tabs">
+            </div>
+            
+            <!-- Tabs (hidden during chat) -->
+            <div class="tabs" id="main-tabs">
                 <div class="tab active" data-tab="chats">Chats</div>
                 <div class="tab" data-tab="contacts">Contacts</div>
                 <div class="tab" data-tab="profile">Profile</div>
@@ -353,14 +612,14 @@ html
             <div id="content-area">
                 <!-- Chats Tab -->
                 <div id="chats-tab">
-                    <div id="contacts-list"></div>
+                    <div id="contacts-list" class="loading">Loading conversations...</div>
                 </div>
                 
                 <!-- Contacts Tab (hidden by default) -->
                 <div id="contacts-tab" style="display: none;">
                     <div class="add-contact">
-                        <input type="text" id="new-contact-name" placeholder="Contact name" value="Bob">
-                        <input type="text" id="new-contact-phone" placeholder="Phone or ID" value="bob@example.com">
+                        <input type="text" id="new-contact-name" placeholder="Contact name">
+                        <input type="text" id="new-contact-id" placeholder="User ID">
                         <button id="add-contact-btn">Add Contact</button>
                     </div>
                     <div id="all-contacts-list"></div>
@@ -368,23 +627,24 @@ html
                 
                 <!-- Profile Tab (hidden by default) -->
                 <div id="profile-tab" style="display: none;">
-                    <div style="background:#13222b; border-radius:16px; padding:2rem; text-align:center;">
-                        <div style="width:80px; height:80px; background:#25D366; border-radius:50%; margin:0 auto 1rem; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:700;">
-                            👤
+                    <div class="profile-card">
+                        <div class="profile-avatar" id="profile-avatar">
+                            <img id="profile-avatar-img" src="" alt="avatar">
                         </div>
-                        <h3 style="color:white;" id="profile-name"></h3>
-                        <p style="color:#4a6577; margin-top:1rem;">End-to-end encrypted</p>
+                        <input type="text" id="profile-name-input" class="profile-input" placeholder="Your name">
+                        <button id="save-profile-btn">Save Changes</button>
+                        <div class="profile-id" id="profile-user-id">ID: loading...</div>
                     </div>
                 </div>
             </div>
             
-            <!-- Chat View (hidden by default) -->
+            <!-- Chat View - Takes over entire app when active -->
             <div id="chat-view">
                 <div class="chat-header">
                     <button id="back-btn">←</button>
                     <div>
-                        <div style="font-weight:600; color:white;" id="chat-contact-name"></div>
-                        <div style="font-size:0.8rem; color:#4a6577;">encrypted</div>
+                        <div id="chat-contact-name"></div>
+                        <small>encrypted</small>
                     </div>
                 </div>
                 
@@ -398,18 +658,43 @@ html
         </div>
     </div>
     
+    <!-- Firebase SDK -->
     <script type="module">
-        // Simple in-memory database (no Firebase required)
-        // This version works immediately without any setup!
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            query, 
+            orderBy, 
+            onSnapshot,
+            doc,
+            setDoc,
+            getDoc,
+            getDocs,
+            updateDoc,
+            arrayUnion,
+            Timestamp
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         
-        // Data stores
-        const users = JSON.parse(localStorage.getItem('imperion_users')) || {};
-        const messages = JSON.parse(localStorage.getItem('imperion_messages')) || {};
-        const contacts = JSON.parse(localStorage.getItem('imperion_contacts')) || {};
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwM8N-eMlsbndlnuOnB9dQ5lx9D2Dn1hI",
+            authDomain: "chatsnap-16189.firebaseapp.com",
+            projectId: "chatsnap-16189",
+            storageBucket: "chatsnap-16189.firebasestorage.app",
+            messagingSenderId: "687581415852",
+            appId: "1:687581415852:web:3fe355b6fc830ae340d209",
+            measurementId: "G-ZQS6K88PY8"
+        };
         
-        // Current user
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // App state
         let currentUser = null;
         let currentChatContact = null;
+        let messagesUnsubscribe = null;
         
         // DOM elements
         const loginScreen = document.getElementById('login-screen');
@@ -421,6 +706,7 @@ html
         const logoutBtn = document.getElementById('logout-btn');
         const contentArea = document.getElementById('content-area');
         const chatView = document.getElementById('chat-view');
+        const mainTabs = document.getElementById('main-tabs');
         const backBtn = document.getElementById('back-btn');
         const messagesContainer = document.getElementById('messages-container');
         const messageInput = document.getElementById('message-input');
@@ -430,109 +716,170 @@ html
         const chatsTab = document.getElementById('chats-tab');
         const contactsTab = document.getElementById('contacts-tab');
         const profileTab = document.getElementById('profile-tab');
-        const profileName = document.getElementById('profile-name');
+        const profileNameInput = document.getElementById('profile-name-input');
+        const profileUserId = document.getElementById('profile-user-id');
+        const profileAvatarImg = document.getElementById('profile-avatar-img');
+        const saveProfileBtn = document.getElementById('save-profile-btn');
         const contactsList = document.getElementById('contacts-list');
         const allContactsList = document.getElementById('all-contacts-list');
         const addContactBtn = document.getElementById('add-contact-btn');
         const newContactName = document.getElementById('new-contact-name');
-        const newContactPhone = document.getElementById('new-contact-phone');
+        const newContactId = document.getElementById('new-contact-id');
+        
+        // Avatar upload elements
+        const fileInput = document.getElementById('file-input');
+        const loginFileInput = document.getElementById('login-file-input');
+        const loginAvatarPreview = document.getElementById('login-avatar-preview');
+        const loginAvatarImg = document.getElementById('login-avatar-img');
+        const profileAvatar = document.getElementById('profile-avatar');
+        
+        // Track login avatar
+        let loginAvatarData = null;
+        
+        // Login avatar click
+        loginAvatarPreview.addEventListener('click', () => {
+            loginFileInput.click();
+        });
+        
+        loginFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    loginAvatarData = e.target.result;
+                    loginAvatarImg.src = loginAvatarData;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Profile avatar click
+        profileAvatar.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && currentUser) {
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    const avatarData = e.target.result;
+                    profileAvatarImg.src = avatarData;
+                    
+                    // Save to Firestore
+                    const userRef = doc(db, 'users', currentUser.id);
+                    await updateDoc(userRef, {
+                        avatar: avatarData
+                    });
+                    currentUser.avatar = avatarData;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
         
         // Login
-        loginBtn.addEventListener('click', () => {
+        loginBtn.addEventListener('click', async () => {
             const name = usernameInput.value.trim();
             if (!name) {
-                loginError.textContent = 'Please enter a name';
+                loginError.textContent = 'Please enter a username';
                 return;
             }
             
-            // Create user
-            const userId = 'user_' + Date.now();
-            currentUser = {
-                id: userId,
-                name: name,
-                phone: name.toLowerCase() + '@example.com'
-            };
-            
-            // Save user
-            users[userId] = currentUser;
-            localStorage.setItem('imperion_users', JSON.stringify(users));
-            
-            // Initialize contacts for this user
-            if (!contacts[userId]) {
-                contacts[userId] = [];
-            }
-            localStorage.setItem('imperion_contacts', JSON.stringify(contacts));
-            
-            // Initialize messages for this user
-            if (!messages[userId]) {
-                messages[userId] = {};
-            }
-            localStorage.setItem('imperion_messages', JSON.stringify(messages));
-            
-            // Show main app
-            loginScreen.style.display = 'none';
-            mainApp.style.display = 'flex';
-            userInfo.textContent = name;
-            profileName.textContent = name;
-            
-            // Add default contacts
-            if (contacts[userId].length === 0) {
-                contacts[userId].push({
-                    id: 'user_bob',
-                    name: 'Bob',
-                    phone: 'bob@example.com'
-                });
-                contacts[userId].push({
-                    id: 'user_charlie',
-                    name: 'Charlie',
-                    phone: 'charlie@example.com'
-                });
-                localStorage.setItem('imperion_contacts', JSON.stringify(contacts));
-            }
-            
-            // Add some demo messages
-            if (!messages[userId]['user_bob']) {
-                messages[userId]['user_bob'] = [
-                    {
-                        text: 'Hey there! 👋',
-                        sender: 'user_bob',
-                        receiver: userId,
-                        time: new Date(Date.now() - 3600000).toISOString()
-                    },
-                    {
-                        text: 'Hi Bob!',
-                        sender: userId,
-                        receiver: 'user_bob',
-                        time: new Date(Date.now() - 3500000).toISOString()
+            try {
+                // Check if user exists
+                const usersRef = collection(db, 'users');
+                const querySnapshot = await getDocs(usersRef);
+                let found = false;
+                
+                for (const doc of querySnapshot.docs) {
+                    if (doc.data().name === name) {
+                        currentUser = {
+                            id: doc.id,
+                            ...doc.data()
+                        };
+                        found = true;
+                        break;
                     }
-                ];
-                localStorage.setItem('imperion_messages', JSON.stringify(messages));
+                }
+                
+                if (!found) {
+                    // Create new user with avatar
+                    const newUserRef = doc(collection(db, 'users'));
+                    currentUser = {
+                        id: newUserRef.id,
+                        name: name,
+                        avatar: loginAvatarData || '👤',
+                        contacts: [],
+                        createdAt: new Date().toISOString()
+                    };
+                    await setDoc(newUserRef, currentUser);
+                }
+                
+                // Show main app
+                loginScreen.style.display = 'none';
+                mainApp.style.display = 'flex';
+                updateProfileUI();
+                
+                // Load contacts
+                loadContacts();
+                
+            } catch (error) {
+                console.error(error);
+                loginError.textContent = 'Error connecting';
+            }
+        });
+        
+        // Update profile UI
+        function updateProfileUI() {
+            if (!currentUser) return;
+            userInfo.textContent = currentUser.name;
+            profileNameInput.value = currentUser.name;
+            
+            if (currentUser.avatar && currentUser.avatar !== '👤') {
+                profileAvatarImg.src = currentUser.avatar;
+            } else {
+                profileAvatarImg.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23333'/%3E%3Ctext x='50' y='70' font-size='50' text-anchor='middle' fill='%23D4AF37'%3E👤%3C/text%3E%3C/svg%3E";
             }
             
-            if (!messages[userId]['user_charlie']) {
-                messages[userId]['user_charlie'] = [
-                    {
-                        text: 'Welcome to Imperion!',
-                        sender: 'user_charlie',
-                        receiver: userId,
-                        time: new Date(Date.now() - 7200000).toISOString()
-                    }
-                ];
-                localStorage.setItem('imperion_messages', JSON.stringify(messages));
-            }
+            profileUserId.textContent = `ID: ${currentUser.id}`;
+        }
+        
+        // Save profile changes
+        saveProfileBtn.addEventListener('click', async () => {
+            if (!currentUser) return;
             
-            renderContacts();
-            renderAllContacts();
+            const newName = profileNameInput.value.trim();
+            if (!newName) return;
+            
+            // Update in Firestore
+            const userRef = doc(db, 'users', currentUser.id);
+            await updateDoc(userRef, {
+                name: newName
+            });
+            
+            // Update local
+            currentUser.name = newName;
+            updateProfileUI();
+            
+            alert('Profile updated!');
         });
         
         // Logout
         logoutBtn.addEventListener('click', () => {
             currentUser = null;
             currentChatContact = null;
+            if (messagesUnsubscribe) messagesUnsubscribe();
+            
             loginScreen.style.display = 'flex';
             mainApp.style.display = 'none';
             chatView.style.display = 'none';
             contentArea.style.display = 'block';
+            mainTabs.style.display = 'flex';
+            
+            // Reset login fields
+            usernameInput.value = '';
+            loginAvatarImg.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23333'/%3E%3Ctext x='50' y='70' font-size='50' text-anchor='middle' fill='%23D4AF37'%3E👤%3C/text%3E%3C/svg%3E";
+            loginAvatarData = null;
         });
         
         // Tab switching
@@ -547,33 +894,55 @@ html
                 profileTab.style.display = tabName === 'profile' ? 'block' : 'none';
                 
                 if (tabName === 'contacts') {
-                    renderAllContacts();
+                    loadAllContacts();
                 } else if (tabName === 'chats') {
-                    renderContacts();
+                    loadContacts();
                 }
             });
         });
         
-        // Render contacts (chats list)
-        function renderContacts() {
+        // Load contacts for chats
+        async function loadContacts() {
             if (!currentUser) return;
             
-            const userContacts = contacts[currentUser.id] || [];
+            contactsList.innerHTML = '<div class="loading">Loading...</div>';
             
-            if (userContacts.length === 0) {
-                contactsList.innerHTML = '<div class="empty-state">No contacts yet. Add some in Contacts tab.</div>';
+            const usersRef = collection(db, 'users');
+            const snapshot = await getDocs(usersRef);
+            const users = [];
+            
+            snapshot.forEach(doc => {
+                if (doc.id !== currentUser.id) {
+                    users.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                }
+            });
+            
+            if (users.length === 0) {
+                contactsList.innerHTML = '<div class="empty-state">No users yet. Share your ID!</div>';
                 return;
             }
             
+            // Get last messages
+            const usersWithLastMsg = await Promise.all(users.map(async (user) => {
+                const lastMsg = await getLastMessage(user.id);
+                return { ...user, lastMsg };
+            }));
+            
             let html = '';
-            userContacts.forEach(contact => {
-                const lastMsg = getLastMessage(contact.id);
+            usersWithLastMsg.forEach(user => {
+                const avatarHtml = user.avatar && user.avatar !== '👤' 
+                    ? `<img src="${user.avatar}" style="width:100%; height:100%; object-fit:cover;">`
+                    : (user.avatar || '👤');
+                
                 html += `
-                    <div class="contact-item" data-contact-id="${contact.id}">
-                        <div class="contact-avatar">${contact.name.charAt(0)}</div>
+                    <div class="contact-item" data-contact-id="${user.id}">
+                        <div class="contact-avatar">${avatarHtml}</div>
                         <div class="contact-details">
-                            <div class="contact-name">${contact.name}</div>
-                            <div class="contact-last">${lastMsg || 'No messages'}</div>
+                            <div class="contact-name">${user.name}</div>
+                            <div class="contact-last">${user.lastMsg || 'No messages'}</div>
                         </div>
                     </div>
                 `;
@@ -581,125 +950,154 @@ html
             
             contactsList.innerHTML = html;
             
-            // Add click handlers
             document.querySelectorAll('.contact-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const contactId = item.dataset.contactId;
-                    const contact = userContacts.find(c => c.id === contactId);
+                    const contact = usersWithLastMsg.find(u => u.id === contactId);
                     openChat(contact);
                 });
             });
         }
         
-        // Render all contacts (for contacts tab)
-        function renderAllContacts() {
+        // Load all contacts for contacts tab
+        async function loadAllContacts() {
             if (!currentUser) return;
             
-            const userContacts = contacts[currentUser.id] || [];if (userContacts.length === 0) {
-                allContactsList.innerHTML = '<div class="empty-state">No contacts yet. Add one above.</div>';
-                return;
-            }
-            
+            const usersRef = collection(db, 'users');
+            const snapshot = await getDocs(usersRef);
             let html = '';
-            userContacts.forEach(contact => {
-                html += `
-                    <div class="contact-item" data-contact-id="${contact.id}">
-                        <div class="contact-avatar">${contact.name.charAt(0)}</div>
-                        <div class="contact-details">
-                            <div class="contact-name">${contact.name}</div>
-                            <div class="contact-last">${contact.phone}</div>
+            
+            snapshot.forEach(doc => {
+                if (doc.id !== currentUser.id) {
+                    const user = doc.data();
+                    const avatarHtml = user.avatar && user.avatar !== '👤' 
+                        ? `<img src="${user.avatar}" style="width:100%; height:100%; object-fit:cover;">`
+                        : (user.avatar || '👤');
+                    
+                    html += `
+                        <div class="contact-item">
+                            <div class="contact-avatar">${avatarHtml}</div>
+                            <div class="contact-details">
+                                <div class="contact-name">${user.name}</div>
+                                <div class="contact-last">ID: ${doc.id.slice(0, 8)}...</div>
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                }
             });
             
-            allContactsList.innerHTML = html;
+            allContactsList.innerHTML = html || '<div class="empty-state">No other users</div>';
         }
         
         // Get last message
-        function getLastMessage(contactId) {
+        async function getLastMessage(contactId) {
             if (!currentUser) return '';
             
-            const chatMessages = messages[currentUser.id]?.[contactId] || [];
-            if (chatMessages.length === 0) return '';
+            const chatId = [currentUser.id, contactId].sort().join('_');
+            const messagesRef = collection(db, 'chats', chatId, 'messages');
+            const q = query(messagesRef, orderBy('timestamp', 'desc'));
             
-            const last = chatMessages[chatMessages.length - 1];
-            return last.text.substring(0, 30) + (last.text.length > 30 ? '...' : '');
+            const snapshot = await getDocs(q);
+            if (!snapshot.empty) {
+                const msg = snapshot.docs[0].data();
+                return msg.text.substring(0, 30);
+            }
+            return '';
         }
         
         // Add contact
-        addContactBtn.addEventListener('click', () => {
+        addContactBtn.addEventListener('click', async () => {
             if (!currentUser) return;
             
             const name = newContactName.value.trim();
-            const phone = newContactPhone.value.trim();
+            const contactId = newContactId.value.trim();
             
-            if (!name || !phone) {
-                alert('Please enter name and phone');
+            if (!name || !contactId) {
+                alert('Enter both name and ID');
                 return;
             }
             
-            const newContact = {
-                id: 'user_' + Date.now(),
-                name: name,
-                phone: phone
-            };
+            const contactRef = doc(db, 'users', contactId);
+            const contactSnap = await getDoc(contactRef);
             
-            contacts[currentUser.id].push(newContact);
-            localStorage.setItem('imperion_contacts', JSON.stringify(contacts));
+            if (!contactSnap.exists()) {
+                alert('User ID not found');
+                return;
+            }
+            
+            const userRef = doc(db, 'users', currentUser.id);
+            await updateDoc(userRef, {
+                contacts: arrayUnion(contactId)
+            });
             
             newContactName.value = '';
-            newContactPhone.value = '';
-            
-            renderAllContacts();
-            renderContacts();
+            newContactId.value = '';
+            loadAllContacts();
         });
         
-        // Open chat
+        // Open chat - THIS HIDES TABS AND CONTACTS
         function openChat(contact) {
             currentChatContact = contact;
             chatContactName.textContent = contact.name;
             
+            // Hide main content and tabs, show fullscreen chat
             contentArea.style.display = 'none';
+            mainTabs.style.display = 'none';
             chatView.style.display = 'flex';
             
-            renderMessages();
+            // Listen for messages
+            listenForMessages(contact.id);
         }
         
-        // Back button
+        // Listen for messages
+        function listenForMessages(contactId) {
+            if (!currentUser) return;
+            
+            if (messagesUnsubscribe) messagesUnsubscribe();
+            
+            const chatId = [currentUser.id, contactId].sort().join('_');
+            const messagesRef = collection(db, 'chats', chatId, 'messages');
+            const q = query(messagesRef, orderBy('timestamp', 'asc'));
+            
+            messagesUnsubscribe = onSnapshot(q, (snapshot) => {
+                let html = '';
+                
+                snapshot.forEach((doc) => {
+                    const msg = doc.data();
+                    const isSent = msg.senderId === currentUser.id;
+                    
+                    const time = msg.timestamp?.toDate 
+                        ? msg.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                        : '';
+                    
+                    html += `
+                        <div class="message ${isSent ? 'sent' : 'received'}">
+                            ${msg.text}
+                            <div style="font-size:0.7rem; opacity:0.7; margin-top:0.2rem;">${time}</div>
+                        </div>
+                    `;
+                });
+                
+                messagesContainer.innerHTML = html || '<div class="empty-state">Say hello! 👋</div>';
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            });
+        }
+        
+        // Back button - EXITS CHAT, SHOWS TABS AND CONTACTS
         backBtn.addEventListener('click', () => {
             chatView.style.display = 'none';
             contentArea.style.display = 'block';
+            mainTabs.style.display = 'flex';  // Show tabs again
             currentChatContact = null;
-        });
-        
-        // Render messages
-        function renderMessages() {
-            if (!currentUser || !currentChatContact) return;
             
-            const chatMessages = messages[currentUser.id]?.[currentChatContact.id] || [];
-            
-            if (chatMessages.length === 0) {
-                messagesContainer.innerHTML = '<div class="empty-state">No messages yet. Say hi! 👋</div>';
-                return;
+            if (messagesUnsubscribe) {
+                messagesUnsubscribe();
+                messagesUnsubscribe = null;
             }
             
-            let html = '';
-            chatMessages.forEach(msg => {
-                const isSent = msg.sender === currentUser.id;
-                const time = new Date(msg.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                
-                html += `
-                    <div class="message ${isSent ? 'sent' : 'received'}">
-                        ${msg.text}
-                        <div style="font-size:0.7rem; opacity:0.7; margin-top:0.2rem;">${time}</div>
-                    </div>
-                `;
-            });
-            
-            messagesContainer.innerHTML = html;
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
+            // Refresh contacts
+            loadContacts();
+        });
         
         // Send message
         sendBtn.addEventListener('click', sendMessage);
@@ -707,47 +1105,22 @@ html
             if (e.key === 'Enter') sendMessage();
         });
         
-        function sendMessage() {
+        async function sendMessage() {
             const text = messageInput.value.trim();
             if (!text || !currentUser || !currentChatContact) return;
             
-            const message = {
+            const chatId = [currentUser.id, currentChatContact.id].sort().join('_');
+            const messagesRef = collection(db, 'chats', chatId, 'messages');
+            
+            await addDoc(messagesRef, {
                 text: text,
-                sender: currentUser.id,
-                receiver: currentChatContact.id,
-                time: new Date().toISOString()
-            };
-            
-            // Save to current user's messages
-            if (!messages[currentUser.id][currentChatContact.id]) {
-                messages[currentUser.id][currentChatContact.id] = [];
-            }
-            messages[currentUser.id][currentChatContact.id].push(message);
-            
-            // Also save to contact's messages (simulate receiving)
-            if (!messages[currentChatContact.id]) {
-                messages[currentChatContact.id] = {};
-            }
-            if (!messages[currentChatContact.id][currentUser.id]) {
-                messages[currentChatContact.id][currentUser.id] = [];
-            }
-            messages[currentChatContact.id][currentUser.id].push({
-                ...message,
-                sender: currentUser.id,
-                receiver: currentChatContact.id
+                senderId: currentUser.id,
+                senderName: currentUser.name,
+                receiverId: currentChatContact.id,
+                timestamp: Timestamp.fromDate(new Date())
             });
             
-            localStorage.setItem('imperion_messages', JSON.stringify(messages));
-            
             messageInput.value = '';
-            renderMessages();
-            renderContacts(); // Update last message preview
-        }
-        
-        // Check for existing session
-        const savedUsers = Object.values(users);
-        if (savedUsers.length > 0 && !currentUser) {
-            // Just show login screen, user can login manually
         }
     </script>
 </body>
