@@ -1,250 +1,191 @@
+html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Imperion · secure messaging</title>
-    <!-- Font & styling -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Imperion · messaging app</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
         }
         
         body {
-            font-family: 'Inter', sans-serif;
             background: #0a1419;
             height: 100vh;
             display: flex;
-            align-items: center;
             justify-content: center;
-            color: #e9edf0;
+            align-items: center;
         }
         
         #app {
             width: 100%;
-            height: 100%;
-            max-width: 1400px;
+            max-width: 500px;
+            height: 100vh;
+            max-height: 900px;
+            background: #0e1a21;
+            border-radius: 0;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+        
+        @media (min-width: 768px) {
+            #app {
+                border-radius: 30px;
+                height: 90vh;
+                margin: 20px;
+            }
+        }
+        
+        /* Login Screen */
+        #login-screen {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: center;
             background: #0e1a21;
-            box-shadow: 0 25px 60px -15px rgba(0,0,0,0.5);
         }
         
-        /* Auth Screen */
-        #auth-screen {
-            max-width: 400px;
-            margin: auto;
-            padding: 2.5rem;
-            background: #16232b;
-            border-radius: 32px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-            width: 90%;
-        }
-        
-        #auth-screen h2 {
+        #login-screen h1 {
             color: #25D366;
-            margin-bottom: 1.5rem;
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
         }
         
-        #auth-screen input {
+        #login-screen h2 {
+            color: #8ba0b2;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+        
+        #login-screen input {
             width: 100%;
             padding: 1rem;
             margin-bottom: 1rem;
             background: #1f2f39;
             border: 1px solid #314954;
-            border-radius: 16px;
+            border-radius: 12px;
             color: white;
             font-size: 1rem;
         }
         
-        #auth-screen input::placeholder {
-            color: #7f95a6;
-        }
-        
-        #auth-screen button {
+        #login-screen button {
             width: 100%;
             padding: 1rem;
             background: #25D366;
             border: none;
-            border-radius: 16px;
-            font-weight: 700;
+            border-radius: 12px;
+            font-weight: 600;
             font-size: 1rem;
             color: #0a1419;
             cursor: pointer;
-            transition: 0.2s;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
         
-        #auth-screen button:hover {
-            background: #34e27a;
-        }
-        
-        #auth-screen .phone-note {
-            font-size: 0.85rem;
-            color: #8ba0b2;
+        #login-error {
+            color: #ff6b6b;
             text-align: center;
+            margin-top: 1rem;
         }
         
-        #verification-message {
-            color: #f5b342;
-            margin: 1rem 0;
-            text-align: center;
-            font-weight: 500;
-        }
-        
-        /* Main App Layout */
+        /* Main App */
         #main-app {
             display: none;
-            height: 100%;
             flex-direction: column;
+            height: 100%;
             background: #0e1a21;
         }
         
         /* Header */
-        .app-header {
+        .header {
             background: #0f1a1f;
-            padding: 0.8rem 2rem;
+            padding: 1rem;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
             border-bottom: 2px solid #25D366;
         }
         
         .logo {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: white;
-            letter-spacing: -0.02em;
         }
         
         .logo span {
             color: #25D366;
         }
         
-        .user-info {
+        #user-info {
             display: flex;
             align-items: center;
-            gap: 1rem;
-        }
-        
-        .user-phone {
+            gap: 0.5rem;
             background: #1f2f39;
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 1rem;
             border-radius: 30px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #b4d5e5;
         }
         
         #logout-btn {
             background: #2a3f4b;
-            color: white;
             border: none;
-            padding: 0.5rem 1.2rem;
+            color: white;
+            padding: 0.4rem 1rem;
             border-radius: 30px;
             cursor: pointer;
-            font-weight: 500;
-            transition: 0.2s;
         }
         
-        #logout-btn:hover {
-            background: #3d5766;
-        }
-        
-        /* Main content */
-        .main-content {
+        /* Tabs */
+        .tabs {
             display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-        
-        /* Contacts sidebar */
-        .contacts-sidebar {
-            width: 320px;
             background: #101d25;
-            border-right: 1px solid #1f323e;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .sidebar-header {
-            padding: 1.5rem 1rem 0.5rem 1rem;
-        }
-        
-        .sidebar-header h3 {
-            color: #25D366;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .new-chat {
-            padding: 1rem;
             border-bottom: 1px solid #1f323e;
         }
         
-        #new-contact-input {
-            width: 100%;
-            padding: 0.8rem;
-            background: #1f2f39;
-            border: 1px solid #314954;
-            border-radius: 30px;
-            color: white;
-            margin-bottom: 0.5rem;
-        }
-        
-        #add-contact-btn {
-            width: 100%;
-            padding: 0.7rem;
-            background: #1b3a47;
-            border: none;
-            border-radius: 30px;
-            color: white;
-            font-weight: 600;
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
             cursor: pointer;
+            color: #8ba0b2;
+            font-weight: 500;
         }
         
-        #add-contact-btn:hover {
-            background: #254f60;
+        .tab.active {
+            color: #25D366;
+            border-bottom: 3px solid #25D366;
         }
         
-        .contacts-list {
+        /* Content */
+        #content-area {
             flex: 1;
             overflow-y: auto;
-            padding: 0.5rem;
+            padding: 1rem;
+            background: #0a1419;
         }
         
+        /* Contacts List */
         .contact-item {
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: 0.8rem 1rem;
-            border-radius: 16px;
-            margin-bottom: 0.3rem;
-            cursor: pointer;
-            transition: 0.2s;
+            padding: 1rem;
             background: #13222b;
+            border-radius: 16px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
         }
-        
-        .contact-item:hover {
-            background: #1a2e3a;
-        }
-        
-        .contact-item.active {
-            background: #25D36620;
-            border-left: 4px solid #25D366;
-        }
-        
-        .contact-avatar {
-            width: 45px;
-            height: 45px;
+            .contact-avatar {
+            width: 50px;
+            height: 50px;
             background: #25D366;
             border-radius: 50%;
             display: flex;
@@ -252,7 +193,6 @@
             justify-content: center;
             font-weight: 700;
             color: #0f1a1f;
-            text-transform: uppercase;
         }
         
         .contact-details {
@@ -265,62 +205,47 @@
             margin-bottom: 0.2rem;
         }
         
-        .contact-preview {
+        .contact-last {
             font-size: 0.8rem;
             color: #9ab3c4;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 150px;
         }
         
-        /* Chat area */
-        .chat-area {
-            flex: 1;
-            display: flex;
+        /* Chat View */
+        #chat-view {
+            display: none;
             flex-direction: column;
-            background: #0a1419;
+            height: 100%;
         }
         
         .chat-header {
-            padding: 1rem 2rem;
-            background: #101d25;
-            border-bottom: 1px solid #1f323e;
             display: flex;
             align-items: center;
             gap: 1rem;
+            padding: 1rem;
+            background: #101d25;
         }
         
-        .chat-header .contact-avatar {
-            width: 40px;
-            height: 40px;
+        #back-btn {
+            background: none;
+            border: none;
+            color: #25D366;
+            font-size: 1.5rem;
+            cursor: pointer;
         }
         
-        .chat-header-info h2 {
-            font-size: 1.2rem;
-            color: white;
-            margin-bottom: 0.2rem;
-        }
-        
-        .chat-header-info p {
-            font-size: 0.8rem;
-            color: #9ab3c4;
-        }
-        
-        .messages-container {
+        .messages {
             flex: 1;
             overflow-y: auto;
-            padding: 2rem;
+            padding: 1rem;
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
         }
         
         .message {
-            max-width: 60%;
-            padding: 0.8rem 1.2rem;
-            border-radius: 24px;
-            position: relative;
+            max-width: 80%;
+            padding: 0.8rem 1rem;
+            border-radius: 20px;
             word-wrap: break-word;
         }
         
@@ -328,570 +253,453 @@
             background: #25D366;
             color: #0a1419;
             align-self: flex-end;
-            border-bottom-right-radius: 4px;
         }
         
         .message.received {
             background: #1f2f39;
-            color: #e9edf0;
+            color: white;
             align-self: flex-start;
-            border-bottom-left-radius: 4px;
-        }
-        
-        .message-time {
-            font-size: 0.65rem;
-            opacity: 0.7;
-            margin-top: 0.2rem;
-            text-align: right;
         }
         
         .message-input-area {
-            padding: 1.5rem 2rem;
-            background: #101d25;
             display: flex;
-            gap: 1rem;
-            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: #101d25;
         }
         
         #message-input {
             flex: 1;
-            padding: 1rem 1.5rem;
+            padding: 0.8rem;
             background: #1f2f39;
             border: none;
-            border-radius: 30px;
+            border-radius: 25px;
             color: white;
-            font-size: 1rem;
-        }
-        
-        #message-input:focus {
-            outline: 2px solid #25D366;
         }
         
         #send-btn {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             background: #25D366;
             border: none;
-            color: #0a1419;
-            font-size: 1.5rem;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s;
+            font-size: 1.2rem;
         }
         
-        #send-btn:hover {
-            background: #34e27a;
+        /* Add Contact */
+        .add-contact {
+            padding: 1rem;
+            background: #13222b;
+            border-radius: 16px;
+            margin-bottom: 1rem;
         }
         
-        #send-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
+        .add-contact input {
+            width: 100%;
+            padding: 0.8rem;
+            background: #1f2f39;
+            border: 1px solid #314954;
+            border-radius: 12px;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        
+        .add-contact button {
+            width: 100%;
+            padding: 0.8rem;
+            background: #25D366;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
         }
         
         .empty-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: #4a6577;
             text-align: center;
+            color: #4a6577;
             padding: 2rem;
-        }
-        
-        .empty-state h3 {
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
         }
     </style>
 </head>
 <body>
     <div id="app">
-        <!-- Auth Screen -->
-        <div id="auth-screen">
-            <h2>Imperion <span style="color:white; font-size:0.9rem; background:#1f2f39; padding:0.2rem 1rem; border-radius:30px; margin-left:0.5rem;">secure chat</span></h2>
-            
-            <div id="phone-auth">
-                <input type="tel" id="phone-number" placeholder="+1234567890" value="+15555550100">
-                <button id="send-code-btn">Send verification code</button>
-                <p class="phone-note">You'll receive a 6-digit code (simulated in demo)</p>
-            </div>
-            
-            <div id="code-auth" style="display: none;">
-                <input type="text" id="verification-code" placeholder="6-digit code" maxlength="6">
-                <button id="verify-code-btn">Verify & sign in</button>
-                <button id="back-btn" style="background:#2a3f4b;">Back</button>
-                <div id="verification-message"></div>
-            </div>
+        <!-- Login Screen -->
+        <div id="login-screen">
+            <h1>IMPERION</h1>
+            <h2>secure messaging</h2>
+            <input type="text" id="username-input" placeholder="Your name (e.g., Alice)" value="Alice">
+            <button id="login-btn">Start chatting</button>
+            <div id="login-error"></div>
+            <p style="color:#4a6577; text-align:center; margin-top:2rem; font-size:0.8rem;">
+                Demo: Enter any name to begin
+            </p>
         </div>
         
         <!-- Main App -->
         <div id="main-app">
-            <div class="app-header">
+            <div class="header">
                 <div class="logo">IMPERION<span>.</span></div>
-                <div class="user-info">
-                    <span class="user-phone" id="current-user-phone"></span>
-                    <button id="logout-btn">Logout</button>
+                <div style="display: flex; gap: 0.5rem;">
+                    <span id="user-info"></span>
+                    <button id="logout-btn">Exit</button>
+                </div>
+            </div> <div class="tabs">
+                <div class="tab active" data-tab="chats">Chats</div>
+                <div class="tab" data-tab="contacts">Contacts</div>
+                <div class="tab" data-tab="profile">Profile</div>
+            </div>
+            
+            <div id="content-area">
+                <!-- Chats Tab -->
+                <div id="chats-tab">
+                    <div id="contacts-list"></div>
+                </div>
+                
+                <!-- Contacts Tab (hidden by default) -->
+                <div id="contacts-tab" style="display: none;">
+                    <div class="add-contact">
+                        <input type="text" id="new-contact-name" placeholder="Contact name" value="Bob">
+                        <input type="text" id="new-contact-phone" placeholder="Phone or ID" value="bob@example.com">
+                        <button id="add-contact-btn">Add Contact</button>
+                    </div>
+                    <div id="all-contacts-list"></div>
+                </div>
+                
+                <!-- Profile Tab (hidden by default) -->
+                <div id="profile-tab" style="display: none;">
+                    <div style="background:#13222b; border-radius:16px; padding:2rem; text-align:center;">
+                        <div style="width:80px; height:80px; background:#25D366; border-radius:50%; margin:0 auto 1rem; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:700;">
+                            👤
+                        </div>
+                        <h3 style="color:white;" id="profile-name"></h3>
+                        <p style="color:#4a6577; margin-top:1rem;">End-to-end encrypted</p>
+                    </div>
                 </div>
             </div>
             
-            <div class="main-content">
-                <!-- Contacts sidebar -->
-                <div class="contacts-sidebar">
-                    <div class="sidebar-header">
-                        <h3>Chats</h3>
-                    </div>
-                    
-                    <div class="new-chat">
-                        <input type="text" id="new-contact-input" placeholder="Enter phone number...">
-                        <button id="add-contact-btn">➕ Start new chat</button>
-                    </div>
-                    
-                    <div class="contacts-list" id="contacts-list">
-                        <!-- Contacts will be populated here -->
-                        <div style="color:#6b8da0; text-align:center; padding:2rem;">
-                            No contacts yet. Add a phone number above.
-                        </div>
+            <!-- Chat View (hidden by default) -->
+            <div id="chat-view">
+                <div class="chat-header">
+                    <button id="back-btn">←</button>
+                    <div>
+                        <div style="font-weight:600; color:white;" id="chat-contact-name"></div>
+                        <div style="font-size:0.8rem; color:#4a6577;">encrypted</div>
                     </div>
                 </div>
                 
-                <!-- Chat area -->
-                <div class="chat-area" id="chat-area">
-                    <div class="empty-state" id="empty-chat-state">
-                        <h3>👋 Welcome to Imperion</h3>
-                        <p>Select a contact or start a new conversation</p>
-                        <p style="font-size:0.9rem; margin-top:1rem;">All messages are end-to-end encrypted</p>
-                    </div>
-                    
-                    <!-- Active chat (hidden by default) -->
-                    <div id="active-chat" style="display: none; height:100%; display:flex; flex-direction: column;">
-                        <div class="chat-header" id="chat-header">
-                            <!-- Filled dynamically -->
-                        </div>
-                        
-                        <div class="messages-container" id="messages-container">
-                            <!-- Messages appear here -->
-                        </div>
-                        
-                        <div class="message-input-area">
-                            <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off">
-                            <button id="send-btn">➤</button>
-                        </div>
-                    </div>
+                <div class="messages" id="messages-container"></div>
+                
+                <div class="message-input-area">
+                    <input type="text" id="message-input" placeholder="Type a message...">
+                    <button id="send-btn">➤</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Firebase SDKs -->
+    
     <script type="module">
-        // Import Firebase
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-        import { 
-            getAuth, 
-            signInWithPhoneNumber, 
-            RecaptchaVerifier,
-            signOut,
-            onAuthStateChanged
-        } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-        import {
-            getFirestore,
-            collection,
-            addDoc,
-            query,
-            where,
-            orderBy,
-            onSnapshot,
-            doc,
-            getDocs,
-            setDoc,
-            updateDoc,
-            arrayUnion,
-            getDoc,
-            serverTimestamp
-        } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        // Simple in-memory database (no Firebase required)
+        // This version works immediately without any setup!
         
-        // Firebase config
-        const firebaseConfig = {
-            apiKey: "AIzaSyDwM8N-eMlsbndlnuOnB9dQ5lx9D2Dn1hI",
-            authDomain: "chatsnap-16189.firebaseapp.com",
-            projectId: "chatsnap-16189",
-            storageBucket: "chatsnap-16189.firebasestorage.app",
-            messagingSenderId: "687581415852",
-            appId: "1:687581415852:web:3fe355b6fc830ae340d209",
-            measurementId: "G-ZQS6K88PY8"
-        };
+        // Data stores
+        const users = JSON.parse(localStorage.getItem('imperion_users')) || {};
+        const messages = JSON.parse(localStorage.getItem('imperion_messages')) || {};
+        const contacts = JSON.parse(localStorage.getItem('imperion_contacts')) || {};
         
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        // Current user
+        let currentUser = null;
+        let currentChatContact = null;
         
-        // DOM Elements
-        const authScreen = document.getElementById('auth-screen');
+        // DOM elements
+        const loginScreen = document.getElementById('login-screen');
         const mainApp = document.getElementById('main-app');
-        const phoneAuthDiv = document.getElementById('phone-auth');
-        const codeAuthDiv = document.getElementById('code-auth');
-        const phoneNumberInput = document.getElementById('phone-number');
-        const sendCodeBtn = document.getElementById('send-code-btn');
-        const verificationCodeInput = document.getElementById('verification-code');
-        const verifyCodeBtn = document.getElementById('verify-code-btn');
-        const backBtn = document.getElementById('back-btn');
-        const verificationMessage = document.getElementById('verification-message');
+        const loginBtn = document.getElementById('login-btn');
+        const usernameInput = document.getElementById('username-input');
+        const loginError = document.getElementById('login-error');
+        const userInfo = document.getElementById('user-info');
         const logoutBtn = document.getElementById('logout-btn');
-        const currentUserPhoneSpan = document.getElementById('current-user-phone');
-        const contactsList = document.getElementById('contacts-list');
-        const newContactInput = document.getElementById('new-contact-input');
-        const addContactBtn = document.getElementById('add-contact-btn');
+        const contentArea = document.getElementById('content-area');
+        const chatView = document.getElementById('chat-view');
+        const backBtn = document.getElementById('back-btn');
+        const messagesContainer = document.getElementById('messages-container');
         const messageInput = document.getElementById('message-input');
         const sendBtn = document.getElementById('send-btn');
-        const messagesContainer = document.getElementById('messages-container');
-        const chatHeader = document.getElementById('chat-header');
-        const activeChatDiv = document.getElementById('active-chat');
-        const emptyChatState = document.getElementById('empty-chat-state');
+        const chatContactName = document.getElementById('chat-contact-name');
+        const tabs = document.querySelectorAll('.tab');
+        const chatsTab = document.getElementById('chats-tab');
+        const contactsTab = document.getElementById('contacts-tab');
+        const profileTab = document.getElementById('profile-tab');
+        const profileName = document.getElementById('profile-name');
+        const contactsList = document.getElementById('contacts-list');
+        const allContactsList = document.getElementById('all-contacts-list');
+        const addContactBtn = document.getElementById('add-contact-btn');
+        const newContactName = document.getElementById('new-contact-name');
+        const newContactPhone = document.getElementById('new-contact-phone');
         
-        // App state
-        let currentUser = null;
-        let selectedContact = null;
-        let messagesUnsubscribe = null;
-        let contactsUnsubscribe = null;
-        let confirmationResult = null;
-        
-        // Initialize reCAPTCHA (simulated for demo)
-        function setupRecaptcha() {
-            if (!window.recaptchaVerifier) {
-                window.recaptchaVerifier = new RecaptchaVerifier(auth, 'send-code-btn', {
-                    size: 'invisible',
-                    callback: () => {}
+        // Login
+        loginBtn.addEventListener('click', () => {
+            const name = usernameInput.value.trim();
+            if (!name) {
+                loginError.textContent = 'Please enter a name';
+                return;
+            }
+            
+            // Create user
+            const userId = 'user_' + Date.now();
+            currentUser = {
+                id: userId,
+                name: name,
+                phone: name.toLowerCase() + '@example.com'
+            };
+            
+            // Save user
+            users[userId] = currentUser;
+            localStorage.setItem('imperion_users', JSON.stringify(users));
+            
+            // Initialize contacts for this user
+            if (!contacts[userId]) {
+                contacts[userId] = [];
+            }
+            localStorage.setItem('imperion_contacts', JSON.stringify(contacts));
+            
+            // Initialize messages for this user
+            if (!messages[userId]) {
+                messages[userId] = {};
+            }
+            localStorage.setItem('imperion_messages', JSON.stringify(messages));
+            
+            // Show main app
+            loginScreen.style.display = 'none';
+            mainApp.style.display = 'flex';
+            userInfo.textContent = name;
+            profileName.textContent = name;
+            
+            // Add default contacts
+            if (contacts[userId].length === 0) {
+                contacts[userId].push({
+                    id: 'user_bob',
+                    name: 'Bob',
+                    phone: 'bob@example.com'
                 });
-            }
-        }
-        
-        // Send verification code
-        sendCodeBtn.addEventListener('click', async () => {
-            const phoneNumber = phoneNumberInput.value;
-            if (!phoneNumber) {
-                alert('Please enter a phone number');
-                return;
+                contacts[userId].push({
+                    id: 'user_charlie',
+                    name: 'Charlie',
+                    phone: 'charlie@example.com'
+                });
+                localStorage.setItem('imperion_contacts', JSON.stringify(contacts));
             }
             
-            try {
-                setupRecaptcha();
-                confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier);
-                
-                // Show code input
-                phoneAuthDiv.style.display = 'none';
-                codeAuthDiv.style.display = 'block';
-                verificationMessage.textContent = 'Code sent! (demo: use 123456)';
-                
-            } catch (error) {
-                console.error('Error sending code:', error);
-                verificationMessage.textContent = 'Error: ' + error.message;
-                
-                // Demo fallback - for testing without actual SMS
-                if (error.code === 'auth/invalid-phone-number' || error.code === 'auth/missing-verification-code') {
-                    verificationMessage.textContent = 'Demo mode: Using simulated verification. Enter 123456';
-                    // Create fake confirmation for demo
-                    confirmationResult = {
-                        confirm: async (code) => {
-                            if (code === '123456') {
-                                return { user: { phoneNumber: phoneNumber, uid: 'demo-user-' + Date.now() } };
-                            } else {
-                                throw new Error('Invalid code');
-                            }
-                        }
-                    };
-                    phoneAuthDiv.style.display = 'none';
-                    codeAuthDiv.style.display = 'block';
-                }
-            }
-        });
-        
-        // Verify code
-        verifyCodeBtn.addEventListener('click', async () => {
-            const code = verificationCodeInput.value;
-            if (!code) {
-                alert('Enter verification code');
-                return;
+            // Add some demo messages
+            if (!messages[userId]['user_bob']) {
+                messages[userId]['user_bob'] = [
+                    {
+                        text: 'Hey there! 👋',
+                        sender: 'user_bob',
+                        receiver: userId,
+                        time: new Date(Date.now() - 3600000).toISOString()
+                    },
+                    {
+                        text: 'Hi Bob!',
+                        sender: userId,
+                        receiver: 'user_bob',
+                        time: new Date(Date.now() - 3500000).toISOString()
+                    }
+                ];
+                localStorage.setItem('imperion_messages', JSON.stringify(messages));
             }
             
-            try {
-                if (!confirmationResult) {
-                    throw new Error('No verification in progress');
-                }
-                
-                const result = await confirmationResult.confirm(code);
-                // Auth state change will handle UI update
-                
-       } catch (error) {
-                console.error('Verification error:', error);
-                verificationMessage.textContent = 'Invalid code. Try 123456 in demo mode.';
+            if (!messages[userId]['user_charlie']) {
+                messages[userId]['user_charlie'] = [
+                    {
+                        text: 'Welcome to Imperion!',
+                        sender: 'user_charlie',
+                        receiver: userId,
+                        time: new Date(Date.now() - 7200000).toISOString()
+                    }
+                ];
+                localStorage.setItem('imperion_messages', JSON.stringify(messages));
             }
-        });
-        
-        // Back button
-        backBtn.addEventListener('click', () => {
-            phoneAuthDiv.style.display = 'block';
-            codeAuthDiv.style.display = 'none';
-            verificationMessage.textContent = '';
-            verificationCodeInput.value = '';
+            
+            renderContacts();
+            renderAllContacts();
         });
         
         // Logout
-        logoutBtn.addEventListener('click', async () => {
-            await signOut(auth);
+        logoutBtn.addEventListener('click', () => {
+            currentUser = null;
+            currentChatContact = null;
+            loginScreen.style.display = 'flex';
+            mainApp.style.display = 'none';
+            chatView.style.display = 'none';
+            contentArea.style.display = 'block';
         });
         
-        // Auth state observer
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                // User is signed in
-                currentUser = user;
-                authScreen.style.display = 'none';
-                mainApp.style.display = 'flex';
-                currentUserPhoneSpan.textContent = user.phoneNumber || 'Unknown';
+        // Tab switching
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
                 
-                // Create/update user in Firestore
-                await createOrUpdateUser(user);
+                const tabName = tab.dataset.tab;
+                chatsTab.style.display = tabName === 'chats' ? 'block' : 'none';
+                contactsTab.style.display = tabName === 'contacts' ? 'block' : 'none';
+                profileTab.style.display = tabName === 'profile' ? 'block' : 'none';
                 
-                // Load contacts and messages
-                loadContacts();
-                
-            } else {
-                // User is signed out
-                currentUser = null;
-                authScreen.style.display = 'block';
-                mainApp.style.display = 'none';
-                phoneAuthDiv.style.display = 'block';
-                codeAuthDiv.style.display = 'none';
-                verificationCodeInput.value = '';
-                phoneNumberInput.value = '+15555550100';
-                
-                // Cleanup listeners
-                if (messagesUnsubscribe) messagesUnsubscribe();
-                if (contactsUnsubscribe) contactsUnsubscribe();
-                
-                // Clear UI
-                contactsList.innerHTML = '<div style="color:#6b8da0; text-align:center; padding:2rem;">No contacts yet. Add a phone number above.</div>';
-                emptyChatState.style.display = 'flex';
-                activeChatDiv.style.display = 'none';
-            }
-        });
-        
-        // Create or update user in Firestore
-        async function createOrUpdateUser(user) {
-            const userRef = doc(db, 'users', user.uid);
-            const userSnap = await getDoc(userRef);
-            
-            if (!userSnap.exists()) {
-                await setDoc(userRef, {
-                    phoneNumber: user.phoneNumber,
-                    createdAt: serverTimestamp(),
-                    contacts: []
-                });
-            }
-        }
-        
-        // Load contacts
-        function loadContacts() {
-            if (!currentUser) return;
-            
-            const userRef = doc(db, 'users', currentUser.uid);
-            
-            contactsUnsubscribe = onSnapshot(userRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    const userData = docSnap.data();
-                    const contactIds = userData.contacts || [];
-                    
-                    if (contactIds.length === 0) {
-                        contactsList.innerHTML = '<div style="color:#6b8da0; text-align:center; padding:2rem;">No contacts yet. Add a phone number above.</div>';
-                        return;
-                    }
-                    
-                    // Fetch contact details
-                    fetchContacts(contactIds);
+                if (tabName === 'contacts') {
+                    renderAllContacts();
+                } else if (tabName === 'chats') {
+                    renderContacts();
                 }
             });
-        }
+        });
         
-        // Fetch contact details from user IDs
-        async function fetchContacts(contactIds) {
-            if (!contactIds.length) return;
+        // Render contacts (chats list)
+        function renderContacts() {
+            if (!currentUser) return;
             
-            let contactsHtml = '';
+            const userContacts = contacts[currentUser.id] || [];
             
-            for (const contactId of contactIds) {
-                const contactRef = doc(db, 'users', contactId);
-                const contactSnap = await getDoc(contactRef);
-                
-                if (contactSnap.exists()) {
-                    const contactData = contactSnap.data();
-                    const lastMessage = await getLastMessage(contactId);
-                    
-                    contactsHtml += `
-                        <div class="contact-item ${selectedContact?.uid === contactId ? 'active' : ''}" data-contact-id="${contactId}">
-                            <div class="contact-avatar">${contactData.phoneNumber?.slice(-4) || '?'}</div>
-                            <div class="contact-details">
-                                <div class="contact-name">${contactData.phoneNumber || 'Unknown'}</div>
-                                <div class="contact-preview">${lastMessage || 'No messages yet'}</div>
-                            </div>
-                        </div>
-                    `;
-                }
+            if (userContacts.length === 0) {
+                contactsList.innerHTML = '<div class="empty-state">No contacts yet. Add some in Contacts tab.</div>';
+                return;
             }
             
-            contactsList.innerHTML = contactsHtml;
+            let html = '';
+            userContacts.forEach(contact => {
+                const lastMsg = getLastMessage(contact.id);
+                html += `
+                    <div class="contact-item" data-contact-id="${contact.id}">
+                        <div class="contact-avatar">${contact.name.charAt(0)}</div>
+                        <div class="contact-details">
+                            <div class="contact-name">${contact.name}</div>
+                            <div class="contact-last">${lastMsg || 'No messages'}</div>
+                        </div>
+                    </div>
+                `;
+            });
             
-            // Add click listeners
+            contactsList.innerHTML = html;
+            
+            // Add click handlers
             document.querySelectorAll('.contact-item').forEach(item => {
                 item.addEventListener('click', () => {
-                    selectContact(item.dataset.contactId);
+                    const contactId = item.dataset.contactId;
+                    const contact = userContacts.find(c => c.id === contactId);
+                    openChat(contact);
                 });
             });
         }
         
-        // Get last message preview
-        async function getLastMessage(contactId) {
+        // Render all contacts (for contacts tab)
+        function renderAllContacts() {
+            if (!currentUser) return;
+            
+            const userContacts = contacts[currentUser.id] || [];if (userContacts.length === 0) {
+                allContactsList.innerHTML = '<div class="empty-state">No contacts yet. Add one above.</div>';
+                return;
+            }
+            
+            let html = '';
+            userContacts.forEach(contact => {
+                html += `
+                    <div class="contact-item" data-contact-id="${contact.id}">
+                        <div class="contact-avatar">${contact.name.charAt(0)}</div>
+                        <div class="contact-details">
+                            <div class="contact-name">${contact.name}</div>
+                            <div class="contact-last">${contact.phone}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            allContactsList.innerHTML = html;
+        }
+        
+        // Get last message
+        function getLastMessage(contactId) {
             if (!currentUser) return '';
             
-            const chatId = [currentUser.uid, contactId].sort().join('_');
-            const messagesRef = collection(db, 'chats', chatId, 'messages');
-            const q = query(messagesRef, orderBy('timestamp', 'desc'));
-            const snapshot = await getDocs(q);
+            const chatMessages = messages[currentUser.id]?.[contactId] || [];
+            if (chatMessages.length === 0) return '';
             
-            if (!snapshot.empty) {
-                const lastMsg = snapshot.docs[0].data();
-                return lastMsg.text.substring(0, 30) + (lastMsg.text.length > 30 ? '...' : '');
-            }
-            return '';
+            const last = chatMessages[chatMessages.length - 1];
+            return last.text.substring(0, 30) + (last.text.length > 30 ? '...' : '');
         }
         
-        // Select a contact
-        async function selectContact(contactId) {
+        // Add contact
+        addContactBtn.addEventListener('click', () => {
             if (!currentUser) return;
             
-            // Update UI
-            document.querySelectorAll('.contact-item').forEach(item => {
-                item.classList.remove('active');
-                if (item.dataset.contactId === contactId) {
-                    item.classList.add('active');
-                }
-            });
+            const name = newContactName.value.trim();
+            const phone = newContactPhone.value.trim();
             
-            // Get contact details
-            const contactRef = doc(db, 'users', contactId);
-            const contactSnap = await getDoc(contactRef);
+            if (!name || !phone) {
+                alert('Please enter name and phone');
+                return;
+            }
             
-            if (!contactSnap.exists()) return;
-            
-            const contactData = contactSnap.data();
-            selectedContact = {
-                uid: contactId,
-                phoneNumber: contactData.phoneNumber
+            const newContact = {
+                id: 'user_' + Date.now(),
+                name: name,
+                phone: phone
             };
             
-            // Update chat header
-            chatHeader.innerHTML = `
-                <div class="contact-avatar">${contactData.phoneNumber?.slice(-4) || '?'}</div>
-                <div class="chat-header-info">
-                    <h2>${contactData.phoneNumber || 'Unknown'}</h2>
-                    <p>End-to-end encrypted</p>
-                </div>
-            `;
+            contacts[currentUser.id].push(newContact);
+            localStorage.setItem('imperion_contacts', JSON.stringify(contacts));
             
-            // Show chat area
-            emptyChatState.style.display = 'none';
-            activeChatDiv.style.display = 'flex';
+            newContactName.value = '';
+            newContactPhone.value = '';
             
-            // Load messages
-            loadMessages(contactId);
+            renderAllContacts();
+            renderContacts();
+        });
+        
+        // Open chat
+        function openChat(contact) {
+            currentChatContact = contact;
+            chatContactName.textContent = contact.name;
+            
+            contentArea.style.display = 'none';
+            chatView.style.display = 'flex';
+            
+            renderMessages();
         }
         
-        // Load messages for a chat
-        function loadMessages(contactId) {
-            if (!currentUser) return;
-            
-            // Cleanup previous listener
-            if (messagesUnsubscribe) messagesUnsubscribe();
-            
-            const chatId = [currentUser.uid, contactId].sort().join('_');
-            const messagesRef = collection(db, 'chats', chatId, 'messages');
-            const q = query(messagesRef, orderBy('timestamp', 'asc'));
-            
-            messagesUnsubscribe = onSnapshot(q, (snapshot) => {
-                let messagesHtml = '';
-                
-                snapshot.forEach((doc) => {
-                    const msg = doc.data();
-                    const isSent = msg.senderId === currentUser.uid;
-                    
-                    const time = msg.timestamp?.toDate 
-                        ? msg.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                        : 'just now';
-                    
-                    messagesHtml += `
-                        <div class="message ${isSent ? 'sent' : 'received'}">
-                            ${msg.text}
-                            <div class="message-time">${time}</div>
-                        </div>
-                    `;
-                });
-                
-                messagesContainer.innerHTML = messagesHtml;
-                
-                // Scroll to bottom
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            });
-        }
+        // Back button
+        backBtn.addEventListener('click', () => {
+            chatView.style.display = 'none';
+            contentArea.style.display = 'block';
+            currentChatContact = null;
+        });
         
-        // Add contact / start new chat
-        addContactBtn.addEventListener('click', async () => {
-            const phoneNumber = newContactInput.value.trim();
-            if (!phoneNumber || !currentUser) return;
+        // Render messages
+        function renderMessages() {
+            if (!currentUser || !currentChatContact) return;
             
-            // Query for user with this phone number
-            const usersRef = collection(db, 'users');
-            const q = query(usersRef, where('phoneNumber', '==', phoneNumber));
-            const snapshot = await getDocs(q);
+            const chatMessages = messages[currentUser.id]?.[currentChatContact.id] || [];
             
-            let contactUserId;
-            
-            if (snapshot.empty) {
-                // Create a placeholder user
-                const newUserRef = doc(collection(db, 'users'));
-                await setDoc(newUserRef, {
-                    phoneNumber: phoneNumber,
-                    createdAt: serverTimestamp(),
-                    contacts: []
-                });
-                contactUserId = newUserRef.id;
-            } else {
-                contactUserId = snapshot.docs[0].id;
+            if (chatMessages.length === 0) {
+                messagesContainer.innerHTML = '<div class="empty-state">No messages yet. Say hi! 👋</div>';
+                return;
             }
             
-            // Add to current user's contacts
-            const userRef = doc(db, 'users', currentUser.uid);
-            await updateDoc(userRef, {
-                contacts: arrayUnion(contactUserId)
+            let html = '';
+            chatMessages.forEach(msg => {
+                const isSent = msg.sender === currentUser.id;
+                const time = new Date(msg.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                html += `
+                    <div class="message ${isSent ? 'sent' : 'received'}">
+                        ${msg.text}
+                        <div style="font-size:0.7rem; opacity:0.7; margin-top:0.2rem;">${time}</div>
+                    </div>
+                `;
             });
             
-            // Also add current user to contact's contacts (for two-way)
-            const contactRef = doc(db, 'users', contactUserId);
-            await updateDoc(contactRef, {
-                contacts: arrayUnion(currentUser.uid)
-            }).catch(() => {
-                // Contact doc might not exist fully, but we already created it above if needed
-                console.log('Updated contact');
-            });
-            
-            newContactInput.value = '';
-            
-            // Select the new contact
-            selectContact(contactUserId);
-        });
+            messagesContainer.innerHTML = html;
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
         
         // Send message
         sendBtn.addEventListener('click', sendMessage);
@@ -899,25 +707,48 @@
             if (e.key === 'Enter') sendMessage();
         });
         
-        async function sendMessage() {
+        function sendMessage() {
             const text = messageInput.value.trim();
-            if (!text || !currentUser || !selectedContact) return;
+            if (!text || !currentUser || !currentChatContact) return;
             
-            const chatId = [currentUser.uid, selectedContact.uid].sort().join('_');
-            const messagesRef = collection(db, 'chats', chatId, 'messages');
-            
-            await addDoc(messagesRef, {
+            const message = {
                 text: text,
-                senderId: currentUser.uid,
-                receiverId: selectedContact.uid,
-                timestamp: serverTimestamp()
+                sender: currentUser.id,
+                receiver: currentChatContact.id,
+                time: new Date().toISOString()
+            };
+            
+            // Save to current user's messages
+            if (!messages[currentUser.id][currentChatContact.id]) {
+                messages[currentUser.id][currentChatContact.id] = [];
+            }
+            messages[currentUser.id][currentChatContact.id].push(message);
+            
+            // Also save to contact's messages (simulate receiving)
+            if (!messages[currentChatContact.id]) {
+                messages[currentChatContact.id] = {};
+            }
+            if (!messages[currentChatContact.id][currentUser.id]) {
+                messages[currentChatContact.id][currentUser.id] = [];
+            }
+            messages[currentChatContact.id][currentUser.id].push({
+                ...message,
+                sender: currentUser.id,
+                receiver: currentChatContact.id
             });
             
+            localStorage.setItem('imperion_messages', JSON.stringify(messages));
+            
             messageInput.value = '';
+            renderMessages();
+            renderContacts(); // Update last message preview
         }
         
-        console.log('Imperion app initialized!');
+        // Check for existing session
+        const savedUsers = Object.values(users);
+        if (savedUsers.length > 0 && !currentUser) {
+            // Just show login screen, user can login manually
+        }
     </script>
 </body>
 </html>
-```
