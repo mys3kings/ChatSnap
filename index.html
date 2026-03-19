@@ -1,1169 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Imperion · secure messaging</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-        }
-        
-        body {
-            background: #0A1929;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        #app {
-            width: 100%;
-            max-width: 500px;
-            height: 100vh;
-            max-height: 900px;
-            background: #0A1929;
-            border-radius: 0;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
-            border: 1px solid #D4AF37;
-        }
-        
-        @media (min-width: 768px) {
-            #app {
-                border-radius: 30px;
-                height: 90vh;
-                margin: 20px;
-            }
-        }
-        
-        /* Login Screen */
-        #login-screen {
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            justify-content: center;
-            background: #0A1929;
-        }
-        
-        #login-screen h1 {
-            color: #D4AF37;
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
-            letter-spacing: 2px;
-            text-align: center;
-        }
-        
-        #login-screen h2 {
-            color: #B8860B;
-            font-size: 1rem;
-            margin-bottom: 2rem;
-            font-weight: 400;
-            letter-spacing: 1px;
-            text-align: center;
-        }
-        
-        .login-avatar-preview {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 1.5rem;
-            background: #132B3F;
-            border-radius: 50%;
-            border: 3px solid #D4AF37;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            cursor: pointer;
-            position: relative;
-        }
-        
-        .login-avatar-preview:hover::after {
-            content: "📷";
-            position: absolute;
-            background: rgba(0,0,0,0.6);
-            color: #D4AF37;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-        }
-        
-        #login-avatar-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        #login-screen input {
-            width: 100%;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            background: #132B3F;
-            border: 1px solid #B8860B;
-            border-radius: 12px;
-            color: white;
-            font-size: 1rem;
-        }
-        
-        #login-screen input::placeholder {
-            color: #9B7E3D;
-        }
-        
-        #login-screen button {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 1rem;
-            color: #0A1929;
-            cursor: pointer;
-            margin-bottom: 0.5rem;
-            transition: 0.3s;
-            border: 1px solid #D4AF37;
-        }
-        
-        #login-screen button:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 15px #D4AF37;
-        }
-        
-        #login-error {
-            color: #B8860B;
-            text-align: center;
-            margin-top: 1rem;
-            background: #132B3F;
-            padding: 0.5rem;
-            border-radius: 8px;
-            display: none;
-        }
-        
-        /* Debug Panel */
-        #debug-panel {
-            background: #132B3F;
-            border: 1px solid #D4AF37;
-            border-radius: 8px;
-            padding: 0.5rem;
-            margin-top: 1rem;
-            font-size: 0.7rem;
-            color: #9B7E3D;
-            max-height: 100px;
-            overflow-y: auto;
-            display: none;
-        }
-        
-        .debug-log {
-            border-bottom: 1px solid #2A4A5A;
-            padding: 0.2rem 0;
-        }
-        
-        /* Main App */
-        #main-app {
-            display: none;
-            flex-direction: column;
-            height: 100%;
-            background: #0A1929;
-        }
-        
-        .header {
-            background: #0A1929;
-            padding: 1rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #D4AF37;
-        }
-        
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #D4AF37;
-            letter-spacing: 2px;
-            text-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
-        }
-        
-        .logo span {
-            color: #B8860B;
-        }
-        
-        #user-info {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: #132B3F;
-            padding: 0.4rem 1.2rem;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            color: #D4AF37;
-            border: 1px solid #B8860B;
-        }
-        
-        #logout-btn {
-            background: #132B3F;
-            border: 1px solid #B8860B;
-            color: #D4AF37;
-            padding: 0.4rem 1rem;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: 0.2s;
-        }
-        
-        #logout-btn:hover {
-            background: #B8860B;
-            color: #0A1929;
-        }
-        
-        .tabs {
-            display: flex;
-            background: #0A1929;
-            border-bottom: 1px solid #132B3F;
-        }
-        
-        .tab {
-            flex: 1;
-            text-align: center;
-            padding: 1rem;
-            cursor: pointer;
-            color: #9B7E3D;
-            font-weight: 500;
-            transition: 0.2s;
-        }
-        
-        .tab.active {
-            color: #D4AF37;
-            border-bottom: 3px solid #D4AF37;
-            text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
-        }
-        
-        #content-area {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1rem;
-            background: #0F1F2F;
-        }
-        
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: #132B3F;
-            border-radius: 16px;
-            margin-bottom: 0.5rem;
-            cursor: pointer;
-            transition: 0.2s;
-            border: 1px solid #132B3F;
-        }
-        
-        .contact-item:hover {
-            border: 1px solid #D4AF37;
-            transform: translateX(5px);
-        }
-        
-        .contact-avatar {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: #0A1929;
-            font-size: 1.2rem;
-            border: 2px solid #D4AF37;
-            overflow: hidden;
-        }
-        
-        .contact-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .contact-details {
-            flex: 1;
-        }
-        
-        .contact-name {
-            font-weight: 600;
-            color: #D4AF37;
-            margin-bottom: 0.2rem;
-        }
-        
-        .contact-last {
-            font-size: 0.8rem;
-            color: #9B7E3D;
-        }
-        
-        #chat-view {
-            display: none;
-            flex-direction: column;
-            height: 100%;
-            background: #0A1929;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 100;
-        }
-        
-        .chat-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: #0A1929;
-            border-bottom: 2px solid #D4AF37;
-        }
-        
-        #back-btn {
-            background: none;
-            border: 1px solid #D4AF37;
-            color: #D4AF37;
-            font-size: 1.5rem;
-            cursor: pointer;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s;
-        }
-        
-        #back-btn:hover {
-            background: #D4AF37;
-            color: #0A1929;
-        }
-        
-        #chat-contact-name {
-            color: #D4AF37;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-        
-        .chat-header small {
-            color: #9B7E3D;
-            font-size: 0.8rem;
-        }
-        
-        .messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            background: #0F1F2F;
-        }
-        
-        .message {
-            max-width: 80%;
-            padding: 0.8rem 1.2rem;
-            border-radius: 20px;
-            word-wrap: break-word;
-            animation: fadeIn 0.3s;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .message.sent {
-            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
-            color: #0A1929;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-        }
-        
-        .message.received {
-            background: #132B3F;
-            color: #D4AF37;
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-            border: 1px solid #B8860B;
-        }
-        
-        .message-input-area {
-            display: flex;
-            gap: 0.5rem;
-            padding: 1rem;
-            background: #0A1929;
-            border-top: 1px solid #132B3F;
-        }
-        
-        #message-input {
-            flex: 1;
-            padding: 0.8rem 1.2rem;
-            background: #132B3F;
-            border: 1px solid #B8860B;
-            border-radius: 25px;
-            color: white;
-            font-size: 1rem;
-        }
-        
-        #message-input:focus {
-            outline: none;
-            border-color: #D4AF37;
-            box-shadow: 0 0 8px #D4AF37;
-        }
-        
-        #send-btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
-            border: none;
-            cursor: pointer;
-            font-size: 1.2rem;
-            color: #0A1929;
-            transition: 0.2s;
-        }
-        
-        #send-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 15px #D4AF37;
-        }
-        
-        #profile-tab {
-            padding: 1rem;
-        }
-        
-        .profile-card {
-            background: #132B3F;
-            border-radius: 24px;
-            padding: 2rem;
-            text-align: center;
-            border: 1px solid #B8860B;
-        }
-        
-        .profile-avatar {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
-            border-radius: 50%;
-            margin: 0 auto 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #0A1929;
-            border: 3px solid #D4AF37;
-            cursor: pointer;
-            transition: 0.2s;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .profile-avatar:hover::after {
-            content: "📷 Change";
-            position: absolute;
-            background: rgba(0,0,0,0.7);
-            color: #D4AF37;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-        
-        #profile-avatar-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .profile-input {
-            width: 100%;
-            padding: 0.8rem;
-            background: #0A1929;
-            border: 1px solid #B8860B;
-            border-radius: 12px;
-            color: white;
-            margin: 1rem 0;
-            font-size: 1rem;
-        }
-        
-        .profile-input:focus {
-            outline: none;
-            border-color: #D4AF37;
-        }
-        
-        #save-profile-btn {
-            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
-            border: none;
-            padding: 0.8rem 2rem;
-            border-radius: 30px;
-            font-weight: 600;
-            color: #0A1929;
-            cursor: pointer;
-            margin-top: 1rem;
-            border: 1px solid #D4AF37;
-            width: 100%;
-        }
-        
-        .profile-id {
-            background: #0A1929;
-            padding: 0.8rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            color: #D4AF37;
-            margin-top: 1rem;
-            word-break: break-all;
-            border: 1px dashed #B8860B;
-            cursor: pointer;
-            transition: 0.2s;
-            position: relative;
-        }
-        
-        .profile-id:hover {
-            background: #1A2F3F;
-            border-color: #D4AF37;
-        }
-        
-        .profile-id.copied::after {
-            content: "✓ Copied!";
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: #D4AF37;
-            color: #0A1929;
-            padding: 0.2rem 0.8rem;
-            border-radius: 30px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-        
-        .add-contact {
-            background: #132B3F;
-            padding: 1rem;
-            border-radius: 16px;
-            margin-bottom: 1rem;
-            border: 1px solid #B8860B;
-        }
-        
-        .add-contact input {
-            width: 100%;
-            padding: 0.8rem;
-            background: #0A1929;
-            border: 1px solid #B8860B;
-            border-radius: 12px;
-            color: white;
-            margin-bottom: 0.5rem;
-        }
-        
-        .add-contact button {
-            width: 100%;
-            padding: 0.8rem;
-            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            color: #0A1929;
-        }
-        
-        .empty-state {
-            text-align: center;
-            color: #9B7E3D;
-            padding: 2rem;
-        }
-        
-        .loading {
-            text-align: center;
-            color: #9B7E3D;
-            padding: 2rem;
-        }
-        
-        #file-input, #login-file-input {
-            display: none;
-        }
-        
-        .success-message {
-            background: #25D36620;
-            color: #D4AF37;
-            padding: 0.5rem;
-            border-radius: 30px;
-            text-align: center;
-            margin: 0.5rem 0;
-            border: 1px solid #D4AF37;
-            animation: fadeInOut 2s;
-        }
-        
-        @keyframes fadeInOut {
-            0% { opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-        
-        .contact-id-display {
-            font-size: 0.7rem;
-            color: #9B7E3D;
-            margin-top: 0.2rem;
-        }
-        
-        .try-demo-btn {
-            background: #132B3F !important;
-            color: #D4AF37 !important;
-            border: 1px solid #D4AF37 !important;
-            margin-top: 1rem !important;
-        }
-    </style>
-</head>
-<body>
-    <div id="app">
-        <input type="file" id="file-input" accept="image/*">
-        <input type="file" id="login-file-input" accept="image/*">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Imperion Chat</title>
 
-        <!-- Login Screen -->
-        <div id="login-screen">
-            <h1>IMPERION</h1>
-            <h2>Safe and Secure Messaging</h2>
-            
-            <div class="login-avatar-preview" id="login-avatar-preview">
-                <img id="login-avatar-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23333'/%3E%3Ctext x='50' y='70' font-size='50' text-anchor='middle' fill='%23D4AF37'%3E👤%3C/text%3E%3C/svg%3E" alt="avatar">
-            </div>
-            
-            <input type="text" id="username-input" placeholder="input username" value="TestUser">
-            <button id="login-btn">Start Messaging</button>
-            <button id="demo-mode-btn" class="try-demo-btn">Try Demo Mode (Offline)</button>
-            <div id="login-error"></div>
-            <div id="debug-panel"></div>
-        </div>
-        
-        <!-- Main App -->
-        <div id="main-app">
-            <div class="header">
-                <div class="logo">IMPERION<span>.</span></div>
-                <div style="display: flex; gap: 0.5rem;">
-                    <span id="user-info"></span>
-                    <button id="logout-btn">Exit</button>
-                </div>
-            </div>
-            
-            <div class="tabs" id="main-tabs">
-                <div class="tab active" data-tab="chats">Chats</div>
-                <div class="tab" data-tab="contacts">Contacts</div>
-                <div class="tab" data-tab="profile">Profile</div>
-            </div>
-            
-            <div id="content-area">
-                <div id="chats-tab">
-                    <div id="contacts-list" class="loading">Loading conversations...</div>
-                </div>
-                
-                <div id="contacts-tab" style="display: none;">
-                    <div class="add-contact">
-                        <input type="text" id="new-contact-id" placeholder="Enter User ID to add">
-                        <button id="add-contact-btn">Add Contact</button>
-                        <div id="add-contact-status"></div>
-                    </div>
-                    <div id="all-contacts-list"></div>
-                </div>
-                
-                <div id="profile-tab" style="display: none;">
-                    <div class="profile-card">
-                        <div class="profile-avatar" id="profile-avatar">
-                            <img id="profile-avatar-img" src="" alt="avatar">
-                        </div>
-                        <input type="text" id="profile-name-input" class="profile-input" placeholder="Your name">
-                        <button id="save-profile-btn">Save Changes</button>
-                        <div class="profile-id" id="profile-user-id">ID: loading...</div>
-                        <div style="margin-top: 0.5rem; font-size: 0.7rem; color: #9B7E3D;">
-                            Tap your ID to copy
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="chat-view">
-                <div class="chat-header">
-                    <button id="back-btn">←</button>
-                    <div>
-                        <div id="chat-contact-name"></div>
-                        <small>encrypted</small>
-                    </div>
-                </div>
-                
-                <div class="messages" id="messages-container"></div>
-                
-                <div class="message-input-area">
-                    <input type="text" id="message-input" placeholder="Type a message...">
-                    <button id="send-btn">➤</button>
-                </div>
-            </div>
-        </div>
+<style>
+body {
+    margin:0;
+    font-family:sans-serif;
+    background:#0A1929;
+    color:white;
+}
+
+#app {
+    max-width:500px;
+    margin:auto;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+}
+
+input, button {
+    padding:10px;
+    border-radius:8px;
+    border:none;
+}
+
+button {
+    background:#D4AF37;
+    color:#0A1929;
+    cursor:pointer;
+}
+
+#login-screen, #main-app {
+    padding:20px;
+}
+
+.contact {
+    background:#132B3F;
+    padding:10px;
+    margin:5px 0;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.message {
+    padding:10px;
+    margin:5px;
+    border-radius:10px;
+}
+
+.sent {
+    background:#D4AF37;
+    color:#000;
+    text-align:right;
+}
+
+.received {
+    background:#132B3F;
+}
+</style>
+</head>
+
+<body>
+
+<div id="app">
+
+<!-- LOGIN -->
+<div id="login-screen">
+    <h2>Imperion</h2>
+    <input id="username" placeholder="Enter username">
+    <button id="loginBtn">Login</button>
+</div>
+
+<!-- MAIN -->
+<div id="main-app" style="display:none;">
+    <h3 id="userDisplay"></h3>
+
+    <div id="contacts"></div>
+
+    <div id="chatBox" style="display:none;">
+        <h4 id="chatName"></h4>
+        <div id="messages"></div>
+
+        <input id="msgInput" placeholder="Type message">
+        <button id="sendBtn">Send</button>
     </div>
-    
-    <script type="module">
-        // Simple debug logger
-        const debugPanel = document.getElementById('debug-panel');
-        const loginError = document.getElementById('login-error');
-        
-        function addDebugLog(message, isError = false) {
-            console.log(message);
-            debugPanel.style.display = 'block';
-            const logEntry = document.createElement('div');
-            logEntry.className = 'debug-log';
-            logEntry.style.color = isError ? '#B8860B' : '#9B7E3D';
-            logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-            debugPanel.appendChild(logEntry);
-            debugPanel.scrollTop = debugPanel.scrollHeight;
-        }
-        
-        function showError(message) {
-            loginError.style.display = 'block';
-            loginError.textContent = message;
-            addDebugLog('ERROR: ' + message, true);
-        }
-        
-       // Try to import Firebase, but don't fail if it doesn't work
-        let db = null;
-        let firebaseAvailable = false;
-        
-        try {
-            // This will throw if Firebase is blocked
-            const initializeApp = (await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js")).initializeApp;
-            const firestore = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
-            
-            const firebaseConfig = {
-                apiKey: "AIzaSyDwM8N-eMlsbndlnuOnB9dQ5lx9D2Dn1hI",
-                authDomain: "chatsnap-16189.firebaseapp.com",
-                projectId: "chatsnap-16189",
-                storageBucket: "chatsnap-16189.firebasestorage.app",
-                messagingSenderId: "687581415852",
-                appId: "1:687581415852:web:3fe355b6fc830ae340d209",
-                measurementId: "G-ZQS6K88PY8"
+</div>
+
+</div>
+
+<!-- ✅ Firebase CDN -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+<script>
+
+// 🔥 Firebase config
+const firebaseConfig = {
+    apiKey: "AIzaSyDwM8N-eMlsbndlnuOnB9dQ5lx9D2Dn1hI",
+    authDomain: "chatsnap-16189.firebaseapp.com",
+    projectId: "chatsnap-16189",
+    storageBucket: "chatsnap-16189.firebasestorage.app",
+    messagingSenderId: "687581415852",
+    appId: "1:687581415852:web:3fe355b6fc830ae340d209"
+};
+
+// INIT
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+let currentUser = null;
+let currentChat = null;
+
+// DOM
+const loginBtn = document.getElementById("loginBtn");
+const usernameInput = document.getElementById("username");
+const loginScreen = document.getElementById("login-screen");
+const mainApp = document.getElementById("main-app");
+const contactsDiv = document.getElementById("contacts");
+const userDisplay = document.getElementById("userDisplay");
+
+const chatBox = document.getElementById("chatBox");
+const chatName = document.getElementById("chatName");
+const messagesDiv = document.getElementById("messages");
+const msgInput = document.getElementById("msgInput");
+const sendBtn = document.getElementById("sendBtn");
+
+// LOGIN
+loginBtn.onclick = async () => {
+    const name = usernameInput.value.trim();
+    if (!name) return alert("Enter name");
+
+    const userId = "user_" + Date.now();
+
+    await db.collection("users").doc(userId).set({
+        name
+    });
+
+    currentUser = { id:userId, name };
+
+    loginScreen.style.display = "none";
+    mainApp.style.display = "block";
+
+    userDisplay.innerText = "Logged in as: " + name;
+
+    loadUsers();
+};
+
+// LOAD USERS
+async function loadUsers(){
+    const snap = await db.collection("users").get();
+
+    contactsDiv.innerHTML = "";
+
+    snap.forEach(doc=>{
+        if(doc.id !== currentUser.id){
+            const user = doc.data();
+
+            const div = document.createElement("div");
+            div.className = "contact";
+            div.innerText = user.name;
+
+            div.onclick = ()=>{
+                openChat(doc.id, user.name);
             };
-            
-            const app = initializeApp(firebaseConfig);
-            db = firestore.getFirestore(app);
-            firebaseAvailable = true;
-            addDebugLog('✅ Firebase connected successfully');
-        } catch (error) {
-            addDebugLog('❌ Firebase connection failed: ' + error.message, true);
-            addDebugLog('💡 Using demo mode instead');
+
+            contactsDiv.appendChild(div);
         }
-        
-        // App state
-        let currentUser = null;
-        let currentChatContact = null;
-        let messagesUnsubscribe = null;
-        let isDemoMode = false;
-        let demoUsers = [];
-        
-        // DOM elements
-        const loginScreen = document.getElementById('login-screen');
-        const mainApp = document.getElementById('main-app');
-        const loginBtn = document.getElementById('login-btn');
-        const demoModeBtn = document.getElementById('demo-mode-btn');
-        const usernameInput = document.getElementById('username-input');
-        const userInfo = document.getElementById('user-info');
-        const logoutBtn = document.getElementById('logout-btn');
-        const contentArea = document.getElementById('content-area');
-        const chatView = document.getElementById('chat-view');
-        const mainTabs = document.getElementById('main-tabs');
-        const backBtn = document.getElementById('back-btn');
-        const messagesContainer = document.getElementById('messages-container');
-        const messageInput = document.getElementById('message-input');
-        const sendBtn = document.getElementById('send-btn');
-        const chatContactName = document.getElementById('chat-contact-name');
-        const tabs = document.querySelectorAll('.tab');
-        const chatsTab = document.getElementById('chats-tab');
-        const contactsTab = document.getElementById('contacts-tab');
-        const profileTab = document.getElementById('profile-tab');
-        const profileNameInput = document.getElementById('profile-name-input');
-        const profileUserId = document.getElementById('profile-user-id');
-        const profileAvatarImg = document.getElementById('profile-avatar-img');
-        const saveProfileBtn = document.getElementById('save-profile-btn');
-        const contactsList = document.getElementById('contacts-list');
-        const allContactsList = document.getElementById('all-contacts-list');
-        const addContactBtn = document.getElementById('add-contact-btn');
-        const newContactId = document.getElementById('new-contact-id');
-        const addContactStatus = document.getElementById('add-contact-status');
-        
-        // Avatar elements
-        const fileInput = document.getElementById('file-input');
-        const loginFileInput = document.getElementById('login-file-input');
-        const loginAvatarPreview = document.getElementById('login-avatar-preview');
-        const loginAvatarImg = document.getElementById('login-avatar-img');
-        const profileAvatar = document.getElementById('profile-avatar');
-        
-        let loginAvatarData = null;
-        
-        // Check for saved user
-        function checkSavedUser() {
-            const savedUserData = localStorage.getItem('imperion_user');
-            if (savedUserData) {
-                try {
-                    currentUser = JSON.parse(savedUserData);
-                    addDebugLog('✅ Restored user: ' + currentUser.name);
-                    
-                    loginScreen.style.display = 'none';
-                    mainApp.style.display = 'flex';
-                    updateProfileUI();
-                    
-                    if (isDemoMode) {
-                        loadDemoUsers();
-                    }
-                } catch (e) {
-                    localStorage.removeItem('imperion_user');
-                }
-            }
-        }
-        
-        checkSavedUser();
-        
-        // Login avatar click
-        loginAvatarPreview.addEventListener('click', () => {
-            loginFileInput.click();
+    });
+}
+
+// OPEN CHAT
+function openChat(id, name){
+    currentChat = id;
+
+    chatBox.style.display = "block";
+    chatName.innerText = name;
+
+    listenMessages();
+}
+
+// LISTEN MESSAGES
+function listenMessages(){
+    const chatId = [currentUser.id, currentChat].sort().join("_");
+
+    db.collection("chats")
+    .doc(chatId)
+    .collection("messages")
+    .orderBy("time")
+    .onSnapshot(snap=>{
+        messagesDiv.innerHTML = "";
+
+        snap.forEach(doc=>{
+            const msg = doc.data();
+
+            const div = document.createElement("div");
+            div.className = "message " + (msg.sender === currentUser.id ? "sent":"received");
+            div.innerText = msg.text;
+
+            messagesDiv.appendChild(div);
         });
-        
-        loginFileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    loginAvatarData = e.target.result;
-                    loginAvatarImg.src = loginAvatarData;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-        
-        // Profile avatar click
-        profileAvatar.addEventListener('click', () => {
-            fileInput.click();
-        });
-        
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file && currentUser) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const avatarData = e.target.result;
-                    profileAvatarImg.src = avatarData;
-                    currentUser.avatar = avatarData;
-                    localStorage.setItem('imperion_user', JSON.stringify(currentUser));
-                    showStatus('Avatar updated!');
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-        
-        function showStatus(message, element) {
-            const statusEl = element || addContactStatus;
-            statusEl.innerHTML = `<div class="success-message">${message}</div>`;
-            setTimeout(() => {
-                statusEl.innerHTML = '';
-            }, 2000);
-        }
-        
-        // Copy ID
-        profileUserId.addEventListener('click', async () => {
-            if (!currentUser) return;
-            
-            try {
-                await navigator.clipboard.writeText(currentUser.id);
-                profileUserId.classList.add('copied');
-                setTimeout(() => {
-                    profileUserId.classList.remove('copied');
-                }, 1500);
-            } catch (err) {
-                console.error('Failed to copy:', err);
-            }
-        });
-        
-        // Demo Mode - Works without Firebase
-        demoModeBtn.addEventListener('click', () => {
-            isDemoMode = true;
-            addDebugLog('🎯 Demo mode activated');
-            
-            // Create demo user
-            const demoUserId = 'demo_' + Date.now();
-            currentUser = {
-                id: demoUserId,
-                name: 'Demo User',
-                avatar: null
-            };
-            
-            // Create some demo contacts
-            demoUsers = [
-                { id: 'demo_alice', name: 'Alice', avatar: null },
-                { id: 'demo_bob', name: 'Bob', avatar: null },
-                { id: 'demo_charlie', name: 'Charlie', avatar: null }
-            ];
-            
-            // Save to localStorage
-            localStorage.setItem('imperion_user', JSON.stringify(currentUser));
-            
-            loginScreen.style.display = 'none';
-            mainApp.style.display = 'flex';
-            updateProfileUI();
-            loadDemoUsers();
-        });
-        
-        // Login
-        loginBtn.addEventListener('click', async () => {
-            const name = usernameInput.value.trim();
-            if (!name) {
-                showError('Please enter a username');
-                return;
-            }
-            
-            addDebugLog('🔄 Attempting login for: ' + name);
-            
-            if (!firebaseAvailable) {
-                showError('Firebase not available. Click "Try Demo Mode"');
-                return;
-            }
-            
-            try {
-                // Try Firebase first
-                const usersRef = collection(db, 'users');
-                const q = query(usersRef, where('name', '==', name));
-                const querySnapshot = await getDocs(q);
-                
-                if (!querySnapshot.empty) {
-                    const userDoc = querySnapshot.docs[0];
-                    currentUser = {
-                        id: userDoc.id,
-                        ...userDoc.data()
-                    };
-                    addDebugLog('✅ Existing user loaded');
-                } else {
-                    const userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
-                    currentUser = {
-                        id: userId,
-                        name: name,
-                        avatar: loginAvatarData || null,
-                        createdAt: new Date().toISOString()
-                    };
-                    
-                    const newUserRef = doc(db, 'users', userId);
-                    await setDoc(newUserRef, currentUser);
-                    addDebugLog('✅ New user created');
-                }
-                
-                // Save to localStorage
-                localStorage.setItem('imperion_user', JSON.stringify(currentUser));
-                
-                loginScreen.style.display = 'none';
-                mainApp.style.display = 'flex';
-                updateProfileUI();
-                
-                loadAllUsers();
-                loadChatContacts();
-                
-            } catch (error) {
-                addDebugLog('❌ Firebase error: ' + error.message, true);
-                showError('Firebase error. Try Demo Mode');
-            }
-        });
-        
-        function updateProfileUI() {
-            if (!currentUser) return;
-            userInfo.textContent = currentUser.name;
-            profileNameInput.value = currentUser.name;
-            
-            if (currentUser.avatar) {
-                profileAvatarImg.src = currentUser.avatar;
-            } else {
-                profileAvatarImg.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23333'/%3E%3Ctext x='50' y='70' font-size='50' text-anchor='middle' fill='%23D4AF37'%3E👤%3C/text%3E%3C/svg%3E";
-            }
-            
-            profileUserId.innerHTML = `<strong>${currentUser.id}</strong>`;
-        }
-        
-        saveProfileBtn.addEventListener('click', () => {
-            if (!currentUser) return;
-            
-            const newName = profileNameInput.value.trim();
-            if (!newName) return;
-            
-            currentUser.name = newName;
-            localStorage.setItem('imperion_user', JSON.stringify(currentUser));
-            updateProfileUI();
-            showStatus('Profile updated!');
-        });
-        
-        logoutBtn.addEventListener('click', () => {
-            localStorage.removeItem('imperion_user');
-            currentUser = null;
-            currentChatContact = null;
-            if (messagesUnsubscribe) messagesUnsubscribe();
-            
-            loginScreen.style.display = 'flex';
-            mainApp.style.display = 'none';
-            chatView.style.display = 'none';
-            contentArea.style.display = 'block';
-            mainTabs.style.display = 'flex';
-            
-            usernameInput.value = '';
-            loginAvatarImg.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23333'/%3E%3Ctext x='50' y='70' font-size='50' text-anchor='middle' fill='%23D4AF37'%3E👤%3C/text%3E%3C/svg%3E";
-            loginAvatarData = null;
-            debugPanel.style.display = 'none';
-            debugPanel.innerHTML = '';
-        });
-        
-        // Tab switching
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                tabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                const tabName = tab.dataset.tab;
-                chatsTab.style.display = tabName === 'chats' ? 'block' : 'none';
-                contactsTab.style.display = tabName === 'contacts' ? 'block' : 'none';
-                profileTab.style.display = tabName === 'profile' ? 'block' : 'none';
-                
-                if (tabName === 'contacts') {
-                    if (isDemoMode) {
-                        loadDemoUsers();
-                    } else {
-                        loadAllUsers();
-                    }
-                } else if (tabName === 'chats') {
-                    if (isDemoMode) {
-                        loadDemoUsers();
-                    } else {
-                        loadChatContacts();
-                    }
-                }
-            });
-        });
-        
-        // Demo mode functions
-        function loadDemoUsers() {
-            let html = '';
-            demoUsers.forEach(user => {
-                html += `
-                    <div class="contact-item" data-contact-id="${user.id}">
-                        <div class="contact-avatar">👤</div>
-                        <div class="contact-details">
-                            <div class="contact-name">${user.name}</div>
-                            <div class="contact-last">Click to chat</div>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            contactsList.innerHTML = html || '<div class="empty-state">No users</div>';
-            allContactsList.innerHTML = html || '<div class="empty-state">No users</div>';
-            
-            document.querySelectorAll('.contact-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const contactId = item.dataset.contactId;
-                    const contact = demoUsers.find(u => u.id === contactId);
-                    openDemoChat(contact);
-                });
-            });
-        }
-        
-        function openDemoChat(contact) {
-            currentChatContact = contact;
-            chatContactName.textContent = contact.name;
-            
-            contentArea.style.display = 'none';
-            mainTabs.style.display = 'none';
-            chatView.style.display = 'flex';
-            
-            // Show some demo messages
-            messagesContainer.innerHTML = `
-                <div class="message received">
-                    Hey there! 👋
-                    <div style="font-size:0.7rem; opacity:0.7; margin-top:0.2rem;">12:34</div>
-                </div>
-                <div class="message sent">
-                    Hi! How are you?
-                    <div style="font-size:0.7rem; opacity:0.7; margin-top:0.2rem;">12:35</div>
-                </div>
-            `;
-        }
-        
-        // Firebase functions (simplified)
-        async function loadAllUsers() {
-            if (!currentUser || !db) return;
-            contactsList.innerHTML = '<div class="empty-state">Firebase mode - check console</div>';
-        }
-        
-        async function loadChatContacts() {
-            if (!currentUser || !db) return;
-            contactsList.innerHTML = '<div class="empty-state">Firebase mode - check console</div>';
-        }
-        
-        async function getLastMessage(contactId) {
-            return '';
-        }
-        
-        addContactBtn.addEventListener('click', async () => {
-            if (!currentUser) return;
-            showStatus('Use Demo Mode for testing', addContactStatus);
-        });
-        
-        function openChat(contact) {
-            if (isDemoMode) {
-                openDemoChat(contact);
-                return;
-            }
-            // Firebase chat would go here
-        }
-        
-        function listenForMessages(contactId) {
-            // Firebase messages would go here
-        }
-        
-        backBtn.addEventListener('click', () => {
-            chatView.style.display = 'none';
-            contentArea.style.display = 'block';
-            mainTabs.style.display = 'flex';
-            currentChatContact = null;
-        });
-        
-        sendBtn.addEventListener('click', sendMessage);
-        messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
-        
-        function sendMessage() {
-            const text = messageInput.value.trim();
-            if (!text || !currentUser || !currentChatContact) return;
-            
-            // Add message to UI
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const messageHtml = `
-                <div class="message sent">
-                    ${text}
-                    <div style="font-size:0.7rem; opacity:0.7; margin-top:0.2rem;">${time}</div>
-                </div>
-            `;
-            
-            messagesContainer.innerHTML += messageHtml;
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            messageInput.value = '';
-        }
-        
-        addDebugLog('🚀 App loaded - Click "Try Demo Mode" to test');
-    </script>
+    });
+}
+
+// SEND
+sendBtn.onclick = async ()=>{
+    const text = msgInput.value.trim();
+    if(!text) return;
+
+    const chatId = [currentUser.id, currentChat].sort().join("_");
+
+    await db.collection("chats")
+    .doc(chatId)
+    .collection("messages")
+    .add({
+        text,
+        sender: currentUser.id,
+        time: new Date()
+    });
+
+    msgInput.value = "";
+};
+
+</script>
+
 </body>
-</html> 
+</html>
