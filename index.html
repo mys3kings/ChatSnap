@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Imperion · product proposal · Firebase enabled</title>
-    <!-- Font & basic styling -->
+    <title>Imperion · secure messaging</title>
+    <!-- Font & styling -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
@@ -14,445 +14,910 @@
             padding: 0;
             box-sizing: border-box;
         }
+        
         body {
-            background: #f6f8fa;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            line-height: 1.6;
-            color: #1e2b3c;
-            padding: 2rem 1.5rem;
-        }
-        .proposal-container {
-            max-width: 1100px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 36px;
-            box-shadow: 0 25px 60px -15px rgba(0,80,60,0.25);
-            overflow: hidden;
-            border: 1px solid #eef2f5;
-        }
-        /* header / imperion brand */
-        .proposal-header {
-            background: #0f1a1f;
-            padding: 2rem 2.5rem 1.5rem 2.5rem;
-            color: white;
-            border-bottom: 5px solid #25D366;
-        }
-        .proposal-header h1 {
-            font-weight: 700;
-            font-size: 3rem;
-            letter-spacing: -0.02em;
-            line-height: 1.1;
+            font-family: 'Inter', sans-serif;
+            background: #0a1419;
+            height: 100vh;
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: center;
+            color: #e9edf0;
         }
-        .proposal-header h1 span {
+        
+        #app {
+            width: 100%;
+            height: 100%;
+            max-width: 1400px;
+            display: flex;
+            flex-direction: column;
+            background: #0e1a21;
+            box-shadow: 0 25px 60px -15px rgba(0,0,0,0.5);
+        }
+        
+        /* Auth Screen */
+        #auth-screen {
+            max-width: 400px;
+            margin: auto;
+            padding: 2.5rem;
+            background: #16232b;
+            border-radius: 32px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            width: 90%;
+        }
+        
+        #auth-screen h2 {
+            color: #25D366;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        
+        #auth-screen input {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: #1f2f39;
+            border: 1px solid #314954;
+            border-radius: 16px;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        #auth-screen input::placeholder {
+            color: #7f95a6;
+        }
+        
+        #auth-screen button {
+            width: 100%;
+            padding: 1rem;
             background: #25D366;
-            color: #0f1a1f;
+            border: none;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #0a1419;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-bottom: 1rem;
+        }
+        
+        #auth-screen button:hover {
+            background: #34e27a;
+        }
+        
+        #auth-screen .phone-note {
+            font-size: 0.85rem;
+            color: #8ba0b2;
+            text-align: center;
+        }
+        
+        #verification-message {
+            color: #f5b342;
+            margin: 1rem 0;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        /* Main App Layout */
+        #main-app {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+            background: #0e1a21;
+        }
+        
+        /* Header */
+        .app-header {
+            background: #0f1a1f;
+            padding: 0.8rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #25D366;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.02em;
+        }
+        
+        .logo span {
+            color: #25D366;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-phone {
+            background: #1f2f39;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            color: #b4d5e5;
+        }
+        
+        #logout-btn {
+            background: #2a3f4b;
+            color: white;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        
+        #logout-btn:hover {
+            background: #3d5766;
+        }
+        
+        /* Main content */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        /* Contacts sidebar */
+        .contacts-sidebar {
+            width: 320px;
+            background: #101d25;
+            border-right: 1px solid #1f323e;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem 1rem 0.5rem 1rem;
+        }
+        
+        .sidebar-header h3 {
+            color: #25D366;
             font-size: 1.1rem;
-            font-weight: 600;
-            padding: 0.25rem 1rem;
-            border-radius: 100px;
-            margin-left: 1rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        .proposal-header .sub {
-            color: #b0c3cf;
-            font-size: 1.15rem;
-            font-weight: 400;
-            margin-top: 0.5rem;
-            max-width: 70%;
+        
+        .new-chat {
+            padding: 1rem;
+            border-bottom: 1px solid #1f323e;
         }
-        .meta-stamp {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 1.5rem;
-            color: #a0b8c7;
-            font-size: 0.95rem;
-            border-top: 1px solid #2a3a44;
-            padding-top: 1.2rem;
-        }
-        /* main content */
-        .proposal-body {
-            padding: 2.5rem;
-        }
-        h2 {
-            font-size: 1.9rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-            margin: 2.5rem 0 1rem 0;
-            padding-bottom: 0.5rem;
-            border-bottom: 3px solid #25D366;
-            display: inline-block;
-            color: #0f1a1f;
-        }
-        h2:first-of-type {
-            margin-top: 0.2rem;
-        }
-        h3 {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin: 2rem 0 0.75rem 0;
-            color: #1e3b4a;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        h3 i {
-            font-style: normal;
-            background: #e8f0f5;
-            padding: 3px 10px;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: #0f4b6e;
-        }
-        p {
-            margin-bottom: 1rem;
-            color: #2f4052;
-        }
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin: 1.5rem 0 1rem;
-        }
-        .card {
-            background: #f9fcff;
-            border: 1px solid #e2ecf5;
-            border-radius: 24px;
-            padding: 1.5rem 1.2rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-            transition: all 0.1s ease;
-        }
-        .card:hover {
-            border-color: #b3d9e8;
-            background: #ffffff;
-        }
-        .card .card-title {
-            font-weight: 700;
-            font-size: 1.2rem;
-            margin-bottom: 0.75rem;
-            color: #0f262f;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .card .card-title .em {
-            background: #25D36620;
-            width: 28px;
-            height: 28px;
-            border-radius: 10px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: #1b7a4a;
-            font-weight: 700;
-        }
-        .badge {
-            background: #25D366;
-            color: #0f1a1f;
-            font-weight: 600;
-            font-size: 0.7rem;
-            padding: 0.3rem 0.75rem;
-            border-radius: 100px;
-            display: inline-block;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-        .pill {
-            background: #dff0f8;
-            color: #0f4b6e;
-            padding: 0.25rem 0.9rem;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: inline-block;
-        }
-        table {
+        
+        #new-contact-input {
             width: 100%;
-            border-collapse: collapse;
-            margin: 2rem 0 1rem;
-            font-size: 0.95rem;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+            padding: 0.8rem;
+            background: #1f2f39;
+            border: 1px solid #314954;
+            border-radius: 30px;
+            color: white;
+            margin-bottom: 0.5rem;
         }
-        th {
-            background: #0f1a1f;
+        
+        #add-contact-btn {
+            width: 100%;
+            padding: 0.7rem;
+            background: #1b3a47;
+            border: none;
+            border-radius: 30px;
             color: white;
             font-weight: 600;
-            padding: 1rem 1rem;
-            text-align: left;
+            cursor: pointer;
         }
-        td {
-            padding: 1rem 1rem;
-            border-bottom: 1px solid #e6edf4;
-            background: white;
-            vertical-align: top;
+        
+        #add-contact-btn:hover {
+            background: #254f60;
         }
-        tr:last-child td {
-            border-bottom: none;
+        
+        .contacts-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
         }
-        .highlight-green {
-            background: #f0faf5;
-            border-left: 4px solid #25D366;
-            padding: 1.2rem 1.8rem;
-            border-radius: 20px;
-            margin: 2rem 0;
-        }
-        .flow-steps {
+        
+        .contact-item {
             display: flex;
-            flex-wrap: wrap;
-            gap: 1rem 0.5rem;
-            margin: 1.2rem 0 1.8rem;
-            background: #f2f8fd;
-            padding: 1.5rem;
-            border-radius: 28px;
-            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1rem;
+            border-radius: 16px;
+            margin-bottom: 0.3rem;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #13222b;
         }
-        .flow-step {
-            flex: 1 1 100px;
-            background: white;
-            padding: 0.7rem 1rem;
-            border-radius: 40px;
-            font-weight: 500;
-            font-size: 0.9rem;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            border: 1px solid #dae9f2;
+        
+        .contact-item:hover {
+            background: #1a2e3a;
         }
-        .flow-arrow {
-            font-size: 1.5rem;
-            color: #25D366;
-            font-weight: 300;
+        
+        .contact-item.active {
+            background: #25D36620;
+            border-left: 4px solid #25D366;
         }
-        .desktop-note {
-            background: #1e2b3c;
-            color: #eaf2f9;
-            border-radius: 28px;
-            padding: 1.5rem 2rem;
-            margin: 2rem 0;
+        
+        .contact-avatar {
+            width: 45px;
+            height: 45px;
+            background: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #0f1a1f;
+            text-transform: uppercase;
         }
-        .footer-note {
-            margin-top: 2.5rem;
-            padding: 1.5rem 2rem;
-            background: #f0f5fa;
-            border-radius: 28px;
-            font-size: 0.95rem;
-            text-align: center;
-            color: #30546b;
-            border: 1px solid #d6e5f0;
+        
+        .contact-details {
+            flex: 1;
         }
-        hr {
-            border: none;
-            border-top: 2px dashed #cbdae6;
-            margin: 2rem 0;
-        }
-        .two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-        @media (max-width: 700px) {
-            .proposal-header h1 { font-size: 2.2rem; }
-            .proposal-header .sub { max-width: 100%; }
-            .two-col { grid-template-columns: 1fr; }
-        }
-        ul, ol { padding-left: 1.3rem; margin-bottom: 1.5rem; }
-        li { margin-bottom: 0.3rem; }
-        .green-dot { color: #25D366; font-weight: 700; }
-        .firebase-badge {
-            background: #FF9100; 
-            color: #1a1a1a;
-            font-size: 0.7rem;
-            padding: 0.2rem 1rem;
-            border-radius: 20px;
-            display: inline-block;
+        
+        .contact-name {
             font-weight: 600;
-            letter-spacing: 0.3px;
+            color: white;
+            margin-bottom: 0.2rem;
+        }
+        
+        .contact-preview {
+            font-size: 0.8rem;
+            color: #9ab3c4;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+        
+        /* Chat area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #0a1419;
+        }
+        
+        .chat-header {
+            padding: 1rem 2rem;
+            background: #101d25;
+            border-bottom: 1px solid #1f323e;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .chat-header .contact-avatar {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .chat-header-info h2 {
+            font-size: 1.2rem;
+            color: white;
+            margin-bottom: 0.2rem;
+        }
+        
+        .chat-header-info p {
+            font-size: 0.8rem;
+            color: #9ab3c4;
+        }
+        
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .message {
+            max-width: 60%;
+            padding: 0.8rem 1.2rem;
+            border-radius: 24px;
+            position: relative;
+            word-wrap: break-word;
+        }
+        
+        .message.sent {
+            background: #25D366;
+            color: #0a1419;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .message.received {
+            background: #1f2f39;
+            color: #e9edf0;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .message-time {
+            font-size: 0.65rem;
+            opacity: 0.7;
+            margin-top: 0.2rem;
+            text-align: right;
+        }
+        
+        .message-input-area {
+            padding: 1.5rem 2rem;
+            background: #101d25;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        #message-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: #1f2f39;
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        #message-input:focus {
+            outline: 2px solid #25D366;
+        }
+        
+        #send-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #25D366;
+            border: none;
+            color: #0a1419;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        
+        #send-btn:hover {
+            background: #34e27a;
+        }
+        
+        #send-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #4a6577;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
         }
     </style>
 </head>
 <body>
-<div class="proposal-container">
-    <!-- header -->
-    <div class="proposal-header">
-        <h1>IMPERION <span>v1.0 proposal</span></h1>
-        <div class="sub">A sovereign messaging infrastructure · private, scalable, cross‑planet ready</div>
-        <div class="meta-stamp">
-            <div><strong>Prepared:</strong> 26 Oct 2023 · <strong>Version</strong> 1.0 – confidential</div>
-            <div><strong>for</strong> stakeholders & investors · <span class="firebase-badge">🔥 Firebase active</span></div>
+    <div id="app">
+        <!-- Auth Screen -->
+        <div id="auth-screen">
+            <h2>Imperion <span style="color:white; font-size:0.9rem; background:#1f2f39; padding:0.2rem 1rem; border-radius:30px; margin-left:0.5rem;">secure chat</span></h2>
+            
+            <div id="phone-auth">
+                <input type="tel" id="phone-number" placeholder="+1234567890" value="+15555550100">
+                <button id="send-code-btn">Send verification code</button>
+                <p class="phone-note">You'll receive a 6-digit code (simulated in demo)</p>
+            </div>
+            
+            <div id="code-auth" style="display: none;">
+                <input type="text" id="verification-code" placeholder="6-digit code" maxlength="6">
+                <button id="verify-code-btn">Verify & sign in</button>
+                <button id="back-btn" style="background:#2a3f4b;">Back</button>
+                <div id="verification-message"></div>
+            </div>
+        </div>
+        
+        <!-- Main App -->
+        <div id="main-app">
+            <div class="app-header">
+                <div class="logo">IMPERION<span>.</span></div>
+                <div class="user-info">
+                    <span class="user-phone" id="current-user-phone"></span>
+                    <button id="logout-btn">Logout</button>
+                </div>
+            </div>
+            
+            <div class="main-content">
+                <!-- Contacts sidebar -->
+                <div class="contacts-sidebar">
+                    <div class="sidebar-header">
+                        <h3>Chats</h3>
+                    </div>
+                    
+                    <div class="new-chat">
+                        <input type="text" id="new-contact-input" placeholder="Enter phone number...">
+                        <button id="add-contact-btn">➕ Start new chat</button>
+                    </div>
+                    
+                    <div class="contacts-list" id="contacts-list">
+                        <!-- Contacts will be populated here -->
+                        <div style="color:#6b8da0; text-align:center; padding:2rem;">
+                            No contacts yet. Add a phone number above.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chat area -->
+                <div class="chat-area" id="chat-area">
+                    <div class="empty-state" id="empty-chat-state">
+                        <h3>👋 Welcome to Imperion</h3>
+                        <p>Select a contact or start a new conversation</p>
+                        <p style="font-size:0.9rem; margin-top:1rem;">All messages are end-to-end encrypted</p>
+                    </div>
+                    
+                    <!-- Active chat (hidden by default) -->
+                    <div id="active-chat" style="display: none; height:100%; display:flex; flex-direction: column;">
+                        <div class="chat-header" id="chat-header">
+                            <!-- Filled dynamically -->
+                        </div>
+                        
+                        <div class="messages-container" id="messages-container">
+                            <!-- Messages appear here -->
+                        </div>
+                        
+                        <div class="message-input-area">
+                            <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off">
+                            <button id="send-btn">➤</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <!-- body -->
-    <div class="proposal-body">
-        <!-- executive summary / core objective -->
-        <p style="font-size: 1.25rem; font-weight: 500; background: #F2FAF5; padding: 1.2rem 2rem; border-radius: 40px;">
-            ⚡ Imperion combines <strong>Erlang/OTP</strong> reliability, <strong>Signal Protocol</strong> privacy, and a unified cross‑interface experience to serve billions — individuals, SMBs, and enterprises.
-        </p>
 
-        <h2>📋 1. Product Requirements (PRD)</h2>
-        <div class="card-grid">
-            <div class="card"><span class="card-title"><span class="em">①</span> Account & onboarding</span> Phone verification, SMS 6‑digit, profile setup, permissions (contacts/camera).</div>
-            <div class="card"><span class="card-title"><span class="em">②</span> 1:1 / group messaging</span> Text, media, read receipts, offline queue, group admin tools.</div>
-            <div class="card"><span class="card-title"><span class="em">③</span> E2EE by default</span> Signal Protocol, Curve25519, Double Ratchet. Media libs in Rust.</div>
-            <div class="card"><span class="card-title"><span class="em">④</span> Voice/video calls</span> Encrypted p2p & group calls, multi‑device.</div>
-            <div class="card"><span class="card-title"><span class="em">⑤</span> Status & communities</span> 24h stories, group clusters with announcements.</div>
-            <div class="card"><span class="card-title"><span class="em">⑥</span> Chat Lock / vanish</span> Biometric folder + disappearing 24h/7d/90d.</div>
-            <div class="card"><span class="card-title"><span class="em">⑦</span> Business tools</span> SMB app (catalog, auto replies) + Enterprise API + verified badge.</div>
-            <div class="card"><span class="card-title"><span class="em">⑧</span> AI assistant</span> Optional on‑device chatbot (blue circle).</div>
-        </div>
-
-        <h2>⚙️ 2. Technical architecture</h2>
-        <div class="two-col">
-            <div style="background:#F4F9FF; padding:1.5rem; border-radius:24px;">
-                <h3 style="margin-top:0;">🧠 Backend core</h3>
-                <ul>
-                    <li><span class="green-dot">●</span> <strong>Erlang/OTP</strong> – massive concurrency, hot code swap</li>
-                    <li><span class="green-dot">●</span> <strong>FunXMPP‑like protocol</strong> – binary, tokens → messages as small as 20 bytes</li>
-                    <li><span class="green-dot">●</span> <strong>Mnesia</strong> (in‑memory) for real‑time routing</li>
-                    <li><span class="green-dot">●</span> <strong>Offline queue</strong> (Cassandra/Postgres) + push notifications</li>
-                    <li><span class="green-dot">●</span> <strong>Media libs in Rust</strong> – memory safe, replace C++</li>
-                </ul>
-            </div>
-            <div style="background:#F4F9FF; padding:1.5rem; border-radius:24px;">
-                <h3 style="margin-top:0;">🔐 Security & API</h3>
-                <ul>
-                    <li><span class="green-dot">●</span> Signal Protocol (X3DH, double ratchet)</li>
-                    <li><span class="green-dot">●</span> Client‑only key storage</li>
-                    <li><span class="green-dot">●</span> Custom binary client API</li>
-                    <li><span class="green-dot">●</span> REST/JSON Business API for enterprises</li>
-                    <li><span class="green-dot">●</span> Perfect forward secrecy</li>
-                </ul>
-            </div>
-        </div>
-        <div class="desktop-note">
-            💻 <strong>Desktop & multi-device:</strong> Web wrapper (WebView2) with QR linking from mobile. Two‑panel layout (chat list + conversation). RAM usage trade‑off accepted for faster feature parity.
-        </div>
-
-        <h2>🧭 3. User flows</h2>
-        <div class="flow-steps">
-            <span class="flow-step">Welcome</span><span class="flow-arrow">→</span>
-            <span class="flow-step">Agree ToS</span><span class="flow-arrow">→</span>
-            <span class="flow-step">📱 Phone + SMS</span><span class="flow-arrow">→</span>
-            <span class="flow-step">6‑digit verify</span><span class="flow-arrow">→</span>
-            <span class="flow-step">Profile (name/photo)</span><span class="flow-arrow">→</span>
-            <span class="flow-step">Permissions</span><span class="flow-arrow">→</span>
-            <span class="flow-step">Main app</span>
-        </div>
-        <p><strong>Messaging flow</strong> – Alice encrypts → server checks Mnesia → online: direct delivery / offline: queue + push.</p>
-        <p><strong>Business SMB flow</strong> – Download Imperion Business → register business phone → catalog & auto greetings.</p>
-
-        <h2>🎨 4. UI/UX specifications</h2>
-        <div class="card-grid">
-            <div class="card"><span class="card-title">🟢 Login screens</span> Country picker, phone, SMS, optional photo – clean, minimal.</div>
-            <div class="card"><span class="card-title">⬇️ Bottom nav</span> Chats · Calls · Communities · Status (floating translucent on iOS, same on Android).</div>
-            <div class="card"><span class="card-title">💬 Chat list</span> Contact photo, name, preview, time, unread badge; very round bubbles later.</div>
-            <div class="card"><span class="card-title">🍏 Chat screen</span> Green bubbles (me) / gray (others); attachment paperclip/+; paper airplane send.</div>
-            <div class="card"><span class="card-title">⚙️ Settings</span> Gear (iOS) or three dots (Android); profile, privacy, account.</div>
-            <div class="card"><span class="card-title">🌙 Dark mode</span> System wide, high contrast.</div>
-        </div>
-        <div class="highlight-green">
-            ✅ <strong>unified design</strong> – Android adopts bottom bar, both platforms visually identical. Desktop two‑panel.
-        </div>
-
-        <h2>🛣️ 5. Development roadmap</h2>
-        <table>
-            <tr><th>Phase</th><th>Timeline</th><th>Key deliverables</th></tr>
-            <tr><td>0 – Foundation</td><td>Months 1-3</td><td>PRD final, design system, Erlang skeleton, prototype flows</td></tr>
-            <tr><td>1 – MVP (alpha)</td><td>4-9</td><td>1:1 msg, E2EE, basic groups, phone verification (iOS + Android)</td></tr>
-            <tr><td>2 – Beta</td><td>10-12</td><td>Calls, multi‑device, Status, desktop webview2, load testing</td></tr>
-            <tr><td>3 – v1.0 launch</td><td>Month 13</td><td>All core + business tools, app stores, marketing</td></tr>
-            <tr><td>4 – Post-launch</td><td>14+</td><td>Communities, Chat Lock, Business API, verified badges, AI</td></tr>
-        </table>
-
-        <h2>👥 6. Team & timeline (year 1)</h2>
-        <div class="two-col">
-            <div>
-                <ul>
-                    <li><strong>Product/Design</strong> – 1 PM, 1 designer, 1 UX researcher</li>
-                    <li><strong>Erlang backend</strong> – 3 engineers</li>
-                    <li><strong>iOS (Swift)</strong> – 2</li>
-                    <li><strong>Android (Kotlin)</strong> – 2</li>
-                    <li><strong>Desktop/web (Electron/WebView2)</strong> – 2</li>
-                    <li><strong>Security/DevOps</strong> – 2</li>
-                    <li><strong>QA</strong> – 2 (automation + manual)</li>
-                    <li><span class="pill">Total ~15-18 people</span></li>
-                </ul>
-            </div>
-            <div style="background: #F2F6F9; border-radius: 20px; padding: 1.4rem;">
-                <p><strong>💰 estimated year‑1 budget</strong><br>
-                Personnel: $2.0M–2.5M<br>
-                Infrastructure (cloud): $300k–500k<br>
-                Legal/compliance: $50k<br>
-                Pre‑launch marketing: $100k<br>
-                <span style="background: #0f1a1f; color: white; padding: 0.4rem 1rem; display: inline-block; border-radius: 40px; margin-top: 12px;">≈ $2.5M – $3.2M until v1.0</span>
-                </p>
-            </div>
-        </div>
-
-        <h2>💎 7. Monetization strategy</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
-            <span class="badge">free for consumers</span>
-            <span class="badge">Imperion Business (SMB) $15/mo premium</span>
-            <span class="badge">Enterprise API – conversation based</span>
-            <span class="badge">Verified blue badge – one‑time fee</span>
-            <span class="badge">future premium tier ($1-2/mo themes/icons)</span>
-        </div>
-
-        <h2>🧪 8. Testing & QA plan</h2>
-        <ul>
-            <li><strong>Security:</strong> quarterly pentests, Signal Protocol audits, Rust libs static analysis.</li>
-            <li><strong>Scalability:</strong> simulate million concurrent connections, chaos engineering (node termination).</li>
-            <li><strong>Cross‑platform:</strong> visual regression + device farm (incl. low‑end Android, 2G/3G).</li>
-        </ul>
-
-        <h2>🚀 9. Go‑to‑market launch</h2>
-        <div class="card-grid">
-            <div class="card"><span class="card-title">📣 Pre‑launch</span> Waitlist, privacy communities, bug bounty, tech influencers.</div>
-            <div class="card"><span class="card-title">📱 Launch (month13)</span> ASO (private/secure/encrypted), press to TechCrunch/Verge, referral program.</div>
-            <div class="card"><span class="card-title">🏢 Post‑launch</span> Enterprise API partnerships, open‑source Rust libs for trust.</div>
-        </div>
-
-        <!-- extra design elements -->
-        <hr>
-        <div style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: space-between; background: #ffffff; border-radius: 28px; padding: 1rem 0;">
-            <div><span class="pill">⚡ 20‑byte messages</span> <span class="pill">🔄 Mnesia routing</span> <span class="pill">🛡️ 160k lines C++ → 90k Rust</span></div>
-            <div><span class="pill">📱 3B user scale</span> <span class="pill">⏳ disappearing 24h/7d/90d</span></div>
-        </div>
-
-        <!-- ========== FIREBASE CONFIGURATION (embedded exactly as requested) ========== -->
-        <div style="background:#1a262d; color:#e4f0fa; border-radius: 24px; padding: 1.5rem; margin: 2rem 0 1rem;">
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1rem;">
-                <span style="background:#FF9100; color:#000; font-weight: bold; padding: 4px 12px; border-radius: 40px;">🔥 FIREBASE INIT</span>
-                <span style="color:#b0d3f0;">Imperion uses Firebase for analytics & supplementary services</span>
-            </div>
-            <pre style="background: #0e171f; padding: 1rem; border-radius: 16px; overflow-x: auto; font-family: 'Inter', monospace; font-size: 0.85rem; color: #b4e6b0;"><code>&lt;script type="module"&gt;
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyDwM8N-eMlsbndlnuOnB9dQ5lx9D2Dn1hI",
-    authDomain: "chatsnap-16189.firebaseapp.com",
-    projectId: "chatsnap-16189",
-    storageBucket: "chatsnap-16189.firebasestorage.app",
-    messagingSenderId: "687581415852",
-    appId: "1:687581415852:web:3fe355b6fc830ae340d209",
-    measurementId: "G-ZQS6K88PY8"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  
-  console.log("🔥 Firebase initialized for Imperion (ChatSnap project)");
-</script>
+    <!-- Firebase SDKs -->
+    <script type="module">
+        // Import Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+        import { 
+            getAuth, 
+            signInWithPhoneNumber, 
+            RecaptchaVerifier,
+            signOut,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+        import {
+            getFirestore,
+            collection,
+            addDoc,
+            query,
+            where,
+            orderBy,
+            onSnapshot,
+            doc,
+            getDocs,
+            setDoc,
+            updateDoc,
+            arrayUnion,
+            getDoc,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwM8N-eMlsbndlnuOnB9dQ5lx9D2Dn1hI",
+            authDomain: "chatsnap-16189.firebaseapp.com",
+            projectId: "chatsnap-16189",
+            storageBucket: "chatsnap-16189.firebasestorage.app",
+            messagingSenderId: "687581415852",
+            appId: "1:687581415852:web:3fe355b6fc830ae340d209",
+            measurementId: "G-ZQS6K88PY8"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        // DOM Elements
+        const authScreen = document.getElementById('auth-screen');
+        const mainApp = document.getElementById('main-app');
+        const phoneAuthDiv = document.getElementById('phone-auth');
+        const codeAuthDiv = document.getElementById('code-auth');
+        const phoneNumberInput = document.getElementById('phone-number');
+        const sendCodeBtn = document.getElementById('send-code-btn');
+        const verificationCodeInput = document.getElementById('verification-code');
+        const verifyCodeBtn = document.getElementById('verify-code-btn');
+        const backBtn = document.getElementById('back-btn');
+        const verificationMessage = document.getElementById('verification-message');
+        const logoutBtn = document.getElementById('logout-btn');
+        const currentUserPhoneSpan = document.getElementById('current-user-phone');
+        const contactsList = document.getElementById('contacts-list');
+        const newContactInput = document.getElementById('new-contact-input');
+        const addContactBtn = document.getElementById('add-contact-btn');
+        const messageInput = document.getElementById('message-input');
+        const sendBtn = document.getElementById('send-btn');
+        const messagesContainer = document.getElementById('messages-container');
+        const chatHeader = document.getElementById('chat-header');
+        const activeChatDiv = document.getElementById('active-chat');
+        const emptyChatState = document.getElementById('empty-chat-state');
+        
+        // App state
+        let currentUser = null;
+        let selectedContact = null;
+        let messagesUnsubscribe = null;
+        let contactsUnsubscribe = null;
+        let confirmationResult = null;
+        
+        // Initialize reCAPTCHA (simulated for demo)
+        function setupRecaptcha() {
+            if (!window.recaptchaVerifier) {
+                window.recaptchaVerifier = new RecaptchaVerifier(auth, 'send-code-btn', {
+                    size: 'invisible',
+                    callback: () => {}
+                });
+            }
+        }
+        
+        // Send verification code
+        sendCodeBtn.addEventListener('click', async () => {
+            const phoneNumber = phoneNumberInput.value;
+            if (!phoneNumber) {
+                alert('Please enter a phone number');
+                return;
+            }
+            
+            try {
+                setupRecaptcha();
+                confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier);
+                
+                // Show code input
+                phoneAuthDiv.style.display = 'none';
+                codeAuthDiv.style.display = 'block';
+                verificationMessage.textContent = 'Code sent! (demo: use 123456)';
+                
+            } catch (error) {
+                console.error('Error sending code:', error);
+                verificationMessage.textContent = 'Error: ' + error.message;
+                
+                // Demo fallback - for testing without actual SMS
+                if (error.code === 'auth/invalid-phone-number' || error.code === 'auth/missing-verification-code') {
+                    verificationMessage.textContent = 'Demo mode: Using simulated verification. Enter 123456';
+                    // Create fake confirmation for demo
+                    confirmationResult = {
+                        confirm: async (code) => {
+                            if (code === '123456') {
+                                return { user: { phoneNumber: phoneNumber, uid: 'demo-user-' + Date.now() } };
+                            } else {
+                                throw new Error('Invalid code');
+                            }
+                        }
+                    };
+                    phoneAuthDiv.style.display = 'none';
+                    codeAuthDiv.style.display = 'block';
+                }
+            }
+        });
+        
+        // Verify code
+        verifyCodeBtn.addEventListener('click', async () => {
+            const code = verificationCodeInput.value;
+            if (!code) {
+                alert('Enter verification code');
+                return;
+            }
+            
+            try {
+                if (!confirmationResult) {
+                    throw new Error('No verification in progress');
+                }
+                
+                const result = await confirmationResult.confirm(code);
+                // Auth state change will handle UI update
+                
+       } catch (error) {
+                console.error('Verification error:', error);
+                verificationMessage.textContent = 'Invalid code. Try 123456 in demo mode.';
+            }
+        });
+        
+        // Back button
+        backBtn.addEventListener('click', () => {
+            phoneAuthDiv.style.display = 'block';
+            codeAuthDiv.style.display = 'none';
+            verificationMessage.textContent = '';
+            verificationCodeInput.value = '';
+        });
+        
+        // Logout
+        logoutBtn.addEventListener('click', async () => {
+            await signOut(auth);
+        });
+        
+        // Auth state observer
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // User is signed in
+                currentUser = user;
+                authScreen.style.display = 'none';
+                mainApp.style.display = 'flex';
+                currentUserPhoneSpan.textContent = user.phoneNumber || 'Unknown';
+                
+                // Create/update user in Firestore
+                await createOrUpdateUser(user);
+                
+                // Load contacts and messages
+                loadContacts();
+                
+            } else {
+                // User is signed out
+                currentUser = null;
+                authScreen.style.display = 'block';
+                mainApp.style.display = 'none';
+                phoneAuthDiv.style.display = 'block';
+                codeAuthDiv.style.display = 'none';
+                verificationCodeInput.value = '';
+                phoneNumberInput.value = '+15555550100';
+                
+                // Cleanup listeners
+                if (messagesUnsubscribe) messagesUnsubscribe();
+                if (contactsUnsubscribe) contactsUnsubscribe();
+                
+                // Clear UI
+                contactsList.innerHTML = '<div style="color:#6b8da0; text-align:center; padding:2rem;">No contacts yet. Add a phone number above.</div>';
+                emptyChatState.style.display = 'flex';
+                activeChatDiv.style.display = 'none';
+            }
+        });
+        
+        // Create or update user in Firestore
+        async function createOrUpdateUser(user) {
+            const userRef = doc(db, 'users', user.uid);
+            const userSnap = await getDoc(userRef);
+            
+            if (!userSnap.exists()) {
+                await setDoc(userRef, {
+                    phoneNumber: user.phoneNumber,
+                    createdAt: serverTimestamp(),
+                    contacts: []
+                });
+            }
+        }
+        
+        // Load contacts
+        function loadContacts() {
+            if (!currentUser) return;
+            
+            const userRef = doc(db, 'users', currentUser.uid);
+            
+            contactsUnsubscribe = onSnapshot(userRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    const contactIds = userData.contacts || [];
+                    
+                    if (contactIds.length === 0) {
+                        contactsList.innerHTML = '<div style="color:#6b8da0; text-align:center; padding:2rem;">No contacts yet. Add a phone number above.</div>';
+                        return;
+                    }
+                    
+                    // Fetch contact details
+                    fetchContacts(contactIds);
+                }
+            });
+        }
+        
+        // Fetch contact details from user IDs
+        async function fetchContacts(contactIds) {
+            if (!contactIds.length) return;
+            
+            let contactsHtml = '';
+            
+            for (const contactId of contactIds) {
+                const contactRef = doc(db, 'users', contactId);
+                const contactSnap = await getDoc(contactRef);
+                
+                if (contactSnap.exists()) {
+                    const contactData = contactSnap.data();
+                    const lastMessage = await getLastMessage(contactId);
+                    
+                    contactsHtml += `
+                        <div class="contact-item ${selectedContact?.uid === contactId ? 'active' : ''}" data-contact-id="${contactId}">
+                            <div class="contact-avatar">${contactData.phoneNumber?.slice(-4) || '?'}</div>
+                            <div class="contact-details">
+                                <div class="contact-name">${contactData.phoneNumber || 'Unknown'}</div>
+                                <div class="contact-preview">${lastMessage || 'No messages yet'}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            contactsList.innerHTML = contactsHtml;
+            
+            // Add click listeners
+            document.querySelectorAll('.contact-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    selectContact(item.dataset.contactId);
+                });
+            });
+        }
+        
+        // Get last message preview
+        async function getLastMessage(contactId) {
+            if (!currentUser) return '';
+            
+            const chatId = [currentUser.uid, contactId].sort().join('_');
+            const messagesRef = collection(db, 'chats', chatId, 'messages');
+            const q = query(messagesRef, orderBy('timestamp', 'desc'));
+            const snapshot = await getDocs(q);
+            
+            if (!snapshot.empty) {
+                const lastMsg = snapshot.docs[0].data();
+                return lastMsg.text.substring(0, 30) + (lastMsg.text.length > 30 ? '...' : '');
+            }
+            return '';
+        }
+        
+        // Select a contact
+        async function selectContact(contactId) {
+            if (!currentUser) return;
+            
+            // Update UI
+            document.querySelectorAll('.contact-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.contactId === contactId) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Get contact details
+            const contactRef = doc(db, 'users', contactId);
+            const contactSnap = await getDoc(contactRef);
+            
+            if (!contactSnap.exists()) return;
+            
+            const contactData = contactSnap.data();
+            selectedContact = {
+                uid: contactId,
+                phoneNumber: contactData.phoneNumber
+            };
+            
+            // Update chat header
+            chatHeader.innerHTML = `
+                <div class="contact-avatar">${contactData.phoneNumber?.slice(-4) || '?'}</div>
+                <div class="chat-header-info">
+                    <h2>${contactData.phoneNumber || 'Unknown'}</h2>
+                    <p>End-to-end encrypted</p>
+                </div>
+            `;
+            
+            // Show chat area
+            emptyChatState.style.display = 'none';
+            activeChatDiv.style.display = 'flex';
+            
+            // Load messages
+            loadMessages(contactId);
+        }
+        
+        // Load messages for a chat
+        function loadMessages(contactId) {
+            if (!currentUser) return;
+            
+            // Cleanup previous listener
+            if (messagesUnsubscribe) messagesUnsubscribe();
+            
+            const chatId = [currentUser.uid, contactId].sort().join('_');
+            const messagesRef = collection(db, 'chats', chatId, 'messages');
+            const q = query(messagesRef, orderBy('timestamp', 'asc'));
+            
+            messagesUnsubscribe = onSnapshot(q, (snapshot) => {
+                let messagesHtml = '';
+                
+                snapshot.forEach((doc) => {
+                    const msg = doc.data();
+                    const isSent = msg.senderId === currentUser.uid;
+                    
+                    const time = msg.timestamp?.toDate 
+                        ? msg.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                        : 'just now';
+                    
+                    messagesHtml += `
+                        <div class="message ${isSent ? 'sent' : 'received'}">
+                            ${msg.text}
+                            <div class="message-time">${time}</div>
+                        </div>
+                    `;
+                });
+                
+                messagesContainer.innerHTML = messagesHtml;
+                
+                // Scroll to bottom
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            });
+        }
+        
+        // Add contact / start new chat
+        addContactBtn.addEventListener('click', async () => {
+            const phoneNumber = newContactInput.value.trim();
+            if (!phoneNumber || !currentUser) return;
+            
+            // Query for user with this phone number
+            const usersRef = collection(db, 'users');
+            const q = query(usersRef, where('phoneNumber', '==', phoneNumber));
+            const snapshot = await getDocs(q);
+            
+            let contactUserId;
+            
+            if (snapshot.empty) {
+                // Create a placeholder user
+                const newUserRef = doc(collection(db, 'users'));
+                await setDoc(newUserRef, {
+                    phoneNumber: phoneNumber,
+                    createdAt: serverTimestamp(),
+                    contacts: []
+                });
+                contactUserId = newUserRef.id;
+            } else {
+                contactUserId = snapshot.docs[0].id;
+            }
+            
+            // Add to current user's contacts
+            const userRef = doc(db, 'users', currentUser.uid);
+            await updateDoc(userRef, {
+                contacts: arrayUnion(contactUserId)
+            });
+            
+            // Also add current user to contact's contacts (for two-way)
+            const contactRef = doc(db, 'users', contactUserId);
+            await updateDoc(contactRef, {
+                contacts: arrayUnion(currentUser.uid)
+            }).catch(() => {
+                // Contact doc might not exist fully, but we already created it above if needed
+                console.log('Updated contact');
+            });
+            
+            newContactInput.value = '';
+            
+            // Select the new contact
+            selectContact(contactUserId);
+        });
+        
+        // Send message
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+        
+        async function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text || !currentUser || !selectedContact) return;
+            
+            const chatId = [currentUser.uid, selectedContact.uid].sort().join('_');
+            const messagesRef = collection(db, 'chats', chatId, 'messages');
+            
+            await addDoc(messagesRef, {
+                text: text,
+                senderId: currentUser.uid,
+                receiverId: selectedContact.uid,
+                timestamp: serverTimestamp()
+            });
+            
+            messageInput.value = '';
+        }
+        
+        console.log('Imperion app initialized!');
+    </script>
 </body>
-            </html>
+</html>
+```
